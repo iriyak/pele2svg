@@ -1,29 +1,32 @@
 #!/usr/bin/env node
-// pele2svg.mjs — pele の SVG を「CSS エンジンを持たないレンダラー」(Skia SVG / GT の
-// BlSkiaSvgElement など) でも描ける素朴な SVG に変換する。
+// pele2svg.mjs — convert SVG produced by pele (a Mermaid renderer) into plain SVG that
+// renderers without a CSS engine can draw (Skia's SVG module, GToolkit's BlSkiaSvgElement, ...).
 //
-// pele の出力が CSS に頼っている箇所を、すべて SVG のプレゼンテーション属性に展開する:
-//   1. CSS 変数  var(--x, fallback)          → 実際の色・値 (テーマ上書き可)
-//   2. ルート <svg> の style (font: 等)       → font-family / font-size 属性
-//   3. style="fill:..;stroke:..;rx:.."        → 同名の属性 (CSS は属性より強いので属性を置き換える)
-//   4. currentColor                           → 前景色 (--pele-fg)
-//   5. color-mix(in srgb, A p%, B)            → 計算済みの #rrggbb
-//   6. 入れ子 <svg class="pele-icon" ...>     → <g transform="translate() scale()">
-//   7. <a href=...>                           → <g> (リンクは GT では使えないため)
-//   8. 外部 URL の <image href="http...">     → 削除 (GT からは取得できないため)
+// pele writes colors and fonts as CSS (custom properties, style attributes, color-mix(), ...).
+// This script rewrites all of it as SVG presentation attributes:
+//   1. CSS variables  var(--x, fallback)         -> the actual value (themes can override --pele-*)
+//   2. style on the root <svg> (font: ...)       -> font-family / font-size attributes
+//   3. style="fill:..;stroke:..;rx:.."           -> attributes of the same name
+//                                                   (CSS beats attributes, so existing ones are replaced)
+//   4. currentColor                              -> the foreground color (--pele-fg)
+//   5. color-mix(in srgb, A p%, B)               -> a computed #rrggbb
+//   6. nested <svg class="pele-icon" ...>        -> <g transform="translate() scale()">
+//   7. <a href=...>                              -> <g>  (links are useless in a Skia view)
+//   8. <image href="http...">                    -> removed (cannot be fetched by the renderer)
+//   9. font-family="monospace" and other generic -> the real font names given by
+//      family names                                 --gt-font-mono / --gt-font-sans / --gt-font-serif
 //
-// 使い方:
+// Usage:
 //   node pele2svg.mjs input.mmd output.svg [theme.json]
 //   node pele2svg.mjs --batch sources.json outdir [theme.json]
 //       sources.json = [{"name":"flowchart-1","source":"flowchart LR\n A-->B"}, ...]
-//   9. font-family="monospace" 等の総称名    → --gt-font-mono 等で指定した実フォント名
-// theme.json 例: {"--pele-bg":"#fffcf0","--pele-fg":"#100f0f","--pele-accent":"#205ea6",
-//                 "--gt-font-mono":"Consolas"}
+// theme.json example: {"--pele-bg":"#fffcf0","--pele-fg":"#100f0f","--pele-accent":"#205ea6",
+//                      "--gt-font-mono":"Consolas"}
 import { readFileSync, writeFileSync, mkdirSync, realpathSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
 // ---------- var() ----------
-// var(--name) / var(--name, fallback)。fallback は括弧1段まで許容 (rgb(...) など)
+// var(--name) / var(--name, fallback). The fallback may contain one level of parentheses, e.g. rgb(...).
 const VAR_RE = /var\(\s*(--[\w-]+)\s*(?:,\s*((?:[^()]|\([^()]*\))*))?\)/g;
 
 export function resolveVars(str, vars) {
@@ -36,7 +39,7 @@ export function resolveVars(str, vars) {
   return str;
 }
 
-// ---------- 色 ----------
+// ---------- colors ----------
 const NAMED = { white: [255, 255, 255], black: [0, 0, 0] };
 function parseColor(s) {
   s = s.trim().toLowerCase();
@@ -51,12 +54,12 @@ function parseColor(s) {
 }
 const hex = rgb => '#' + rgb.map(v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0')).join('');
 
-// color-mix(in srgb, A p%, B q%)  (sRGB の単純な線形補間。不透明色のみ対応)
+// color-mix(in srgb, A p%, B q%)  (plain linear interpolation in sRGB; opaque colors only)
 const MIX_RE = /color-mix\(\s*in\s+srgb\s*,\s*((?:#[0-9a-fA-F]{3,6}|rgb\([^)]*\)|[a-z]+))(?:\s+([\d.]+)%)?\s*,\s*((?:#[0-9a-fA-F]{3,6}|rgb\([^)]*\)|[a-z]+))(?:\s+([\d.]+)%)?\s*\)/g;
 function resolveColorMix(str, warnings) {
   return str.replace(MIX_RE, (whole, c1, p1, c2, p2) => {
     const a = parseColor(c1), b = parseColor(c2);
-    if (!a || !b) { warnings.push(`color-mix を解決できません: ${whole}`); return whole; }
+    if (!a || !b) { warnings.push(`cannot resolve color-mix: ${whole}`); return whole; }
     let w1 = p1 !== undefined ? +p1 : p2 !== undefined ? 100 - +p2 : 50;
     let w2 = p2 !== undefined ? +p2 : 100 - w1;
     const sum = w1 + w2; w1 /= sum; w2 /= sum;
@@ -64,7 +67,7 @@ function resolveColorMix(str, warnings) {
   });
 }
 
-// ---------- タグ単位の処理 ----------
+// ---------- per-tag processing ----------
 const TAG_RE = /<([a-zA-Z][\w:-]*)((?:\s+[\w:-]+="[^"]*")*)\s*(\/?)>/g;
 const ATTR_RE = /([\w:-]+)="([^"]*)"/g;
 const parseAttrs = s => [...s.matchAll(ATTR_RE)].map(m => [m[1], m[2]]);
@@ -82,13 +85,13 @@ function styleToAttrs(attrs) {
     let value = d.slice(j + 1).trim().replace(/\s*!important$/, '');
     if ((name === 'rx' || name === 'ry') && /px$/.test(value)) value = value.slice(0, -2);
     const k = out.findIndex(([n]) => n === name);
-    if (k >= 0) out.splice(k, 1); // CSS は属性より強い → 同名の属性は置き換える
+    if (k >= 0) out.splice(k, 1); // CSS wins over attributes, so an existing attribute of the same name is replaced
     out.push([name, value]);
   }
   return out;
 }
 
-// 入れ子 <svg x y width height viewBox> → <g transform>
+// nested <svg x y width height viewBox>  ->  <g transform>
 function nestedSvgToG(attrs) {
   const get = n => attrs.find(([k]) => k === n)?.[1];
   const vb = get('viewBox')?.trim().split(/[\s,]+/).map(Number);
@@ -96,7 +99,7 @@ function nestedSvgToG(attrs) {
   const w = parseFloat(get('width')), h = parseFloat(get('height'));
   let t = `translate(${x} ${y})`;
   if (vb && vb.length === 4 && w > 0 && h > 0) {
-    const s = Math.min(w / vb[2], h / vb[3]); // preserveAspectRatio=xMidYMid meet 相当
+    const s = Math.min(w / vb[2], h / vb[3]); // equivalent to preserveAspectRatio=xMidYMid meet
     const dx = (w - vb[2] * s) / 2 - vb[0] * s, dy = (h - vb[3] * s) / 2 - vb[1] * s;
     t = `translate(${+(x + dx).toFixed(4)} ${+(y + dy).toFixed(4)}) scale(${+s.toFixed(6)})`;
   }
@@ -109,7 +112,7 @@ export function flatten(svg, theme = {}) {
   const warnings = [];
   const vars = { ...theme };
 
-  // 1. ルート <svg> の style から変数を集める
+  // 1. Collect custom properties from the style of the root <svg>
   const rootMatch = svg.match(/^<svg\b[^>]*?\sstyle="([^"]*)"/);
   if (rootMatch) {
     const decls = rootMatch[1].split(';').map(s => s.trim()).filter(Boolean);
@@ -123,24 +126,24 @@ export function flatten(svg, theme = {}) {
     for (const [k, v] of Object.entries(raw)) if (vars[k] === undefined) vars[k] = resolveVars(v, vars);
     const ff = decls.find(d => d.startsWith('font-family:'));
     const fontFamily = ff ? resolveVars(ff.slice('font-family:'.length).trim(), vars) : 'sans-serif';
-    // 属性値の中の " は XML 的に不正なので &quot; にする
+    // a raw " inside an attribute value is invalid XML, so escape it as &quot;
     svg = svg.replace(/^(<svg\b[^>]*?)\sstyle="[^"]*"/,
       `$1 font-family="${fontFamily.replace(/"/g, '&quot;')}" font-size="16"`);
   }
   const fg = vars['--_fg'] ?? vars['--pele-fg'] ?? '#000000';
 
-  // 2. 残りの var() を全部解決し、currentColor は前景色にする
+  // 2. Resolve every remaining var(), and turn currentColor into the foreground color
   svg = resolveVars(svg, vars);
   svg = svg.replace(/currentColor/g, fg);
 
-  // 3. 入れ子 <svg>(アイコン) → <g>。ルート以外の <svg ...> と </svg> を対応づけて置換
+  // 3. Nested <svg> (icons) -> <g>: pair every non-root <svg ...> with its </svg>
   let depth = 0;
   svg = svg.replace(/<svg\b((?:\s+[\w:-]+="[^"]*")*)\s*>|<\/svg>/g, (m, a) => {
     if (m === '</svg>') return --depth === 0 ? m : '</g>';
     return depth++ === 0 ? m : `<g${buildAttrs(nestedSvgToG(parseAttrs(a)))}>`;
   });
 
-  // 4. タグごとに style → 属性
+  // 4. style -> attributes, tag by tag
   svg = svg.replace(TAG_RE, (m, tag, a, selfClose) => {
     if (!/\sstyle="/.test(a)) return m;
     return `<${tag}${buildAttrs(styleToAttrs(parseAttrs(a)))}${selfClose ? '/' : ''}>`;
@@ -149,19 +152,19 @@ export function flatten(svg, theme = {}) {
   // 5. color-mix()
   svg = resolveColorMix(svg, warnings);
 
-  // 6. <a> → <g>
+  // 6. <a> -> <g>
   svg = svg.replace(/<a\b((?:\s+[\w:-]+="[^"]*")*)\s*>/g, '<g>').replace(/<\/a>/g, '</g>');
 
-  // 7. 外部 URL の <image>
+  // 7. <image> with an external URL
   svg = svg.replace(/<image\b[^>]*\shref="https?:[^"]*"[^>]*\/>|<image\b[^>]*\shref="https?:[^"]*"[^>]*>\s*<\/image>/g, () => {
-    warnings.push('外部 URL の <image> を削除しました');
+    warnings.push('removed an <image> with an external URL');
     return '';
   });
 
-  // 7b. 総称フォント名 → 実フォント名
-  //     Skia の SVG は monospace / sans-serif などの総称名を解決しないことがある。
-  //     theme に --gt-font-mono / --gt-font-sans / --gt-font-serif を渡すと置き換える。
-  //     (Skia は font-family を1つの名前として扱う可能性があるため、候補リストではなく単一名を推奨)
+  // 7b. Generic font family names -> real font names
+  //     Skia's SVG module may not resolve generic names such as monospace / sans-serif.
+  //     Pass --gt-font-mono / --gt-font-sans / --gt-font-serif in the theme to replace them.
+  //     (Skia may treat font-family as a single name, so give one name rather than a fallback list.)
   const generic = {
     monospace: vars['--gt-font-mono'],
     'sans-serif': vars['--gt-font-sans'],
@@ -172,10 +175,10 @@ export function flatten(svg, theme = {}) {
     return to ? `font-family="${to.replace(/"/g, '&quot;')}"` : m;
   });
 
-  // 8. 取りこぼしの検査
-  if (/var\(/.test(svg)) warnings.push('解決できない var() が残っています');
-  if (/<style\b/i.test(svg)) warnings.push('<style> が残っています');
-  if (/color-mix\(/.test(svg)) warnings.push('color-mix() が残っています');
+  // 8. Check for anything left behind
+  if (/var\(/.test(svg)) warnings.push('unresolved var() left in the output');
+  if (/<style\b/i.test(svg)) warnings.push('<style> left in the output');
+  if (/color-mix\(/.test(svg)) warnings.push('color-mix() left in the output');
   return { svg, warnings };
 }
 
@@ -197,10 +200,10 @@ async function main(argv) {
         if (flat.warnings.length) { warned++; console.error(`${name}: ${[...new Set(flat.warnings)].join(' / ')}`); }
       } catch (e) {
         failed++;
-        console.error(`${name}: 変換失敗 ${e.message}`);
+        console.error(`${name}: conversion failed: ${e.message}`);
       }
     }
-    console.log(`ok=${ok} failed=${failed} withWarnings=${warned} → ${outDir}`);
+    console.log(`ok=${ok} failed=${failed} withWarnings=${warned} -> ${outDir}`);
   } else {
     const [inFile, outFile, themeFile] = argv;
     const { svg } = render(readFileSync(inFile, 'utf8'));
@@ -211,11 +214,11 @@ async function main(argv) {
   }
 }
 
-const USAGE = `使い方:
+const USAGE = `Usage:
   pele2svg input.mmd output.svg [theme.json]
   pele2svg --batch sources.json outdir [theme.json]`;
 
-// 直接実行されたときだけ CLI を動かす (npm の bin はシンボリックリンクなので realpath で比較)
+// Run the CLI only when executed directly (npm bins are symlinks, so compare real paths)
 const isMain = (() => {
   try { return process.argv[1] && pathToFileURL(realpathSync(process.argv[1])).href === import.meta.url; }
   catch { return false; }

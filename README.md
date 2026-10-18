@@ -1,76 +1,77 @@
 # pele2svg
 
-[pele](https://github.com/obsidianmd/pele)(Mermaid → SVG)が出力する SVG を、**CSS エンジンを持たないレンダラー**
-(Skia の SVG モジュール、GToolkit の `BlSkiaSvgElement` など)でも正しく描ける素朴な SVG に変換します。
+Turn the SVG produced by [pele](https://github.com/obsidianmd/pele) (a fast Mermaid → SVG renderer) into **plain SVG
+that renderers without a CSS engine can draw** — Skia's SVG module, and with it GToolkit's `BlSkiaSvgElement`.
 
-*Converts pele's CSS-variable-based SVG into plain SVG with presentation attributes only, for renderers without a CSS engine (Skia SVG / GToolkit).*
+## Why
 
-## なぜ必要か
+pele writes colors and fonts as CSS: custom properties (`fill="var(--_s)"`), `style` attributes, `color-mix()`,
+`currentColor`, and so on. Renderers without a CSS engine can't resolve `var()`, so the diagram comes out
+**all black** (that is what a renderer with no CSS variable support, resvg, draws for the raw output).
+In `BlSkiaSvgElement` (Glamorous Toolkit) a minimal test showed that declarations inside a `style` attribute are
+honored, while rules in a `<style>` element are ignored.
 
-pele は色やフォントを CSS 変数(`fill="var(--_s)"` など)で書き出します。CSS エンジンのないレンダラーでは
-`var()` が解決されず、図形が**すべて黒塗り**になります。`BlSkiaSvgElement` で確かめた範囲では、
-`style` 属性の中の宣言は解釈される一方で、`<style>` 要素や `var()` は解釈されませんでした。
+`pele2svg` runs pele, then rewrites everything CSS-related as SVG presentation attributes.
 
-## 変換の内容
+## What it converts
 
-| 変換前 | 変換後 |
+| Before | After |
 |---|---|
-| `var(--x, fallback)` | 実際の値(`--pele-*` はテーマで上書き可) |
-| ルート `<svg>` の `style`(`font:` など) | `font-family` / `font-size` 属性 |
-| `style="fill:..;stroke:..;rx:.."` | 同名の属性(同名の属性が既にあれば置き換え) |
-| `currentColor` | 前景色 |
-| `color-mix(in srgb, A p%, B)` | 計算済みの `#rrggbb` |
-| 入れ子の `<svg>`(アイコン) | `<g transform="translate() scale()">` |
+| `var(--x, fallback)` | the actual value (`--pele-*` can be overridden with a theme) |
+| `style` on the root `<svg>` (`font:` …) | `font-family` / `font-size` attributes |
+| `style="fill:..;stroke:..;rx:.."` | attributes of the same name (existing ones are replaced, as in CSS) |
+| `currentColor` | the foreground color |
+| `color-mix(in srgb, A p%, B)` | a computed `#rrggbb` |
+| nested `<svg>` (icons) | `<g transform="translate() scale()">` |
 | `<a href>` | `<g>` |
-| 外部 URL の `<image>` | 削除(警告を出力) |
-| `font-family="monospace"` など | `--gt-font-mono` などで指定した実フォント名 |
+| `<image>` with an external URL | removed (a warning is printed) |
+| `font-family="monospace"` etc. | the font name you give in the theme (see [Fonts](#fonts)) |
 
-## インストール
+## Install
 
 ```sh
-npm install pele2svg        # pele も一緒に入ります (Node.js 18 以上 / bun でも可)
+npm install pele2svg        # also installs pele; Node.js 18+ (bun works too)
 ```
 
-リポジトリから直接使う場合:
+Or from a clone:
 
 ```sh
-git clone <this repo> && cd pele2svg && npm install
+git clone https://github.com/iriyak/pele2svg.git && cd pele2svg && npm install
 ```
 
-## 使い方
+## Usage
 
 ```sh
-# 1 ファイル
+# one file
 npx pele2svg input.mmd output.svg [theme.json]
 
-# まとめて変換: sources.json = [{"name":"flow-1","source":"flowchart LR\n A-->B"}, ...]
+# many at once: sources.json = [{"name":"flow-1","source":"flowchart LR\n A-->B"}, ...]
 npx pele2svg --batch sources.json outdir [theme.json]
 ```
 
-ライブラリとして:
+As a library:
 
 ```js
 import { render } from 'pele';
 import { flatten } from 'pele2svg';
 
-const { svg } = flatten(render('flowchart LR\n A-->B').svg, { '--gt-font-mono': 'Consolas' });
-// flatten は { svg, warnings } を返します
+const { svg, warnings } = flatten(render('flowchart LR\n A-->B').svg, { '--gt-font-mono': 'Consolas' });
 ```
 
-### テーマ
+### Themes
 
-`theme.json` で pele の CSS 変数を上書きできます(`themes/` に例があります)。
+A theme is a JSON object that overrides pele's CSS variables (examples in [`themes/`](themes)):
 
 ```json
 {"--pele-bg":"#fffcf0","--pele-fg":"#100f0f","--pele-surface":"#f2f0e5","--pele-border":"#cecdc3","--pele-accent":"#205ea6"}
 ```
 
-### フォント
+### Fonts
 
-Skia の SVG は `monospace` のような総称名を実フォントに解決できないことがあります
-(GToolkit では `monospace` が効かず、既定フォントで描かれました)。次のキーで実フォント名に置き換えます。
+Skia's SVG module could not resolve the generic family name `monospace` (in GToolkit, text set in
+`monospace` was drawn in the default font). Map generic names to real font names with these keys:
 
-| キー | 置き換える総称名 |
+| Key | Replaces |
 |---|---|
 | `--gt-font-mono` | `monospace` |
 | `--gt-font-sans` | `sans-serif` |
@@ -80,13 +81,16 @@ Skia の SVG は `monospace` のような総称名を実フォントに解決で
 {"--gt-font-mono":"Consolas"}
 ```
 
-- `themes/gt-windows.json` は Windows 用の例です。macOS なら `Menlo`、Linux なら `DejaVu Sans Mono` などに変えてください。
-- `font-family` は候補リストではなく、**フォント名を 1 つだけ**にしてください。
-- 同じテキストでも pele は文字幅を自前で測っています。`sans-serif` を別のフォントにすると、ラベルが枠に収まらなくなることがあります。
+- [`themes/gt-windows.json`](themes/gt-windows.json) is a Windows example. Use `Menlo` on macOS or `DejaVu Sans Mono` on most Linux systems.
+- Give **a single font name**, not a fallback list: Skia may treat the whole string as one name.
+- pele measures text widths itself. Replacing `sans-serif` with a font of different metrics can make labels overflow their boxes, so
+  only `monospace` is mapped in the example theme.
+- In pele's own examples, `monospace` is used by `eventmodeling` and `railroad`; `sans-serif` is the root font everywhere;
+  `serif` is not used.
 
-## GToolkit で使う
+## Using it from GToolkit
 
-SVG を作ってから、`BlSkiaSvgElement` に渡します。
+Generate the SVG, then hand it to `BlSkiaSvgElement`:
 
 ```smalltalk
 svg := (FileLocator home / 'Downloads' / 'eventmodeling-1.svg') contents.
@@ -95,29 +99,37 @@ BlSkiaSvgElement new
     size: 400 asPoint.
 ```
 
-Mermaid から直接つなぐ場合は、`pele2svg` を外部プロセスとして呼び、標準出力ではなくファイルに書き出した SVG を読む形が簡単です。
+To go from Mermaid text to a view, run `pele2svg` as an external process and read back the file it writes.
 
-## 確認範囲
+## What has been checked
 
-pele の例(<https://pele.run/examples>)の 32 種別、トップに並ぶ 58 件と各種別ページの 520 件(計 578 件)で、次を確認しています。
+Using pele's published examples ([pele.run/examples](https://pele.run/examples)) — 32 diagram types, 58 featured examples
+plus the 520 documentation examples on the per-type pages (578 in total):
 
-- すべて変換でき、`var()`、`style` 属性、`<style>`、`currentColor`、`color-mix()`、入れ子の `<svg>`、`<a>` が残らないこと
-- すべて XML として正しいこと(`xmllint`)
-- GToolkit(Skia)と WebView2 の描画を目視で比べ、次が同等に出ること: 色、`tspan` / `text-anchor`、太字・斜体、角丸、矢印、破線、半透明の重なり、回転した文字、アイコン、楕円・多角形、`« »` などの文字、等幅フォント(Consolas に置換)
+- All of them convert, and none keeps a `var()`, `style` attribute, `<style>` element, `currentColor`,
+  `color-mix()`, nested `<svg>` or `<a>`.
+- All outputs are well-formed XML (`xmllint`).
+- Rendered with a renderer that has no CSS variable support (resvg): the raw pele output is all black, the converted output is correct.
+- Compared by eye in GToolkit (Skia) and in WebView2 on Windows, they match for: colors, `tspan` / `text-anchor`, bold and
+  italic text, rounded corners, arrowheads, dashed lines, translucent overlaps, rotated text, icons, ellipses and polygons,
+  characters such as `« »` and `ʻ`, and monospace text (replaced by Consolas).
 
-未確認の点:
+Not verified:
 
-- 日本語など全角文字を含む図。pele は文字幅を自前で測るため、全角の幅の見積もりが GT のフォントと合わず、ラベルが枠からずれる可能性があります。
-- 外部 URL の `<image>` は削除されます(flowchart の例で 1 件)。
+- Diagrams with Japanese or other full-width text. pele measures text itself, so label boxes may not fit full-width glyphs
+  in the font GT picks.
+- One `<image>` with an external URL (a flowchart example) is removed.
+- The converted SVG keeps pele's intrinsic `width`/`height`; how it is scaled depends on the viewer.
 
-## テスト
+## Development
 
 ```sh
+npm install
 npm test
 ```
 
-`examples/` に Mermaid のソースと、変換後の SVG(Windows 用フォント置換つき)の例が入っています。
+[`examples/`](examples) has Mermaid sources and the converted SVGs (with the Consolas font mapping).
 
-## ライセンス
+## License
 
-MIT。pele も MIT ライセンスです。このリポジトリは pele のコードを含まず、pele が出力した SVG を後処理するだけです。
+MIT. pele is MIT-licensed too; this repository contains no pele code, it only post-processes pele's output.
