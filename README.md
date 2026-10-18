@@ -52,7 +52,23 @@ You need [Node.js](https://nodejs.org/) 20 or later (pele needs it). [Bun](https
    Pele2svg installDependencies
    ```
 
-3. **Try it:**
+3. **Add the Lepiter notebook, once.** The repository has a Lepiter database with a *Getting started* page.
+   This registers it with Lepiter:
+
+   ```smalltalk
+   #BaselineOfPele2svg asClass loadLepiter
+   ```
+
+4. **Open the Getting started page.** Evaluate this and look at the page that comes back:
+
+   ```smalltalk
+   aDatabaseName := 'iriyak/pele2svg/lepiter'.
+   aDatabase := LeDatabasesRegistry defaultLogicalDatabase databases
+       detect: [ :each | (each databaseName copyReplaceAll: '\' with: '/') = aDatabaseName ].
+   aPage := aDatabase pageNamed: 'Getting started with pele2svg in GT'
+   ```
+
+5. **Try it**, here or with the snippets on that page:
 
    ```smalltalk
    Pele2svg new asElement: 'flowchart LR
@@ -75,6 +91,8 @@ Pele2svg new
 ```
 
 (Running `npm install` yourself in that directory does the same.)
+
+The Lepiter notebook (steps 3 and 4) is registered from the Iceberg clone, so it is available only with the Iceberg route.
 
 ## Using it
 

@@ -5,6 +5,23 @@ Class {
 	#package : 'BaselineOfPele2svg'
 }
 
+{ #category : 'lepiter' }
+BaselineOfPele2svg class >> loadLepiter [
+	"Register the lepiter/ folder of this repository with the default logical Lepiter database and reload it,
+	 so that the 'Getting started with pele2svg in GT' page shows up in Lepiter. Requires the repository to be
+	 loaded into Iceberg (as 'pele2svg'), which Metacello does."
+
+	IceRepository registry
+		detect: [ :aRepository | aRepository name = 'pele2svg' ]
+		ifFound: [ :aRepository |
+			| defaultDatabase |
+			defaultDatabase := LeDatabasesRegistry defaultLogicalDatabase.
+			defaultDatabase properties
+				addRegisteredDirectory: aRepository repositoryDirectory / 'lepiter'.
+			defaultDatabase reload ]
+		ifNone: [ self inform: 'Repository pele2svg not found in Iceberg.' ]
+]
+
 { #category : 'baseline' }
 BaselineOfPele2svg >> baseline: spec [
 	<baseline>
