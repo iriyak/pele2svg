@@ -29,17 +29,39 @@ honored, while rules in a `<style>` element are ignored.
 
 ## Install
 
+Requires [Node.js](https://nodejs.org/) 20 or later (pele itself needs it). Bun has not been tested.
+
+pele2svg is **not on the npm registry yet** and has no versioned releases; the API and options may still change.
+Install it straight from GitHub. (npm records the exact commit in `package-lock.json`, so a project that uses it stays reproducible.)
+
+Run it once, without installing anything:
+
 ```sh
-npm install pele2svg        # also installs pele; Node.js 18+ (bun works too)
+npx github:iriyak/pele2svg input.mmd output.svg
 ```
 
-Or from a clone:
+Add it to a project (this also installs pele):
 
 ```sh
-git clone https://github.com/iriyak/pele2svg.git && cd pele2svg && npm install
+npm install github:iriyak/pele2svg
+npx pele2svg input.mmd output.svg
 ```
+
+Or work from a clone — for development, or to run the tests:
+
+```sh
+git clone https://github.com/iriyak/pele2svg.git
+cd pele2svg
+npm install
+node pele2svg.mjs input.mmd output.svg
+```
+
+If `github:` fails because SSH is not set up, use the HTTPS form: `npm install git+https://github.com/iriyak/pele2svg.git`.
 
 ## Usage
+
+In the commands below, write `npx github:iriyak/pele2svg` instead of `npx pele2svg` if you have not installed it,
+or `node pele2svg.mjs` if you work from a clone.
 
 ```sh
 # one file
@@ -53,7 +75,7 @@ As a library:
 
 ```js
 import { render } from 'pele';
-import { flatten } from 'pele2svg';
+import { flatten } from 'pele2svg';      // from a clone: import { flatten } from './pele2svg.mjs';
 
 const { svg, warnings } = flatten(render('flowchart LR\n A-->B').svg, { '--gt-font-mono': 'Consolas' });
 ```
