@@ -1,6 +1,14 @@
 MIT License
 
-Copyright (c) 2026 Kazunori Iriya
+Copyright (c) 2026 kepano (pele, https://github.com/obsidianmd/pele)
+Copyright (c) 2026 Kazunori Iriya (pele2svg post-processing and GToolkit adaptation)
+
+pele is the work of its original author, who holds the copyright in it; its own
+license is at https://github.com/obsidianmd/pele/blob/main/LICENSE. This repository
+does not contain pele's code (it is installed with npm). It does contain material
+taken from pele - the example diagram sources under test/fixtures - which is used
+under pele's MIT License. The conversion script, the Pharo package, the tests, the
+themes, the documentation and the converted examples are by Kazunori Iriya.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
