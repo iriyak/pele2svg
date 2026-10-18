@@ -122,16 +122,23 @@ Set these on the instance before rendering, as `theme:` is set above.
 
 ### Showing an SVG file you already have
 
-Give the file's contents straight to Skia:
+Give the file's contents straight to Skia. The repository's [`examples/`](examples) folder has three converted diagrams;
+`Pele2svg repositoryDirectory` is the Iceberg clone:
 
 ```smalltalk
 BlSkiaSvgElement new
-    svg: (FileLocator home / 'Downloads' / 'eventmodeling-1.svg') contents;
-    size: 400 asPoint.
+	svg: (Pele2svg repositoryDirectory / 'examples' / 'eventmodeling-1.svg') contents.
+
+BlSkiaSvgElement new
+	svg: (Pele2svg repositoryDirectory / 'examples' / 'architecture-2.svg') contents.
+
+BlSkiaSvgElement new
+	svg: (Pele2svg repositoryDirectory / 'examples' / 'sequence-1.svg') contents.
 ```
 
 The package also adds an `SvgInWeb` view to `.svg` files in the GT inspector
-(`AbstractFileReference>>#gtSvgInWebViewFor:`), which shows the file in WebView2 next to the Skia view.
+(`AbstractFileReference>>#gtSvgInWebViewFor:`), which shows the file in WebView2 next to the Skia view. Evaluate
+`Pele2svg repositoryDirectory / 'examples' / 'sequence-1.svg'` and look at the result to see both views.
 
 ### Examples
 

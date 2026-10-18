@@ -28,11 +28,8 @@ Class {
 { #category : 'defaults' }
 Pele2svg class >> defaultScript [
 	"The pele2svg.mjs inside the Iceberg clone of the pele2svg repository."
-	| repo file |
-	repo := IceRepository registry
-		detect: [ :each | each name = 'pele2svg' ]
-		ifNone: [ Pele2svgError signal: 'No Iceberg repository named pele2svg; set #script: explicitly' ].
-	file := repo location / 'pele2svg.mjs'.
+	| file |
+	file := self repositoryDirectory / 'pele2svg.mjs'.
 	file exists ifFalse: [ Pele2svgError signal: 'Not found: ', file fullName ].
 	^ file fullName
 ]
@@ -41,6 +38,16 @@ Pele2svg class >> defaultScript [
 Pele2svg class >> installDependencies [
 	"Install pele (npm install) in the directory of pele2svg.mjs. Run it once after loading the package."
 	^ self new installDependencies
+]
+
+{ #category : 'defaults' }
+Pele2svg class >> repositoryDirectory [
+	"The directory of the Iceberg clone of the pele2svg repository."
+	| repository |
+	repository := IceRepository registry
+		detect: [ :each | each name = 'pele2svg' ]
+		ifNone: [ Pele2svgError signal: 'No Iceberg repository named pele2svg; set #script: explicitly' ].
+	^ repository location
 ]
 
 { #category : 'accessing' }
