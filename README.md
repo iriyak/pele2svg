@@ -39,10 +39,13 @@ You need [Node.js](https://nodejs.org/) 20 or later (pele needs it). [Bun](https
 
    ```smalltalk
    Metacello new
-       repository: 'github://iriyak/pele2svg:main/src';
+       repository: 'github://iriyak/pele2svg:v0.1.0/src';
        baseline: 'Pele2svg';
        load
    ```
+
+   `v0.1.0` is the tag of the [release](https://github.com/iriyak/pele2svg/releases/tag/v0.1.0). Write `main` instead
+   to follow the latest development version.
 
 2. **Install pele, once.** The Pharo class only calls `pele2svg.mjs`, so pele has to be installed next to it.
    This runs `npm install` in the Iceberg clone (`bun install` if you set `runtime: 'bun'`) and does nothing if pele is
