@@ -1466,12 +1466,8 @@ Pele2svgExamples >> quadrantChart [
 
 { #category : 'private' }
 Pele2svgExamples >> renderer [
-	"The converter used by all examples. Consolas replaces the generic monospace family on Windows."
-	| renderer |
-	renderer := Pele2svg new.
-	OSPlatform current isWindows ifTrue: [
-		renderer theme: { '--gt-font-mono' -> 'Consolas' } asDictionary ].
-	^ renderer
+	"The converter used by all examples."
+	^ Pele2svg new
 ]
 
 { #category : 'examples' }

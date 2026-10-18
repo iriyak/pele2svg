@@ -7,7 +7,7 @@ I convert Mermaid source to a GToolkit-friendly SVG string by running pele2svg (
 
 script: path to pele2svg.mjs (default: the Iceberg clone of pele2svg).
 runtime: executable, 'node' by default ('bun' also works).
-theme: nil, a path to a theme JSON file, or a Dictionary of theme variables.
+theme: nil (default), a path to a theme JSON file, or a Dictionary of theme variables. Generic font families such as monospace are left as they are.
 timeout: milliseconds, 30000 by default.
 installDependencies installs pele (npm install, or bun install) in the directory of the script, unless it is already there.
 Failures signal Pele2svgError.
@@ -159,14 +159,19 @@ Pele2svg >> theme [
 
 { #category : 'accessing' }
 Pele2svg >> theme: nilOrPathOrDictionary [
+	"Theme variables for pele2svg: nil, the path of a theme JSON file, or a Dictionary. See docs/standalone.md."
 	theme := nilOrPathOrDictionary
 ]
 
-{ #category : 'accessing' }
+{ #category : 'private' }
 Pele2svg >> themeArgumentIn: aDirectory [
+	"Answer the theme arguments for the command line: none, or the path of a theme file."
 	| file |
 	theme ifNil: [ ^ #() ].
-	theme isDictionary ifFalse: [ ^ { theme asFileReference fullName } ].
+	theme isDictionary ifFalse: [
+		file := theme asFileReference.
+		file exists ifFalse: [ Pele2svgError signal: 'Theme file not found: ', file fullName ].
+		^ { file fullName } ].
 	file := aDirectory / 'theme.json'.
 	file binaryWriteStreamDo: [ :s | s nextPutAll: (NeoJSONWriter toString: theme) utf8Encoded ].
 	^ { file fullName }
