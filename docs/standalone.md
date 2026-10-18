@@ -73,8 +73,10 @@ examples: `--pele-fg`, `--pele-surface` and `--pele-border` changed the sequence
 
 ## Fonts
 
-Font families are left as pele wrote them (`monospace`, `sans-serif`). To use another font, map the generic
-names to real font names with these keys in a theme:
+Font families are left as pele wrote them (`monospace`, `sans-serif`). A renderer such as WebView2 resolves the
+generic names itself; Skia (`BlSkiaSvgElement`) does not resolve `monospace` (on Windows the text came out
+proportional). To get a monospace font there, or to use another font, map the generic names to real font names with
+these keys in a theme:
 
 | Key | Replaces |
 |---|---|
@@ -86,7 +88,7 @@ names to real font names with these keys in a theme:
 {"--gt-font-mono":"Consolas"}
 ```
 
-- [`themes/gt-windows.json`](../themes/gt-windows.json) maps `monospace` to `Consolas`. On Windows, GToolkit (Skia) and WebView2 drew `monospace` and `Consolas` with the same font, so the mapping is optional there; other platforms have not been looked at.
+- [`themes/gt-windows.json`](../themes/gt-windows.json) maps `monospace` to `Consolas`, for Skia on Windows. Other platforms have not been looked at.
 - Give **a single font name**, not a fallback list: Skia may treat the whole string as one name.
 - pele measures text widths itself. Replacing `sans-serif` with a font of different metrics can make labels overflow their boxes, so
   the example theme maps only `monospace`.

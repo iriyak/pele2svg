@@ -28,7 +28,7 @@ In `BlSkiaSvgElement` a minimal test showed that declarations inside a `style` a
 | nested `<svg>` (icons) | `<g transform="translate() scale()">` |
 | `<a href>` | `<g>` |
 | `<image>` with an external URL | removed (a warning is printed) |
-| `font-family="monospace"` etc. | kept as it is; a theme can map it to another font (see [Fonts in GToolkit](#fonts-in-gtoolkit)) |
+| `font-family="monospace"` etc. | kept as it is; map it to a real font with a theme (see [Fonts in GToolkit](#fonts-in-gtoolkit)) |
 
 ## Getting started in GToolkit
 
@@ -148,9 +148,11 @@ look at the results.
 
 ### Fonts in GToolkit
 
-Font families are left as pele wrote them: text set in `monospace` stays `monospace`, `sans-serif` stays `sans-serif`.
-On Windows, `BlSkiaSvgElement` and WebView2 (Edge) drew `monospace` text with the same font, and the WebView2 inspector
-showed that font to be the one `Consolas` gives. Other platforms have not been looked at.
+Font families are left as pele wrote them: `monospace` stays `monospace`, `sans-serif` stays `sans-serif`.
+WebView2 draws `monospace` text in a monospace font, but `BlSkiaSvgElement` does not: on Windows the text came out
+proportional. To get monospace text in Skia, map `monospace` to a real font name in the theme (`Consolas` on Windows;
+the other platforms have not been looked at). Only some diagram types use `monospace`, such as event modeling; a
+flowchart is all `sans-serif`.
 
 To use another font, map the generic name in the theme (a single font name, not a list):
 
@@ -169,7 +171,7 @@ Pele2svg new theme: { '--gt-font-mono' -> 'Courier New' } asDictionary; asElemen
   which draws correctly.
 - Compared by eye in GToolkit (Skia) and in WebView2 on Windows, the converted SVG matches for: colors, `tspan` /
   `text-anchor`, bold and italic text, rounded corners, arrowheads, dashed lines, translucent overlaps, rotated text,
-  icons, ellipses and polygons, and `monospace` text (left as `monospace`).
+  icons, ellipses and polygons, and monospace text (with `--gt-font-mono` set to `Consolas`).
 
 Not verified: other full-width text than that one flowchart; the converted SVG keeps pele's intrinsic `width`/`height`, so
 how it is scaled depends on the viewer; one external `<image>` in a flowchart example is removed. More in

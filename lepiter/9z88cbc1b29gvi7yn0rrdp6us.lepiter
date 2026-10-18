@@ -5,10 +5,48 @@
 		"__type" : "snippets",
 		"items" : [
 			{
-				"__type" : "pharoSnippet",
+				"__type" : "textSnippet",
 				"children" : {
 					"__type" : "snippets",
-					"items" : [ ]
+					"items" : [
+						{
+							"__type" : "textSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.098+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.098+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "8O5E8RzpV0+v5JM0CoxFTw=="
+							},
+							"paragraphStyle" : {
+								"__type" : "textStyle"
+							},
+							"string" : "This page contains snippets you can try out. {{gtClass:name=Pele2svg}} turns Mermaid text into an SVG that GToolkit's Skia can draw, by running [pele](https://github.com/obsidianmd/pele) and [pele2svg](https://github.com/iriyak/pele2svg) as an external process. It needs [Node.js](https://nodejs.org/) 20 or later."
+						}
+					]
 				},
 				"createEmail" : {
 					"__type" : "email",
@@ -18,7 +56,7 @@
 					"__type" : "time",
 					"time" : {
 						"__type" : "dateAndTime",
-						"dateAndTimeString" : "2026-10-18T15:28:52.455+09:00"
+						"dateAndTimeString" : "2026-10-18T19:00:07.098+09:00"
 					}
 				},
 				"editEmail" : {
@@ -29,20 +67,240 @@
 					"__type" : "time",
 					"time" : {
 						"__type" : "dateAndTime",
-						"dateAndTimeString" : "2026-10-18T15:28:54.67+09:00"
+						"dateAndTimeString" : "2026-10-18T19:00:07.098+09:00"
 					}
 				},
 				"uid" : {
 					"__type" : "uid",
-					"uidString" : "UCKhUO/gJUqY6AaUmwjXbQ=="
+					"uidString" : "JdaCoGrs3kGBQeVmjpz97w=="
 				},
-				"code" : "1"
+				"paragraphStyle" : {
+					"__type" : "textStyle"
+				},
+				"string" : "#### About this page"
 			},
 			{
 				"__type" : "textSnippet",
 				"children" : {
 					"__type" : "snippets",
-					"items" : [ ]
+					"items" : [
+						{
+							"__type" : "textSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:14:07.283+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:14:07.283+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "vmuHqn8NsEqWh8MtmduGrA=="
+							},
+							"paragraphStyle" : {
+								"__type" : "textStyle"
+							},
+							"string" : "If you have already loaded the package, skip the first snippet: running it again reloads the package."
+						},
+						{
+							"__type" : "textSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:14:07.295+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:14:07.295+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "Xs7Q/yE+JkKUov5G5B9SzA=="
+							},
+							"paragraphStyle" : {
+								"__type" : "textStyle"
+							},
+							"string" : "The package is loaded with Metacello. It clones the repository with Iceberg under `pharo-local/iceberg/`:"
+						},
+						{
+							"__type" : "pharoSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:14:07.295+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:14:07.295+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "YY7nON60VU+5v0+BP10GGg=="
+							},
+							"code" : "Metacello new\n\trepository: 'github://iriyak/pele2svg:main/src';\n\tbaseline: 'Pele2svg';\n\tload"
+						},
+						{
+							"__type" : "textSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:14:07.295+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:14:07.295+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "WILbtQIFaEeUvwQ/hcT2Vg=="
+							},
+							"paragraphStyle" : {
+								"__type" : "textStyle"
+							},
+							"string" : "pele itself has to be installed next to the script. This runs `npm install` in the Iceberg clone, once, and does nothing if pele is already there:"
+						},
+						{
+							"__type" : "pharoSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:14:07.295+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:14:07.295+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "zHJi1qdCqUCpPoXvqNTPrw=="
+							},
+							"code" : "Pele2svg installDependencies"
+						},
+						{
+							"__type" : "textSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:14:07.295+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:14:07.295+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "3eIeK/FJtUG0B4X2+fAqHg=="
+							},
+							"paragraphStyle" : {
+								"__type" : "textStyle"
+							},
+							"string" : "If you cloned the repository with `git` yourself, point the class at the script of that clone (see the [README](https://github.com/iriyak/pele2svg#getting-started-in-gtoolkit))."
+						}
+					]
 				},
 				"createEmail" : {
 					"__type" : "email",
@@ -52,7 +310,7 @@
 					"__type" : "time",
 					"time" : {
 						"__type" : "dateAndTime",
-						"dateAndTimeString" : "2026-10-18T15:28:43.827+09:00"
+						"dateAndTimeString" : "2026-10-18T19:00:07.114+09:00"
 					}
 				},
 				"editEmail" : {
@@ -63,17 +321,1029 @@
 					"__type" : "time",
 					"time" : {
 						"__type" : "dateAndTime",
-						"dateAndTimeString" : "2026-10-18T15:28:43.827+09:00"
+						"dateAndTimeString" : "2026-10-18T19:00:07.114+09:00"
 					}
 				},
 				"uid" : {
 					"__type" : "uid",
-					"uidString" : "sOIpoaHC5UWwYLUfcK7BzA=="
+					"uidString" : "ZuuncG/SfUSB9VWJXZOpYw=="
 				},
 				"paragraphStyle" : {
 					"__type" : "textStyle"
 				},
-				"string" : ""
+				"string" : "#### Install"
+			},
+			{
+				"__type" : "textSnippet",
+				"children" : {
+					"__type" : "snippets",
+					"items" : [
+						{
+							"__type" : "textSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "bxMeTL0HokKKfuyzCusq7g=="
+							},
+							"paragraphStyle" : {
+								"__type" : "textStyle"
+							},
+							"string" : "{{gtMethod:name=Pele2svg>>asElement:}} answers a `BlSkiaSvgElement`, drawn by Skia:"
+						},
+						{
+							"__type" : "pharoSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "KewMitFbo0SQf/mzW+SOyA=="
+							},
+							"code" : "Pele2svg new asElement: 'flowchart LR\n  A --> B'"
+						},
+						{
+							"__type" : "textSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "u8o7UzV4B0yXukbBDO2usw=="
+							},
+							"paragraphStyle" : {
+								"__type" : "textStyle"
+							},
+							"string" : "{{gtMethod:name=Pele2svg>>asWebViewElement:}} answers a `GtWebViewElement`, drawn by WebView2 (the SVG may be at most 2 MB):"
+						},
+						{
+							"__type" : "pharoSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "StlWqBdfpUy+rhMQf7G34w=="
+							},
+							"code" : "Pele2svg new asWebViewElement: 'flowchart LR\n  A --> B'"
+						},
+						{
+							"__type" : "textSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "HOXPlQgLj0appuGW4lA05g=="
+							},
+							"paragraphStyle" : {
+								"__type" : "textStyle"
+							},
+							"string" : "{{gtMethod:name=Pele2svg>>render:}} answers the converted SVG as a string. A failure signals `Pele2svgError` with a one-line message."
+						},
+						{
+							"__type" : "pharoSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "ukp8TicugE6JK/0NJkZikA=="
+							},
+							"code" : "Pele2svg new render: 'flowchart LR\n  A --> B'"
+						}
+					]
+				},
+				"createEmail" : {
+					"__type" : "email",
+					"emailString" : "<unknown>"
+				},
+				"createTime" : {
+					"__type" : "time",
+					"time" : {
+						"__type" : "dateAndTime",
+						"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+					}
+				},
+				"editEmail" : {
+					"__type" : "email",
+					"emailString" : "<unknown>"
+				},
+				"editTime" : {
+					"__type" : "time",
+					"time" : {
+						"__type" : "dateAndTime",
+						"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+					}
+				},
+				"uid" : {
+					"__type" : "uid",
+					"uidString" : "rTy0P+T+EUa3FaNoDp6JfQ=="
+				},
+				"paragraphStyle" : {
+					"__type" : "textStyle"
+				},
+				"string" : "#### Showing a diagram"
+			},
+			{
+				"__type" : "textSnippet",
+				"children" : {
+					"__type" : "snippets",
+					"items" : [
+						{
+							"__type" : "textSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "DKf6kSE3i0Ct1bRNwoUMdQ=="
+							},
+							"paragraphStyle" : {
+								"__type" : "textStyle"
+							},
+							"string" : "A theme overrides pele's CSS variables. Give a Dictionary, or the path of a theme JSON file:"
+						},
+						{
+							"__type" : "pharoSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:09:19.355+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "++Jgg6XACUSh42o6V9Ybzw=="
+							},
+							"code" : "Pele2svg new\r\ttheme: {'--pele-surface' -> '#e6e8f0'.\r\t\t\t'--pele-border' -> '#205ea6'} asDictionary;\r\tasElement: 'sequenceDiagram\n  Alice->>Bob: Hello'"
+						},
+						{
+							"__type" : "textSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "D6Lii2e4g0yoHaomgpF10w=="
+							},
+							"paragraphStyle" : {
+								"__type" : "textStyle"
+							},
+							"string" : "Not every variable shows in every diagram: `--pele-accent`, for example, changes only a few diagram types (gantt, kanban, treeview and wardley among pele's featured examples). See [Themes](https://github.com/iriyak/pele2svg/blob/main/docs/standalone.md#themes)."
+						}
+					]
+				},
+				"createEmail" : {
+					"__type" : "email",
+					"emailString" : "<unknown>"
+				},
+				"createTime" : {
+					"__type" : "time",
+					"time" : {
+						"__type" : "dateAndTime",
+						"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+					}
+				},
+				"editEmail" : {
+					"__type" : "email",
+					"emailString" : "<unknown>"
+				},
+				"editTime" : {
+					"__type" : "time",
+					"time" : {
+						"__type" : "dateAndTime",
+						"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+					}
+				},
+				"uid" : {
+					"__type" : "uid",
+					"uidString" : "XdqYXiauP0SKT7TwbUopIg=="
+				},
+				"paragraphStyle" : {
+					"__type" : "textStyle"
+				},
+				"string" : "#### Theme"
+			},
+			{
+				"__type" : "textSnippet",
+				"children" : {
+					"__type" : "snippets",
+					"items" : [
+						{
+							"__type" : "textSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "91o3OBtQxE+deygREovZog=="
+							},
+							"paragraphStyle" : {
+								"__type" : "textStyle"
+							},
+							"string" : "The repository has three converted diagrams under `examples/`. {{gtMethod:name=Pele2svg class>>repositoryDirectory}} is the Iceberg clone:"
+						},
+						{
+							"__type" : "pharoSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "VZE6MKbflEm7U5UfWMAhZw=="
+							},
+							"code" : "BlSkiaSvgElement new\n\tsvg: (Pele2svg repositoryDirectory / 'examples' / 'eventmodeling-1.svg') contents."
+						},
+						{
+							"__type" : "pharoSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "NoqKqJBCzESYKf4FCzJUYg=="
+							},
+							"code" : "BlSkiaSvgElement new\n\tsvg: (Pele2svg repositoryDirectory / 'examples' / 'architecture-2.svg') contents."
+						},
+						{
+							"__type" : "pharoSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "S5KDcFMykk+NNEzs5GYhRQ=="
+							},
+							"code" : "BlSkiaSvgElement new\n\tsvg: (Pele2svg repositoryDirectory / 'examples' / 'sequence-1.svg') contents."
+						},
+						{
+							"__type" : "textSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:10:24.032+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "Y5n0D33p30idxYrqR7rvCQ=="
+							},
+							"paragraphStyle" : {
+								"__type" : "textStyle"
+							},
+							"string" : "The package also adds an `SvgInWeb` custom view to `.svg` files in the inspector. Evaluate this and look at the views:"
+						},
+						{
+							"__type" : "pharoSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "f6L7IxwahE+xzDiIhbEDnQ=="
+							},
+							"code" : "Pele2svg repositoryDirectory / 'examples' / 'sequence-1.svg'"
+						}
+					]
+				},
+				"createEmail" : {
+					"__type" : "email",
+					"emailString" : "<unknown>"
+				},
+				"createTime" : {
+					"__type" : "time",
+					"time" : {
+						"__type" : "dateAndTime",
+						"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+					}
+				},
+				"editEmail" : {
+					"__type" : "email",
+					"emailString" : "<unknown>"
+				},
+				"editTime" : {
+					"__type" : "time",
+					"time" : {
+						"__type" : "dateAndTime",
+						"dateAndTimeString" : "2026-10-18T19:00:07.129+09:00"
+					}
+				},
+				"uid" : {
+					"__type" : "uid",
+					"uidString" : "OCfqNdaMyUyd8kP7lL2sEA=="
+				},
+				"paragraphStyle" : {
+					"__type" : "textStyle"
+				},
+				"string" : "#### Showing an SVG file you already have"
+			},
+			{
+				"__type" : "textSnippet",
+				"children" : {
+					"__type" : "snippets",
+					"items" : [
+						{
+							"__type" : "textSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.145+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.145+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "NYA2AmKnvke7vdtJGbXUWA=="
+							},
+							"paragraphStyle" : {
+								"__type" : "textStyle"
+							},
+							"string" : "{{gtClass:name=Pele2svgExamples}} has one example per diagram: pele's 58 featured examples (`featured...`) and short examples of the basic diagram types, 82 in all. Open the class in the GT Coder and look at the results."
+						}
+					]
+				},
+				"createEmail" : {
+					"__type" : "email",
+					"emailString" : "<unknown>"
+				},
+				"createTime" : {
+					"__type" : "time",
+					"time" : {
+						"__type" : "dateAndTime",
+						"dateAndTimeString" : "2026-10-18T19:00:07.145+09:00"
+					}
+				},
+				"editEmail" : {
+					"__type" : "email",
+					"emailString" : "<unknown>"
+				},
+				"editTime" : {
+					"__type" : "time",
+					"time" : {
+						"__type" : "dateAndTime",
+						"dateAndTimeString" : "2026-10-18T19:00:07.145+09:00"
+					}
+				},
+				"uid" : {
+					"__type" : "uid",
+					"uidString" : "mHsQ3Az7+U+wUtcaNkYVnQ=="
+				},
+				"paragraphStyle" : {
+					"__type" : "textStyle"
+				},
+				"string" : "#### More examples"
+			},
+			{
+				"__type" : "textSnippet",
+				"children" : {
+					"__type" : "snippets",
+					"items" : [
+						{
+							"__type" : "textSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:14:07.295+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:14:07.295+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "8l6d7IsqYU62P8GLlmbL1A=="
+							},
+							"paragraphStyle" : {
+								"__type" : "textStyle"
+							},
+							"string" : "Font families are left as pele wrote them: `monospace` stays `monospace`. On Windows, Skia and WebView2 draw it with the same font. To use another font, map the generic name in the theme (a single font name)."
+						},
+						{
+							"__type" : "textSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:14:07.295+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:14:07.295+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "SpdAh2f/aE2mnHg+5VGrIg=="
+							},
+							"paragraphStyle" : {
+								"__type" : "textStyle"
+							},
+							"string" : "Only some diagram types use `monospace`: an event modeling diagram does (the `data` block), a flowchart does not, as it is all `sans-serif`. This one shows the mapping; its `data` text turns into Courier New:"
+						},
+						{
+							"__type" : "pharoSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:14:07.295+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:18:27.904+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "OG3ETTTA+ESOVupuv4Dx7w=="
+							},
+							"code" : "Pele2svg new\n\ttheme: { '--gt-font-mono' -> 'Courier New' } asDictionary;\n\tasElement: 'eventmodeling\n\ntimeframe 01 ui CartUI\ntimeframe 02 command AddItem [[Item]]\n\ndata Item {\n  description: ''john''\n  price: 20.4\n}'"
+						},
+						{
+							"__type" : "textSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:14:07.31+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:14:07.31+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "Q4vB0YtaX0uachXLX+RwsA=="
+							},
+							"paragraphStyle" : {
+								"__type" : "textStyle"
+							},
+							"string" : "Without the theme, the same text stays `monospace`:"
+						},
+						{
+							"__type" : "pharoSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:14:07.31+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:14:07.31+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "2fwwS8MzOU+vfvjS5y/P9Q=="
+							},
+							"code" : "Pele2svg new asElement: 'eventmodeling\n\ntimeframe 01 ui CartUI\ntimeframe 02 command AddItem [[Item]]\n\ndata Item {\n  description: ''john''\n  price: 20.4\n}'"
+						}
+					]
+				},
+				"createEmail" : {
+					"__type" : "email",
+					"emailString" : "<unknown>"
+				},
+				"createTime" : {
+					"__type" : "time",
+					"time" : {
+						"__type" : "dateAndTime",
+						"dateAndTimeString" : "2026-10-18T19:00:07.145+09:00"
+					}
+				},
+				"editEmail" : {
+					"__type" : "email",
+					"emailString" : "<unknown>"
+				},
+				"editTime" : {
+					"__type" : "time",
+					"time" : {
+						"__type" : "dateAndTime",
+						"dateAndTimeString" : "2026-10-18T19:00:07.145+09:00"
+					}
+				},
+				"uid" : {
+					"__type" : "uid",
+					"uidString" : "Qha81HOVcU+3X2APVf+/+Q=="
+				},
+				"paragraphStyle" : {
+					"__type" : "textStyle"
+				},
+				"string" : "#### Fonts"
+			},
+			{
+				"__type" : "textSnippet",
+				"children" : {
+					"__type" : "snippets",
+					"items" : [
+						{
+							"__type" : "textSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.145+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-18T19:00:07.145+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "1KK6rsxyokuXAcMwhS3Thg=="
+							},
+							"paragraphStyle" : {
+								"__type" : "textStyle"
+							},
+							"string" : "This is experimental, and the API may still change. Any comment and feedback are most welcome: [issues](https://github.com/iriyak/pele2svg/issues)."
+						}
+					]
+				},
+				"createEmail" : {
+					"__type" : "email",
+					"emailString" : "<unknown>"
+				},
+				"createTime" : {
+					"__type" : "time",
+					"time" : {
+						"__type" : "dateAndTime",
+						"dateAndTimeString" : "2026-10-18T19:00:07.145+09:00"
+					}
+				},
+				"editEmail" : {
+					"__type" : "email",
+					"emailString" : "<unknown>"
+				},
+				"editTime" : {
+					"__type" : "time",
+					"time" : {
+						"__type" : "dateAndTime",
+						"dateAndTimeString" : "2026-10-18T19:00:07.145+09:00"
+					}
+				},
+				"uid" : {
+					"__type" : "uid",
+					"uidString" : "YWPDhpaYykWJchRgMkATyw=="
+				},
+				"paragraphStyle" : {
+					"__type" : "textStyle"
+				},
+				"string" : "#### Comment and Feedback"
 			}
 		]
 	},
@@ -96,12 +1366,12 @@
 		"__type" : "time",
 		"time" : {
 			"__type" : "dateAndTime",
-			"dateAndTimeString" : "2026-10-18T15:28:43.717+09:00"
+			"dateAndTimeString" : "2026-10-18T18:58:06.967+09:00"
 		}
 	},
 	"pageType" : {
 		"__type" : "namedPage",
-		"title" : "Page 1"
+		"title" : "Getting started with pele2svg in GT"
 	},
 	"uid" : {
 		"__type" : "uuid",

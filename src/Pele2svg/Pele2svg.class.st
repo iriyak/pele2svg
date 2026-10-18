@@ -7,7 +7,7 @@ I convert Mermaid source to a GToolkit-friendly SVG string by running pele2svg (
 
 script: path to pele2svg.mjs (default: the Iceberg clone of pele2svg).
 runtime: executable, 'node' by default ('bun' also works).
-theme: nil (default), a path to a theme JSON file, or a Dictionary of theme variables. Generic font families such as monospace are left as they are.
+theme: nil (default), a path to a theme JSON file, or a Dictionary of theme variables. Generic font families such as monospace are left as they are; Skia does not resolve monospace (the text comes out proportional), so map it to a real font name with the theme key --gt-font-mono, e.g. { '--gt-font-mono' -> 'Consolas' } asDictionary on Windows.
 timeout: milliseconds, 30000 by default.
 installDependencies installs pele (npm install, or bun install) in the directory of the script, unless it is already there.
 Failures signal Pele2svgError.
