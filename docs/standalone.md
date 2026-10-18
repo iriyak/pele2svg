@@ -66,6 +66,11 @@ A theme is a JSON object that overrides pele's CSS variables (examples in [`them
 {"--pele-bg":"#fffcf0","--pele-fg":"#100f0f","--pele-surface":"#f2f0e5","--pele-border":"#cecdc3","--pele-accent":"#205ea6"}
 ```
 
+Not every variable shows up in every diagram. Changing each one in turn and comparing the output for pele's 58 featured
+examples: `--pele-fg`, `--pele-surface` and `--pele-border` changed the sequence diagram and the flowchart;
+`--pele-bg` changed neither (the SVG has no background of its own); `--pele-accent` changed only 5 of the 58
+(`gantt-1`, `gantt-2`, `kanban-2`, `treeview-2`, `wardley-1`).
+
 ## Fonts
 
 Font families are left as pele wrote them (`monospace`, `sans-serif`). To use another font, map the generic

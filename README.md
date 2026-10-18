@@ -96,7 +96,7 @@ Pele2svg new asWebViewElement: 'flowchart LR
   A --> B'.
 
 Pele2svg new
-    theme: { '--pele-accent' -> '#205ea6' } asDictionary;
+    theme: { '--pele-surface' -> '#e6e8f0'. '--pele-border' -> '#205ea6' } asDictionary;
     asElement: 'sequenceDiagram
   Alice->>Bob: Hello'.
 ```
