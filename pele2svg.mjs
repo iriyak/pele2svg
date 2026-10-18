@@ -229,5 +229,9 @@ if (isMain) {
     console.log(USAGE);
     process.exit(args.length === 0 ? 1 : 0);
   }
-  main(args);
+  main(args).catch(e => {
+    // one readable line instead of a Node stack trace (also useful when called from another program)
+    console.error(`pele2svg: ${e && e.message ? e.message : e}`);
+    process.exit(1);
+  });
 }
