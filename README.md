@@ -184,11 +184,13 @@ how it is scaled depends on the viewer; one external `<image>` in a flowchart ex
 ## License
 
 MIT License.
-
+```
 Copyright (c) 2026 kepano ([pele](https://github.com/obsidianmd/pele))
 Copyright (c) 2026 Kazunori Iriya (pele2svg post-processing and GToolkit adaptation)
-
+```
 pele is the work of its original author and is MIT-licensed
 ([its LICENSE](https://github.com/obsidianmd/pele/blob/main/LICENSE)). This repository contains no pele code: it
 post-processes pele's output, and pele is installed with npm. The example diagram sources in `test/fixtures` are taken
-from pele. See [LICENSE](LICENSE) for the full text.
+from pele.
+
+See [LICENSE](LICENSE) for the full text.
