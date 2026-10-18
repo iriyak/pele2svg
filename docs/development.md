@@ -2,14 +2,14 @@
 
 ## What has been checked
 
-Using pele's published examples ([pele.run/examples](https://pele.run/examples)) — 32 diagram types, 58 featured examples
+Using Pele's published examples ([pele.run/examples](https://pele.run/examples)) — 32 diagram types, 58 featured examples
 plus the 520 documentation examples on the per-type pages (578 in total):
 
 - All of them convert, and none keeps a `var()`, `style` attribute, `<style>` element, `currentColor`,
   `color-mix()`, nested `<svg>` or `<a>`. These sources are kept in `test/fixtures/` and checked by `npm test`
-  (together with 170 more from pele's own test corpus).
+  (together with 170 more from Pele's own test corpus).
 - All outputs are well-formed XML (`xmllint`; `npm test` has its own, simpler check).
-- Rendered with a renderer that has no CSS variable support (resvg): the raw pele output is all black, the converted output is correct.
+- Rendered with a renderer that has no CSS variable support (resvg): the raw Pele output is all black, the converted output is correct.
 - Compared by eye in GToolkit (Skia) and in WebView2 on Windows, they match for: colors, `tspan` / `text-anchor`, bold and
   italic text, rounded corners, arrowheads, dashed lines, translucent overlaps, rotated text, icons, ellipses and polygons,
   characters such as `« »` and `ʻ`, and monospace text (replaced by Consolas).
@@ -18,10 +18,10 @@ plus the 520 documentation examples on the per-type pages (578 in total):
 
 Not verified:
 
-- Other full-width text than that one flowchart. pele measures text itself, so label boxes may not fit full-width glyphs
+- Other full-width text than that one flowchart. Pele measures text itself, so label boxes may not fit full-width glyphs
   in every font GT picks.
 - One `<image>` with an external URL (a flowchart example) is removed.
-- The converted SVG keeps pele's intrinsic `width`/`height`; how it is scaled depends on the viewer.
+- The converted SVG keeps Pele's intrinsic `width`/`height`; how it is scaled depends on the viewer.
 
 ## Running the tests
 
@@ -33,7 +33,7 @@ npm test
 `npm test` (Node's built-in test runner, a few seconds) runs:
 
 - [`test/flatten.test.js`](../test/flatten.test.js): small unit tests of `resolveVars` and `flatten`.
-- [`test/corpus.test.js`](../test/corpus.test.js): converts every source in [`test/fixtures/`](../test/fixtures) — pele's
+- [`test/corpus.test.js`](../test/corpus.test.js): converts every source in [`test/fixtures/`](../test/fixtures) — Pele's
   58 featured examples, its 520 documentation examples and 170 sources from its own test corpus — and checks that the
   output has no `var()`, `style` attribute, `<style>`, `currentColor`, `color-mix()`, `<a>`, external `<image>` or
   nested `<svg>`, that it is well-formed, and that converting it again changes nothing. It also repeats the featured

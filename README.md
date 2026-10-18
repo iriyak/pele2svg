@@ -1,8 +1,8 @@
 # pele2svg
 
-Draw [pele](https://github.com/obsidianmd/pele) (a fast Mermaid → SVG renderer) diagrams in **GToolkit**.
+Draw [Pele](https://github.com/obsidianmd/pele) (a fast Mermaid → SVG renderer) diagrams in **GToolkit**.
 
-pele's SVG relies on CSS, which Skia's SVG module (and so GToolkit's `BlSkiaSvgElement`) does not have. `pele2svg`
+Pele's SVG relies on CSS, which Skia's SVG module (and so GToolkit's `BlSkiaSvgElement`) does not have. `pele2svg`
 turns that SVG into **plain SVG that a renderer without a CSS engine can draw**, and the Pharo package in this repository
 runs it for you: Mermaid text in, a `BlSkiaSvgElement` out.
 
@@ -10,13 +10,13 @@ This is experimental; the API and options may still change. There are no version
 
 ## Why
 
-pele writes colors and fonts as CSS: custom properties (`fill="var(--_s)"`), `style` attributes, `color-mix()`,
+Pele writes colors and fonts as CSS: custom properties (`fill="var(--_s)"`), `style` attributes, `color-mix()`,
 `currentColor`, and so on. Renderers without a CSS engine can't resolve `var()`, so the diagram comes out
 **all black** (that is what a renderer with no CSS variable support, resvg, draws for the raw output).
 In `BlSkiaSvgElement` a minimal test showed that declarations inside a `style` attribute are honored, while rules in a
 `<style>` element are ignored.
 
-`pele2svg` runs pele, then rewrites everything CSS-related as SVG presentation attributes:
+`pele2svg` runs Pele, then rewrites everything CSS-related as SVG presentation attributes:
 
 | Before | After |
 |---|---|
@@ -32,7 +32,7 @@ In `BlSkiaSvgElement` a minimal test showed that declarations inside a `style` a
 
 ## Getting started in GToolkit
 
-You need [Node.js](https://nodejs.org/) 20 or later (pele needs it). [Bun](https://bun.sh/) can run the script too.
+You need [Node.js](https://nodejs.org/) 20 or later (Pele needs it). [Bun](https://bun.sh/) can run the script too.
 
 1. **Load the Pharo package** in a GToolkit image. Metacello clones the repository with Iceberg
    (under `pharo-local/iceberg/` in the GT directory):
@@ -44,8 +44,8 @@ You need [Node.js](https://nodejs.org/) 20 or later (pele needs it). [Bun](https
        load
    ```
 
-2. **Install pele, once.** The Pharo class only calls `pele2svg.mjs`, so pele has to be installed next to it.
-   This runs `npm install` in the Iceberg clone (`bun install` if you set `runtime: 'bun'`) and does nothing if pele is
+2. **Install Pele, once.** The Pharo class only calls `pele2svg.mjs`, so Pele has to be installed next to it.
+   This runs `npm install` in the Iceberg clone (`bun install` if you set `runtime: 'bun'`) and does nothing if Pele is
    already there:
 
    ```smalltalk
@@ -76,7 +76,7 @@ You need [Node.js](https://nodejs.org/) 20 or later (pele needs it). [Bun](https
    ```
 
 If you did not get the code through Iceberg — for example, you cloned it with `git` yourself — point `Pele2svg` at the
-script in that clone. `installDependencies` then installs pele there, as it does for the Iceberg clone:
+script in that clone. `installDependencies` then installs Pele there, as it does for the Iceberg clone:
 
 ```sh
 git clone https://github.com/iriyak/pele2svg.git
@@ -173,13 +173,13 @@ The package also adds an `SvgInWeb` view to `.svg` files in the GT inspector
 
 ### Examples
 
-The class `Pele2svgExamples` has one `<gtExample>` per diagram — pele's 58 featured examples (`featured…`, with their sources copied from pele) and short
+The class `Pele2svgExamples` has one `<gtExample>` per diagram — Pele's 58 featured examples (`featured…`, with their sources copied from Pele) and short
 examples of the basic diagram types, 82 in all. Each answers a `BlSkiaSvgElement`; open the class in the GT Coder and
 look at the results.
 
 ### Fonts in GToolkit
 
-Font families are left as pele wrote them: `monospace` stays `monospace`, `sans-serif` stays `sans-serif`.
+Font families are left as Pele wrote them: `monospace` stays `monospace`, `sans-serif` stays `sans-serif`.
 WebView2 draws `monospace` text in a monospace font, but `BlSkiaSvgElement` does not: on Windows the text came out
 proportional. To get monospace text in Skia, map `monospace` to a real font name in the theme (`Consolas` on Windows;
 the other platforms have not been looked at). Only some diagram types use `monospace`, such as event modeling; a
@@ -195,16 +195,16 @@ Pele2svg new theme: { '--gt-font-mono' -> 'Courier New' } asDictionary; asElemen
 
 ## What has been checked
 
-- All of pele's published examples (58 featured and 520 documentation examples) convert, and none keeps a `var()`,
+- All of Pele's published examples (58 featured and 520 documentation examples) convert, and none keeps a `var()`,
   `style` attribute, `<style>` element, `currentColor`, `color-mix()`, nested `<svg>` or `<a>`. The tests in `npm test` repeat
-  this for these and 170 more sources from pele's own test corpus.
+  this for these and 170 more sources from Pele's own test corpus.
 - Every example of `Pele2svgExamples` (82) was looked at in GToolkit (Skia), including a flowchart with Japanese labels,
   which draws correctly.
 - Compared by eye in GToolkit (Skia) and in WebView2 on Windows, the converted SVG matches for: colors, `tspan` /
   `text-anchor`, bold and italic text, rounded corners, arrowheads, dashed lines, translucent overlaps, rotated text,
   icons, ellipses and polygons, and monospace text (with `--gt-font-mono` set to `Consolas`).
 
-Not verified: other full-width text than that one flowchart; the converted SVG keeps pele's intrinsic `width`/`height`, so
+Not verified: other full-width text than that one flowchart; the converted SVG keeps Pele's intrinsic `width`/`height`, so
 how it is scaled depends on the viewer; one external `<image>` in a flowchart example is removed. More in
 [docs/development.md](docs/development.md).
 
@@ -221,10 +221,10 @@ MIT License.
 Copyright (c) 2026 kepano (pele)
 Copyright (c) 2026 Kazunori Iriya (pele2svg post-processing and GToolkit adaptation)
 ```
-[pele](https://github.com/obsidianmd/pele) is the work of its original author and is MIT-licensed
-([its LICENSE](https://github.com/obsidianmd/pele/blob/main/LICENSE)). This repository contains no pele code: it
-post-processes pele's output, and pele is installed with npm. The example diagram sources in `examples`,
-`test/fixtures` and the `featured…` methods of `Pele2svgExamples` are taken from pele, and pele itself is run by the
+[Pele](https://github.com/obsidianmd/pele) is the work of its original author and is MIT-licensed
+([its LICENSE](https://github.com/obsidianmd/pele/blob/main/LICENSE)). This repository contains no Pele code: it
+post-processes Pele's output, and Pele is installed with npm. The example diagram sources in `examples`,
+`test/fixtures` and the `featured…` methods of `Pele2svgExamples` are taken from Pele, and Pele itself is run by the
 tests and the examples. Each of these says so where it is used: `examples/README.md`, `test/fixtures/README.md`, the
 header of `test/corpus.test.js` and the class comment of `Pele2svgExamples`.
 
