@@ -42,6 +42,14 @@ Pele2svg >> asElement: aMermaidString [
 ]
 
 { #category : 'accessing' }
+Pele2svg >> asWebViewElement: aMermaidString [
+	"Answer a GtWebViewElement (WebView2) that draws the converted SVG. The SVG is handed to the browser as it is. GtWebViewElement>>#html: accepts at most 2 MB."
+	^ GtWebViewElement new
+		html: (self render: aMermaidString);
+		yourself
+]
+
+{ #category : 'accessing' }
 Pele2svg >> initialize [
 	super initialize.
 	runtime := 'node'.
