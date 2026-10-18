@@ -34,7 +34,8 @@ In `BlSkiaSvgElement` a minimal test showed that declarations inside a `style` a
 
 You need [Node.js](https://nodejs.org/) 20 or later (pele needs it). [Bun](https://bun.sh/) can run the script too.
 
-1. **Load the Pharo package** in a GToolkit image:
+1. **Load the Pharo package** in a GToolkit image. Metacello clones the repository with Iceberg
+   (under `pharo-local/iceberg/` in the GT directory):
 
    ```smalltalk
    Metacello new
@@ -43,18 +44,13 @@ You need [Node.js](https://nodejs.org/) 20 or later (pele needs it). [Bun](https
        load
    ```
 
-2. **Install pele next to the script, once.** The Pharo class only calls `pele2svg.mjs`, so a clone of this repository with
-   its dependencies must be on disk:
+2. **Install pele, once.** The Pharo class only calls `pele2svg.mjs`, so pele has to be installed next to it.
+   This runs `npm install` in the Iceberg clone (`bun install` if you set `runtime: 'bun'`) and does nothing if pele is
+   already there:
 
-   ```sh
-   git clone https://github.com/iriyak/pele2svg.git
-   cd pele2svg
-   npm install
+   ```smalltalk
+   Pele2svg installDependencies
    ```
-
-   If you clone the repository with Iceberg (the clone lives under `pharo-local/iceberg/` in the GT directory), run
-   `npm install` in that directory; `Pele2svg` then finds `pele2svg.mjs` by itself. For any other location, tell it
-   where the script is: `Pele2svg new script: 'C:\...\pele2svg\pele2svg.mjs'`.
 
 3. **Try it:**
 
@@ -62,6 +58,23 @@ You need [Node.js](https://nodejs.org/) 20 or later (pele needs it). [Bun](https
    Pele2svg new asElement: 'flowchart LR
      A --> B'.
    ```
+
+If you did not get the code through Iceberg — for example, you cloned it with `git` yourself — point `Pele2svg` at the
+script in that clone. `installDependencies` then installs pele there, as it does for the Iceberg clone:
+
+```sh
+git clone https://github.com/iriyak/pele2svg.git
+```
+
+```smalltalk
+Pele2svg new
+    script: 'C:\...\pele2svg\pele2svg.mjs';
+    installDependencies;
+    asElement: 'flowchart LR
+  A --> B'
+```
+
+(Running `npm install` yourself in that directory does the same.)
 
 ## Using it
 
