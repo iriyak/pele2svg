@@ -171,8 +171,9 @@ Using pele's published examples ([pele.run/examples](https://pele.run/examples))
 plus the 520 documentation examples on the per-type pages (578 in total):
 
 - All of them convert, and none keeps a `var()`, `style` attribute, `<style>` element, `currentColor`,
-  `color-mix()`, nested `<svg>` or `<a>`.
-- All outputs are well-formed XML (`xmllint`).
+  `color-mix()`, nested `<svg>` or `<a>`. These sources are kept in `test/fixtures/` and checked by `npm test`
+  (together with 170 more from pele's own test corpus).
+- All outputs are well-formed XML (`xmllint`; `npm test` has its own, simpler check).
 - Rendered with a renderer that has no CSS variable support (resvg): the raw pele output is all black, the converted output is correct.
 - Compared by eye in GToolkit (Skia) and in WebView2 on Windows, they match for: colors, `tspan` / `text-anchor`, bold and
   italic text, rounded corners, arrowheads, dashed lines, translucent overlaps, rotated text, icons, ellipses and polygons,
@@ -193,6 +194,17 @@ Not verified:
 npm install
 npm test
 ```
+
+`npm test` (Node's built-in test runner, a few seconds) runs:
+
+- [`test/flatten.test.js`](test/flatten.test.js): small unit tests of `resolveVars` and `flatten`.
+- [`test/corpus.test.js`](test/corpus.test.js): converts every source in [`test/fixtures/`](test/fixtures) — pele's
+  58 featured examples, its 520 documentation examples and 170 sources from its own test corpus — and checks that the
+  output has no `var()`, `style` attribute, `<style>`, `currentColor`, `color-mix()`, `<a>`, external `<image>` or
+  nested `<svg>`, that it is well-formed, and that converting it again changes nothing. It also repeats the featured
+  examples with each theme in [`themes/`](themes) and runs `--batch` on a whole corpus file.
+
+These tests need no GToolkit. What they cannot check is how a renderer draws the result; that was looked at by eye (see above).
 
 [`examples/`](examples) has Mermaid sources and the converted SVGs (with the Consolas font mapping).
 
