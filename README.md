@@ -112,12 +112,25 @@ Pele2svg new asElement: 'flowchart LR
 
 Pele2svg new asWebViewElement: 'flowchart LR
   A --> B'.
+```
 
-Pele2svg new
+The same diagram without and with a theme, side by side:
+
+```smalltalk
+element1 := Pele2svg new asElement: 'sequenceDiagram
+  Alice->>Bob: Hello'.
+element2 := Pele2svg new
     theme: { '--pele-surface' -> '#e6e8f0'. '--pele-border' -> '#205ea6' } asDictionary;
     asElement: 'sequenceDiagram
   Alice->>Bob: Hello'.
+BrHorizontalPane new
+    matchParent;
+    addChildren: { element1. element2 }
 ```
+
+The element that `asElement:` answers has the size of the diagram (the width and height of the SVG's `viewBox`), so
+it takes its own room in a layout. Elements placed side by side, for example in a `BrHorizontalPane`, do not overlap.
+`width` and `height` answer that size once the element has been laid out.
 
 ### Settings
 

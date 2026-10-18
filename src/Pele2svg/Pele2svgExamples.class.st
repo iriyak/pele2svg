@@ -47,15 +47,7 @@ Pele2svgExamples >> classDiagram [
 { #category : 'private' }
 Pele2svgExamples >> elementFor: aMermaidString [
 	"Answer a BlSkiaSvgElement sized from the SVG viewBox."
-	| svg stream numbers |
-	svg := self svgFor: aMermaidString.
-	stream := svg readStream.
-	stream upToAll: 'viewBox="'.
-	numbers := (stream upTo: $") substrings collect: #asNumber.
-	^ BlSkiaSvgElement new
-		svg: svg;
-		size: (numbers third @ numbers fourth);
-		yourself
+	^ self renderer elementFromSvg: (self svgFor: aMermaidString)
 ]
 
 { #category : 'examples' }

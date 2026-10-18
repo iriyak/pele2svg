@@ -373,7 +373,7 @@
 							"paragraphStyle" : {
 								"__type" : "textStyle"
 							},
-							"string" : "{{gtMethod:name=Pele2svg>>asElement:}} answers a `BlSkiaSvgElement`, drawn by Skia:"
+							"string" : "{{gtMethod:name=Pele2svg>>asElement:}} answers a `BlSkiaSvgElement`, drawn by Skia. It has the size of the diagram (the width and height of the SVG's `viewBox`), so elements placed side by side, for example in a `BrHorizontalPane`, do not overlap:"
 						},
 						{
 							"__type" : "pharoSnippet",
@@ -651,14 +651,14 @@
 								"__type" : "time",
 								"time" : {
 									"__type" : "dateAndTime",
-									"dateAndTimeString" : "2026-10-18T19:09:19.355+09:00"
+									"dateAndTimeString" : "2026-10-18T20:03:44.933+09:00"
 								}
 							},
 							"uid" : {
 								"__type" : "uid",
 								"uidString" : "++Jgg6XACUSh42o6V9Ybzw=="
 							},
-							"code" : "Pele2svg new\r\ttheme: {'--pele-surface' -> '#e6e8f0'.\r\t\t\t'--pele-border' -> '#205ea6'} asDictionary;\r\tasElement: 'sequenceDiagram\n  Alice->>Bob: Hello'"
+							"code" : "element1 := Pele2svg new asElement: 'sequenceDiagram\n  Alice->>Bob: Hello'.\relement2 := Pele2svg new\r\t\ttheme: {'--pele-surface' -> '#e6e8f0'.\r\t\t\t\t'--pele-border' -> '#205ea6'} asDictionary;\r\t\tasElement: 'sequenceDiagram\n  Alice->>Bob: Hello'.\raPager := BrHorizontalPane new\r\t\tmatchParent;\r\t\thMatchParent;\r\t\taddChildren: {element1.\r\t\t\t\telement2}"
 						},
 						{
 							"__type" : "textSnippet",

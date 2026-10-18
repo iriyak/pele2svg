@@ -50,11 +50,10 @@ Pele2svg class >> repositoryDirectory [
 	^ repository location
 ]
 
-{ #category : 'accessing' }
+{ #category : 'converting' }
 Pele2svg >> asElement: aMermaidString [
-	^ BlSkiaSvgElement new
-		svg: (self render: aMermaidString);
-		yourself
+	"Answer a BlSkiaSvgElement for the diagram, sized from the viewBox of the SVG so that it takes its own room in a layout."
+	^ self elementFromSvg: (self render: aMermaidString)
 ]
 
 { #category : 'accessing' }
@@ -62,6 +61,17 @@ Pele2svg >> asWebViewElement: aMermaidString [
 	"Answer a GtWebViewElement (WebView2) that draws the converted SVG. The SVG is handed to the browser as it is. GtWebViewElement>>#html: accepts at most 2 MB."
 	^ GtWebViewElement new
 		html: (self render: aMermaidString);
+		yourself
+]
+
+{ #category : 'private' }
+Pele2svg >> elementFromSvg: anSvgString [
+	"Answer a BlSkiaSvgElement showing the SVG, with the width and height of its viewBox as its size."
+	| numbers |
+	numbers := (anSvgString readStream upToAll: 'viewBox="'; upTo: $") substrings collect: #asNumber.
+	^ BlSkiaSvgElement new
+		svg: anSvgString;
+		size: numbers third @ numbers fourth;
 		yourself
 ]
 
