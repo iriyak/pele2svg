@@ -1,13 +1,16 @@
 "
 I convert Mermaid source to a GToolkit-friendly SVG string by running pele2svg (Node.js or Bun) as an external process.
 
+	Pele2svg installDependencies.	""once, after loading the package""
 	Pele2svg new render: mmd.
 	Pele2svg new theme: 'path/to/theme.json'; asElement: mmd.
 
-script: path to pele2svg.mjs (default: the Iceberg clone of pele2svg; run npm install there once).
+script: path to pele2svg.mjs (default: the Iceberg clone of pele2svg).
 runtime: executable, 'node' by default ('bun' also works).
 theme: nil, a path to a theme JSON file, or a Dictionary of theme variables.
 timeout: milliseconds, 30000 by default.
+installDependencies installs pele (npm install, or bun install) in the directory of the script, unless it is already there.
+Failures signal Pele2svgError.
 "
 Class {
 	#name : 'Pele2svg',
@@ -34,6 +37,12 @@ Pele2svg class >> defaultScript [
 	^ file fullName
 ]
 
+{ #category : 'installing' }
+Pele2svg class >> installDependencies [
+	"Install pele (npm install) in the directory of pele2svg.mjs. Run it once after loading the package."
+	^ self new installDependencies
+]
+
 { #category : 'accessing' }
 Pele2svg >> asElement: aMermaidString [
 	^ BlSkiaSvgElement new
@@ -56,6 +65,29 @@ Pele2svg >> initialize [
 	timeout := 30000
 ]
 
+{ #category : 'installing' }
+Pele2svg >> installDependencies [
+	"Install pele next to pele2svg.mjs: npm install, or bun install when the runtime is bun. Does nothing when pele is already installed there."
+	| directory command arguments process message |
+	directory := self script asFileReference parent.
+	(directory / 'node_modules' / 'pele') exists ifTrue: [ ^ self ].
+	runtime = 'bun'
+		ifTrue: [ command := 'bun'. arguments := #('install') ]
+		ifFalse: [
+			OSPlatform current isWindows
+				ifTrue: [ command := 'cmd'. arguments := #('/c' 'npm' 'install') ]
+				ifFalse: [ command := 'npm'. arguments := #('install') ] ].
+	process := GtSubprocessWithInMemoryOutput new
+		command: command;
+		arguments: arguments;
+		workingDirectory: directory;
+		yourself.
+	self runProcess: process timeout: 300000 description: 'npm install in ', directory fullName.
+	process exitCode = 0 ifFalse: [
+		message := process stderr trimBoth.
+		Pele2svgError signal: 'install failed: ', (message last: (message size min: 600)) ]
+]
+
 { #category : 'accessing' }
 Pele2svg >> render: aMermaidString [
 	"Answer the converted SVG string. Signal Pele2svgError on failure or timeout."
@@ -68,16 +100,29 @@ Pele2svg >> render: aMermaidString [
 			command: runtime;
 			arguments: { self script. in fullName. out fullName }, (self themeArgumentIn: dir);
 			yourself.
-		process runAndSignal.
-		(process waitTimeoutMilliseconds: timeout) ifTrue: [
-			process kill.
-			Pele2svgError signal: 'pele2svg timed out after ', timeout printString, ' ms' ].
+		self runProcess: process timeout: timeout description: runtime.
 		(process exitCode = 0 and: [ out exists ]) ifFalse: [
 			| message |
 			message := process stderr trimBoth.
 			Pele2svgError signal: (message first: (message size min: 600)) ].
 		out binaryReadStreamDo: [ :s | s upToEnd utf8Decoded ] ]
 			ensure: [ dir ensureDeleteAll ]
+]
+
+{ #category : 'private' }
+Pele2svg >> runProcess: aProcess timeout: milliseconds description: aString [
+	"Run aProcess to completion. Signal Pele2svgError when it cannot be started or does not finish in time."
+	| timedOut |
+	timedOut := false.
+	[ aProcess runAndSignal.
+	  timedOut := aProcess waitTimeoutMilliseconds: milliseconds.
+	  "stderr signals an error when the process could not be started"
+	  timedOut ifFalse: [ aProcess stderr ] ]
+		on: Error
+		do: [ :error | Pele2svgError signal: 'cannot run ', aString, ': ', error messageText ].
+	timedOut ifTrue: [
+		aProcess kill.
+		Pele2svgError signal: aString, ' timed out after ', milliseconds printString, ' ms' ]
 ]
 
 { #category : 'accessing' }
