@@ -155,3 +155,12 @@ npm test
 ## License
 
 MIT. pele is MIT-licensed too; this repository contains no pele code, it only post-processes pele's output.
+
+## Installation
+
+```st
+Metacello new
+	repository: 'github://iriyak/pele2svg:main/src';
+	baseline: 'Pele2svg';
+	load
+```
