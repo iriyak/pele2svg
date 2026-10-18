@@ -68,8 +68,8 @@ A theme is a JSON object that overrides pele's CSS variables (examples in [`them
 
 ## Fonts
 
-Skia's SVG module could not resolve the generic family name `monospace` (in GToolkit, text set in
-`monospace` was drawn in the default font). Map generic names to real font names with these keys:
+Font families are left as pele wrote them (`monospace`, `sans-serif`). To use another font, map the generic
+names to real font names with these keys in a theme:
 
 | Key | Replaces |
 |---|---|
@@ -81,9 +81,9 @@ Skia's SVG module could not resolve the generic family name `monospace` (in GToo
 {"--gt-font-mono":"Consolas"}
 ```
 
-- [`themes/gt-windows.json`](../themes/gt-windows.json) is a Windows example. Use `Menlo` on macOS or `DejaVu Sans Mono` on most Linux systems.
+- [`themes/gt-windows.json`](../themes/gt-windows.json) maps `monospace` to `Consolas`. On Windows, GToolkit (Skia) and WebView2 drew `monospace` and `Consolas` with the same font, so the mapping is optional there; other platforms have not been looked at.
 - Give **a single font name**, not a fallback list: Skia may treat the whole string as one name.
 - pele measures text widths itself. Replacing `sans-serif` with a font of different metrics can make labels overflow their boxes, so
-  only `monospace` is mapped in the example theme.
+  the example theme maps only `monospace`.
 - In pele's own examples, `monospace` is used by `eventmodeling` and `railroad`; `sans-serif` is the root font everywhere;
   `serif` is not used.
