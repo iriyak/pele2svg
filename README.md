@@ -139,7 +139,7 @@ Set these on the instance before rendering, as `theme:` is set above.
 | Setting | Default | |
 |---|---|---|
 | `script:` | `pele2svg.mjs` in the Iceberg clone named `pele2svg` | Path of `pele2svg.mjs`. Set it when no Iceberg repository named `pele2svg` exists in the image (the class then signals `Pele2svgError`). |
-| `runtime:` | `'node'` | The executable to run. `'bun'` is also possible. |
+| `runtime:` | `'node'` | The executable to run. `'bun'` is also possible. Give the full path if `node` is not on the PATH that GToolkit sees (for example, an app started from the macOS Finder does not use your shell's PATH; not tried). |
 | `theme:` | none | `nil`, the path of a theme JSON file, or a Dictionary of theme variables. See [Themes](docs/standalone.md#themes). |
 | `timeout:` | `30000` | Milliseconds; the process is killed when it is exceeded. |
 

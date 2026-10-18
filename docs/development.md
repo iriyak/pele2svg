@@ -41,4 +41,5 @@ npm test
 
 These tests need no GToolkit. What they cannot check is how a renderer draws the result; that was looked at by eye (see above).
 
-[`examples/`](../examples) has Mermaid sources and the converted SVGs (with the Consolas font mapping).
+[`examples/`](../examples) has Mermaid sources and the converted SVGs. `eventmodeling-1.svg` is made with
+[`themes/gt-windows.json`](../themes/gt-windows.json) (`monospace` → `Consolas`); the other two have no `monospace` text.
