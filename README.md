@@ -78,21 +78,32 @@ Pele2svg new
 
 ## Using it
 
-```smalltalk
-Pele2svg new render: 'flowchart LR
-  A --> B'.                                  "an SVG string"
+`Pele2svg` turns Mermaid text into an SVG string, or into an element you can show in GToolkit.
 
+### Showing a diagram
+
+| Message | Answers |
+|---|---|
+| `render:` | the converted SVG, as a string |
+| `asElement:` | a `BlSkiaSvgElement` (drawn by Skia) |
+| `asWebViewElement:` | a `GtWebViewElement` (drawn by WebView2) |
+
+```smalltalk
 Pele2svg new asElement: 'flowchart LR
-  A --> B'.                                  "a BlSkiaSvgElement (Skia)"
+  A --> B'.
 
 Pele2svg new asWebViewElement: 'flowchart LR
-  A --> B'.                                  "a GtWebViewElement (WebView2)"
+  A --> B'.
 
 Pele2svg new
-    theme: { '--gt-font-mono' -> 'Consolas' } asDictionary;   "or the path of a theme JSON file"
+    theme: { '--gt-font-mono' -> 'Consolas' } asDictionary;
     asElement: 'sequenceDiagram
   Alice->>Bob: Hello'.
 ```
+
+### Settings
+
+Set these on the instance before rendering, as `theme:` is set above.
 
 | Setting | Default | |
 |---|---|---|
@@ -101,20 +112,26 @@ Pele2svg new
 | `theme:` | none | `nil`, the path of a theme JSON file, or a Dictionary of theme variables. See [Themes](docs/standalone.md#themes). |
 | `timeout:` | `30000` | Milliseconds; the process is killed when it is exceeded. |
 
+### What happens when you render
+
 - The class writes the Mermaid source to a temporary file, runs the script as an external process, reads the SVG back,
   and deletes the temporary files.
-- A failure (invalid Mermaid, a missing runtime, a timeout) signals `Pele2svgError` with a one-line message.
-- `asWebViewElement:` hands the converted SVG to `GtWebViewElement>>#html:`, which accepts at most 2 MB.
-- The package also adds an `SvgInWeb` view to `.svg` files in the GT inspector (`AbstractFileReference>>#gtSvgInWebViewFor:`),
-  which shows the file in WebView2 next to the Skia view.
+- A failure signals `Pele2svgError` with a one-line message: invalid Mermaid, a runtime that cannot be started, a
+  script that is not found, or a timeout.
+- `asWebViewElement:` hands the SVG to `GtWebViewElement>>#html:`, which accepts at most 2 MB.
 
-To use an SVG file you already have, give it straight to Skia:
+### Showing an SVG file you already have
+
+Give the file's contents straight to Skia:
 
 ```smalltalk
 BlSkiaSvgElement new
     svg: (FileLocator home / 'Downloads' / 'eventmodeling-1.svg') contents;
     size: 400 asPoint.
 ```
+
+The package also adds an `SvgInWeb` view to `.svg` files in the GT inspector
+(`AbstractFileReference>>#gtSvgInWebViewFor:`), which shows the file in WebView2 next to the Skia view.
 
 ### Examples
 
