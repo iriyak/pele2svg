@@ -13,6 +13,7 @@
   "files": [
     "pele2svg.mjs",
     "themes",
+    "docs",
     "README.md",
     "LICENSE"
   ],
