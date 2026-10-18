@@ -142,7 +142,7 @@ The package also adds an `SvgInWeb` view to `.svg` files in the GT inspector
 
 ### Examples
 
-The class `Pele2svgExamples` has one `<gtExample>` per diagram — pele's 58 featured examples (`featured…`) and short
+The class `Pele2svgExamples` has one `<gtExample>` per diagram — pele's 58 featured examples (`featured…`, with their sources copied from pele) and short
 examples of the basic diagram types, 82 in all. Each answers a `BlSkiaSvgElement`; open the class in the GT Coder and
 look at the results.
 
@@ -190,7 +190,9 @@ Copyright (c) 2026 Kazunori Iriya (pele2svg post-processing and GToolkit adaptat
 ```
 [pele](https://github.com/obsidianmd/pele) is the work of its original author and is MIT-licensed
 ([its LICENSE](https://github.com/obsidianmd/pele/blob/main/LICENSE)). This repository contains no pele code: it
-post-processes pele's output, and pele is installed with npm. The example diagram sources in `test/fixtures` are taken
-from pele.
+post-processes pele's output, and pele is installed with npm. The example diagram sources in `examples`,
+`test/fixtures` and the `featured…` methods of `Pele2svgExamples` are taken from pele, and pele itself is run by the
+tests and the examples. Each of these says so where it is used: `examples/README.md`, `test/fixtures/README.md`, the
+header of `test/corpus.test.js` and the class comment of `Pele2svgExamples`.
 
 See [LICENSE](LICENSE) for the full text.

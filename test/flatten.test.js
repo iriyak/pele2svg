@@ -1,3 +1,5 @@
+// The tests render small diagrams written for this package with the real pele (MIT License, Copyright (c) 2026
+// kepano, https://github.com/obsidianmd/pele), which is installed as a dependency, and convert the output.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';

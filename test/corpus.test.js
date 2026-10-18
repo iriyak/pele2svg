@@ -1,5 +1,6 @@
 // Corpus tests: run pele2svg over every Mermaid source in test/fixtures/ and check that the
-// output is plain SVG, whatever the diagram type. See test/fixtures/README.md for the sources.
+// output is plain SVG, whatever the diagram type. The sources come from pele (MIT License, Copyright (c) 2026
+// kepano, https://github.com/obsidianmd/pele) and pele itself renders them; see test/fixtures/README.md.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync, mkdtempSync, rmSync } from 'node:fs';

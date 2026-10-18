@@ -1,5 +1,7 @@
 "
 GToolkit examples for Pele2svg: each <gtExample> method renders a Mermaid diagram through pele2svg and answers a BlSkiaSvgElement. Open the class in the GT Coder and click the example results to see the diagrams. Requires Node.js (or Bun) and `npm install` in the Iceberg clone of pele2svg.
+
+The 58 featured... methods use the Mermaid sources of the featured examples of pele (https://pele.run/examples, https://github.com/obsidianmd/pele, MIT License, Copyright (c) 2026 kepano), copied unchanged; the same sources are in test/fixtures/featured.json of the repository. The other examples (flowchart, sequenceDiagram, ...) are short diagrams written for this package.
 "
 Class {
 	#name : 'Pele2svgExamples',
