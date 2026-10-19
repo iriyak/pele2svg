@@ -140,25 +140,6 @@ The element that `asElement:` answers has the size of the diagram (the width and
 it takes its own room in a layout. Elements placed side by side, for example in a `BrHorizontalPane`, do not overlap.
 `width` and `height` answer that size once the element has been laid out.
 
-### Settings
-
-Set these on the instance before rendering, as `theme:` is set above.
-
-| Setting | Default | |
-|---|---|---|
-| `script:` | `pele2svg.mjs` in the Iceberg clone named `pele2svg` | Path of `pele2svg.mjs`. Set it when no Iceberg repository named `pele2svg` exists in the image (the class then signals `Pele2svgError`). |
-| `runtime:` | `'node'` | The executable to run. `'bun'` is also possible. Give the full path if `node` is not on the PATH that GToolkit sees (for example, an app started from the macOS Finder does not use your shell's PATH; not tried). |
-| `theme:` | none | `nil`, the path of a theme JSON file, or a Dictionary of theme variables. See [Themes](docs/standalone.md#themes). |
-| `timeout:` | `30000` | Milliseconds; the process is killed when it is exceeded. |
-
-### What happens when you render
-
-- The class writes the Mermaid source to a temporary file, runs the script as an external process, reads the SVG back,
-  and deletes the temporary files.
-- A failure signals `Pele2svgError` with a one-line message: invalid Mermaid, a runtime that cannot be started, a
-  script that is not found, or a timeout.
-- `asWebViewElement:` hands the SVG to `GtWebViewElement>>#html:`, which accepts at most 2 MB.
-
 ### Showing an SVG file you already have
 
 `asElementFromSvg:` takes the contents of an SVG file, converts it if it needs it, and answers a `BlSkiaSvgElement`
@@ -203,6 +184,17 @@ The class `Pele2svgExamples` has one `<gtExample>` per diagram — Pele's 58 fea
 examples of the basic diagram types, 82 in all. Each answers a `BlSkiaSvgElement`; open the class in the GT Coder and
 look at the results.
 
+### Settings
+
+Set these on the instance before rendering, as `theme:` is set above.
+
+| Setting | Default | |
+|---|---|---|
+| `script:` | `pele2svg.mjs` in the Iceberg clone named `pele2svg` | Path of `pele2svg.mjs`. Set it when no Iceberg repository named `pele2svg` exists in the image (the class then signals `Pele2svgError`). |
+| `runtime:` | `'node'` | The executable to run. `'bun'` is also possible. Give the full path if `node` is not on the PATH that GToolkit sees (for example, an app started from the macOS Finder does not use your shell's PATH; not tried). |
+| `theme:` | none | `nil`, the path of a theme JSON file, or a Dictionary of theme variables. See [Themes](docs/standalone.md#themes). |
+| `timeout:` | `30000` | Milliseconds; the process is killed when it is exceeded. |
+
 ### Fonts in GToolkit
 
 Font families are left as Pele wrote them: `monospace` stays `monospace`, `sans-serif` stays `sans-serif`.
@@ -218,6 +210,14 @@ Pele2svg new theme: { '--gt-font-mono' -> 'Courier New' } asDictionary; asElemen
 ```
 
 `--gt-font-sans` and `--gt-font-serif` work the same way. The details are in [docs/standalone.md](docs/standalone.md#fonts).
+
+### What happens when you render
+
+- The class writes the Mermaid source to a temporary file, runs the script as an external process, reads the SVG back,
+  and deletes the temporary files.
+- A failure signals `Pele2svgError` with a one-line message: invalid Mermaid, a runtime that cannot be started, a
+  script that is not found, or a timeout.
+- `asWebViewElement:` hands the SVG to `GtWebViewElement>>#html:`, which accepts at most 2 MB.
 
 ## What has been checked
 
