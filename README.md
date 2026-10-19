@@ -180,8 +180,9 @@ Pele2svg new asElementFromSvg: svg.     "a BlSkiaSvgElement"
 
 What is converted is what Skia cannot draw: CSS variables, `style` attributes, `color-mix()` and so on (see the table
 at the top). Simple `<style>` rules such as `.a { fill: red }` are turned into attributes too, so SVGs from other tools
-often draw correctly; an SVG with nothing to convert comes back unchanged. When the root has a `viewBox` but no `width` and
-`height`, they are added (Skia draws nothing without them). The command line does the same with
+often draw correctly; an SVG with nothing to convert comes back unchanged. The element is sized from the `viewBox` (or from `width` and `height` when there is no `viewBox`); when the root has a
+`viewBox` but no `width` and `height`, they are added (Skia draws nothing without them). An SVG with neither signals
+`Pele2svgError`. The command line does the same with
 `pele2svg --svg input.svg output.svg` (see [docs/standalone.md](docs/standalone.md)).
 
 The package also adds an `SvgInWeb` view to `.svg` files in the GT inspector
