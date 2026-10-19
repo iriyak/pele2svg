@@ -153,38 +153,40 @@ Set these on the instance before rendering, as `theme:` is set above.
 
 ### Showing an SVG file you already have
 
-Give the file's contents straight to Skia. The repository's [`examples/`](examples) folder has three converted diagrams;
+`asElementFromSvg:` takes the contents of an SVG file, converts it if it needs it, and answers a `BlSkiaSvgElement`
+sized from the `viewBox`. It works for the diagrams in [`examples/`](examples) (already converted, so nothing changes),
+for a file straight from Pele (the CSS is converted, and Pele itself is not run), and for SVGs from other tools.
 `Pele2svg repositoryDirectory` is the Iceberg clone:
 
 ```smalltalk
-BlSkiaSvgElement new
-	svg: (Pele2svg repositoryDirectory / 'examples' / 'eventmodeling-1.svg') contents.
+Pele2svg new
+	asElementFromSvg: (Pele2svg repositoryDirectory / 'examples' / 'eventmodeling-1.svg') contents.
 
-BlSkiaSvgElement new
-	svg: (Pele2svg repositoryDirectory / 'examples' / 'architecture-2.svg') contents.
+Pele2svg new
+	asElementFromSvg: (Pele2svg repositoryDirectory / 'examples' / 'architecture-2.svg') contents.
 
-BlSkiaSvgElement new
-	svg: (Pele2svg repositoryDirectory / 'examples' / 'sequence-1.svg') contents.
+Pele2svg new
+	asElementFromSvg: (Pele2svg repositoryDirectory / 'examples' / 'sequence-1.svg') contents.
 ```
+
+For your own file, use its path (a `theme:` and the other settings work as before):
+
+```smalltalk
+| svg |
+svg := 'path/to/diagram.svg' asFileReference contents.
+Pele2svg new renderSvg: svg.            "the converted SVG string"
+Pele2svg new asElementFromSvg: svg.     "a BlSkiaSvgElement"
+```
+
+What is converted is what Skia cannot draw: CSS variables, `style` attributes, `color-mix()` and so on (see the table
+at the top). Simple `<style>` rules such as `.a { fill: red }` are turned into attributes too, so SVGs from other tools
+often draw correctly; an SVG with nothing to convert comes back unchanged. When the root has a `viewBox` but no `width` and
+`height`, they are added (Skia draws nothing without them). The command line does the same with
+`pele2svg --svg input.svg output.svg` (see [docs/standalone.md](docs/standalone.md)).
 
 The package also adds an `SvgInWeb` view to `.svg` files in the GT inspector
 (`AbstractFileReference>>#gtSvgInWebViewFor:`), which shows the file in WebView2 next to the Skia view. Evaluate
 `Pele2svg repositoryDirectory / 'examples' / 'sequence-1.svg'` and look at the result to see both views.
-
-### Converting an SVG that Pele has already made
-
-If you already have an SVG file made by Pele (with its CSS), convert it without running Pele:
-
-```smalltalk
-| svg |
-svg := 'diagram.svg' asFileReference contents.
-Pele2svg new renderSvg: svg.            "the converted SVG string"
-Pele2svg new asElementFromSvg: svg.     "a BlSkiaSvgElement, sized from the viewBox"
-```
-
-`theme:` and the other settings work as before. Simple `<style>` rules such as `.a { fill: red }` are also turned into
-attributes, so SVGs from other tools often draw correctly too; an SVG with nothing to convert comes back unchanged.
-`asElementFromSvg:` adds `width` and `height` from the `viewBox` when the SVG has none (Skia draws nothing without them).
 
 ### Examples
 
