@@ -5,7 +5,7 @@ on its own. For GToolkit, see the [README](../README.md).
 
 ## Install
 
-Requires [Node.js](https://nodejs.org/) 20 or later (Pele itself needs it).
+Requires [Node.js](https://nodejs.org/) 20 or later (pele itself needs it).
 [Bun](https://bun.sh/) can run `pele2svg.mjs` too: with Bun 1.4.3 on Windows the output was identical to Node's and each
 run was faster. Installing with `bun install` / `bunx` has not been tried.
 
@@ -18,7 +18,7 @@ Run it once, without installing anything:
 npx github:iriyak/pele2svg input.mmd output.svg
 ```
 
-Add it to a project (this also installs Pele):
+Add it to a project (this also installs pele):
 
 ```sh
 npm install github:iriyak/pele2svg
@@ -47,7 +47,15 @@ npx pele2svg input.mmd output.svg [theme.json]
 
 # many at once: sources.json = [{"name":"flow-1","source":"flowchart LR\n A-->B"}, ...]
 npx pele2svg --batch sources.json outdir [theme.json]
+
+# an SVG that Pele has already produced (Pele itself is not run)
+npx pele2svg --svg input.svg output.svg [theme.json]
 ```
+
+With `--svg`, an input that has nothing to convert is written unchanged and a note is printed to stderr.
+Simple `<style>` rules of the form `.name { declarations }` are turned into attributes of the elements with that class,
+so SVGs from other tools can be converted too; other kinds of rules (tag or id selectors, `@media`) are left and reported
+as a warning.
 
 As a library:
 
@@ -60,20 +68,20 @@ const { svg, warnings } = flatten(render('flowchart LR\n A-->B').svg, { '--gt-fo
 
 ## Themes
 
-A theme is a JSON object that overrides Pele's CSS variables (examples in [`themes/`](../themes)):
+A theme is a JSON object that overrides pele's CSS variables (examples in [`themes/`](../themes)):
 
 ```json
 {"--pele-bg":"#fffcf0","--pele-fg":"#100f0f","--pele-surface":"#f2f0e5","--pele-border":"#cecdc3","--pele-accent":"#205ea6"}
 ```
 
-Not every variable shows up in every diagram. Changing each one in turn and comparing the output for Pele's 58 featured
+Not every variable shows up in every diagram. Changing each one in turn and comparing the output for pele's 58 featured
 examples: `--pele-fg`, `--pele-surface` and `--pele-border` changed the sequence diagram and the flowchart;
 `--pele-bg` changed neither (the SVG has no background of its own); `--pele-accent` changed only 5 of the 58
 (`gantt-1`, `gantt-2`, `kanban-2`, `treeview-2`, `wardley-1`).
 
 ## Fonts
 
-Font families are left as Pele wrote them (`monospace`, `sans-serif`). A renderer such as WebView2 resolves the
+Font families are left as pele wrote them (`monospace`, `sans-serif`). A renderer such as WebView2 resolves the
 generic names itself; Skia (`BlSkiaSvgElement`) does not resolve `monospace` (on Windows the text came out
 proportional). To get a monospace font there, or to use another font, map the generic names to real font names with
 these keys in a theme:
@@ -90,7 +98,7 @@ these keys in a theme:
 
 - [`themes/gt-windows.json`](../themes/gt-windows.json) maps `monospace` to `Consolas`, for Skia on Windows. Other platforms have not been looked at.
 - Give **a single font name**, not a fallback list: Skia may treat the whole string as one name.
-- Pele measures text widths itself. Replacing `sans-serif` with a font of different metrics can make labels overflow their boxes, so
+- pele measures text widths itself. Replacing `sans-serif` with a font of different metrics can make labels overflow their boxes, so
   the example theme maps only `monospace`.
-- In Pele's own examples, `monospace` is used by `eventmodeling` and `railroad`; `sans-serif` is the root font everywhere;
+- In pele's own examples, `monospace` is used by `eventmodeling` and `railroad`; `sans-serif` is the root font everywhere;
   `serif` is not used.

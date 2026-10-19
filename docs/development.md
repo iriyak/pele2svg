@@ -32,7 +32,7 @@ npm test
 
 `npm test` (Node's built-in test runner, a few seconds) runs:
 
-- [`test/flatten.test.js`](../test/flatten.test.js): small unit tests of `resolveVars` and `flatten`.
+- [`test/flatten.test.js`](../test/flatten.test.js): small unit tests of `resolveVars` and `flatten`, including the inlining of simple `<style>` class rules.
 - [`test/corpus.test.js`](../test/corpus.test.js): converts every source in [`test/fixtures/`](../test/fixtures) — Pele's
   58 featured examples, its 520 documentation examples and 170 sources from its own test corpus — and checks that the
   output has no `var()`, `style` attribute, `<style>`, `currentColor`, `color-mix()`, `<a>`, external `<image>` or

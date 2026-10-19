@@ -15,6 +15,7 @@
 //   8. <image href="http...">                    -> removed (cannot be fetched by the renderer)
 //   9. font-family="monospace" and other generic -> the real font names given by
 //      family names                                 --gt-font-mono / --gt-font-sans / --gt-font-serif
+//  10. <style> rules  .name{...}              -> style attribute of the elements with that class (then step 3)
 //
 // Usage:
 //   node pele2svg.mjs input.mmd output.svg [theme.json]
@@ -108,6 +109,44 @@ function nestedSvgToG(attrs) {
   return [...rest, ['transform', t]];
 }
 
+// <style> rules of the form  .name { declarations }  (also  .a, .b { ... })  -> added to the style attribute of
+// every element that has the class (the element's own style stays last, so it wins). The <style> element is
+// removed when all its rules were of that simple form; anything else (tag or id selectors, @media, ...) is kept
+// and reported by the final check.
+function inlineClassRules(svg) {
+  const sheets = [...svg.matchAll(/<style\b[^>]*>([\s\S]*?)<\/style>/g)];
+  if (!sheets.length) return svg;
+  const rules = [];
+  let simple = true;
+  for (const [, css] of sheets) {
+    const text = css.replace(/\/\*[\s\S]*?\*\//g, '').replace(/<!\[CDATA\[|\]\]>/g, '');
+    if (text.includes('@')) { simple = false; continue; }
+    for (const m of text.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
+      const classes = [];
+      for (const sel of m[1].split(',').map(x => x.trim())) {
+        if (/^\.[\w-]+$/.test(sel)) classes.push(sel.slice(1)); else simple = false;
+      }
+      if (classes.length) rules.push({ classes, decls: m[2].trim().replace(/;$/, '') });
+    }
+    if (text.replace(/[^{}]+\{[^{}]*\}/g, '').trim() !== '') simple = false;
+  }
+  if (rules.length) {
+    svg = svg.replace(TAG_RE, (m, tag, a, selfClose) => {
+      const attrs = parseAttrs(a);
+      const cls = attrs.find(([k]) => k === 'class')?.[1].split(/\s+/);
+      if (!cls) return m;
+      const decls = rules.filter(r => r.classes.some(x => cls.includes(x))).map(r => r.decls);
+      if (!decls.length) return m;
+      const i = attrs.findIndex(([k]) => k === 'style');
+      if (i >= 0) decls.push(attrs[i][1]); else attrs.push(['style', '']);
+      attrs[i >= 0 ? i : attrs.length - 1][1] = decls.join(';');
+      return `<${tag}${buildAttrs(attrs)}${selfClose ? '/' : ''}>`;
+    });
+  }
+  if (simple) svg = svg.replace(/<style\b[^>]*>[\s\S]*?<\/style>/g, '').replace(/<defs>\s*<\/defs>/g, '');
+  return svg;
+}
+
 export function flatten(svg, theme = {}) {
   const warnings = [];
   const vars = { ...theme };
@@ -130,6 +169,7 @@ export function flatten(svg, theme = {}) {
     svg = svg.replace(/^(<svg\b[^>]*?)\sstyle="[^"]*"/,
       `$1 font-family="${fontFamily.replace(/"/g, '&quot;')}" font-size="16"`);
   }
+  svg = inlineClassRules(svg);
   const fg = vars['--_fg'] ?? vars['--pele-fg'] ?? '#000000';
 
   // 2. Resolve every remaining var(), and turn currentColor into the foreground color
@@ -184,8 +224,20 @@ export function flatten(svg, theme = {}) {
 
 // ---------- CLI ----------
 async function main(argv) {
-  const { render } = await import('pele');
   const themeOf = f => (f ? JSON.parse(readFileSync(f, 'utf8')) : {});
+  if (argv[0] === '--svg') {
+    // Post-process an SVG that Pele has already produced (Pele itself is not needed)
+    const [, inFile, outFile, themeFile] = argv;
+    if (!inFile || !outFile) throw new Error(USAGE);
+    const input = readFileSync(inFile, 'utf8');
+    const flat = flatten(input, themeOf(themeFile));
+    writeFileSync(outFile, flat.svg);
+    for (const w of new Set(flat.warnings)) console.error('warning:', w);
+    if (flat.svg === input) console.error('note: nothing to change; is this an SVG made by Pele?');
+    console.log('wrote', outFile);
+    return;
+  }
+  const { render } = await import('pele');
   if (argv[0] === '--batch') {
     const [, listFile, outDir, themeFile] = argv;
     const theme = themeOf(themeFile);
@@ -216,6 +268,7 @@ async function main(argv) {
 
 const USAGE = `Usage:
   pele2svg input.mmd output.svg [theme.json]
+  pele2svg --svg input.svg output.svg [theme.json]
   pele2svg --batch sources.json outdir [theme.json]`;
 
 // Run the CLI only when executed directly (npm bins are symlinks, so compare real paths)

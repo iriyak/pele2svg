@@ -49,3 +49,20 @@ test('flatten: nested <svg> (icons) become <g>', () => {
   assert.equal((svg.match(/<svg\b/g) || []).length, 1);
   assert.match(svg, /<g[^>]*transform="translate\([^"]*\) scale\(/);
 });
+
+test('flatten: simple <style> class rules become attributes', () => {
+  const src = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8"><defs><style>.a,.b{fill:#bb5938}</style></defs>'
+    + '<path d="M0 0h5v5z" class="a"/><rect width="8" height="8" class="b" style="fill:red"/></svg>';
+  const { svg, warnings } = flatten(src);
+  assert.deepEqual(warnings, []);
+  assert.doesNotMatch(svg, /<style|<defs/);
+  assert.match(svg, /<path d="M0 0h5v5z" class="a" fill="#bb5938"\/>/);
+  assert.match(svg, /class="b" fill="red"/); // the element's own style wins
+});
+
+test('flatten: <style> rules that cannot be inlined are kept and reported', () => {
+  const src = '<svg xmlns="http://www.w3.org/2000/svg"><style>@media print{.a{fill:red}} rect{fill:blue}</style><rect class="a"/></svg>';
+  const { svg, warnings } = flatten(src);
+  assert.match(svg, /<style/);
+  assert.ok(warnings.some(w => /<style> left/.test(w)));
+});
