@@ -106,6 +106,14 @@ The Lepiter notebook (steps 3 and 4) is registered from the Iceberg clone, so it
 | `asElement:` | a `BlSkiaSvgElement` (drawn by Skia) |
 | `asWebViewElement:` | a `GtWebViewElement` (drawn by WebView2) |
 
+For an SVG that Pele has already made, give the SVG instead of the Mermaid source
+(see [Showing an SVG file you already have](#showing-an-svg-file-you-already-have)):
+
+| Message | Answers |
+|---|---|
+| `renderSvg:` | the converted SVG, as a string |
+| `asElementFromSvg:` | a `BlSkiaSvgElement` (drawn by Skia) |
+
 ```smalltalk
 Pele2svg new asElement: 'flowchart LR
   A --> B'.
