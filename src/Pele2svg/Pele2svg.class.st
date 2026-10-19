@@ -73,6 +73,15 @@ Pele2svg >> asWebViewElement: aMermaidString [
 ]
 
 { #category : 'private' }
+Pele2svg >> attribute: aName inTag: aTagString [
+	"Answer the value of the attribute, or nil when the tag has none."
+	| stream |
+	stream := aTagString readStream.
+	stream upToAll: ' ', aName, '="'.
+	^ stream atEnd ifTrue: [ nil ] ifFalse: [ stream upTo: $" ]
+]
+
+{ #category : 'private' }
 Pele2svg >> convert: aString extension: anExtension flags: anArray [
 	"Write aString to a temporary file, run pele2svg.mjs on it and answer the SVG it wrote."
 	| dir in out process |
@@ -95,19 +104,33 @@ Pele2svg >> convert: aString extension: anExtension flags: anArray [
 
 { #category : 'private' }
 Pele2svg >> elementFromSvg: anSvgString [
-	"Answer a BlSkiaSvgElement showing the SVG, with the width and height of its viewBox as its size."
-	| numbers svg start rootTag |
-	numbers := (anSvgString readStream upToAll: 'viewBox="'; upTo: $") substrings collect: #asNumber.
+	"Answer a BlSkiaSvgElement showing the SVG. Its size is the width and height of the viewBox, or of the root's width and height when there is no viewBox. Skia draws nothing when the root has a viewBox but no width and height, so they are added. Signal Pele2svgError when the SVG has neither."
+	| start rootTag extent svg |
+	start := anSvgString indexOfSubCollection: '<svg'.
+	start = 0 ifTrue: [ Pele2svgError signal: 'Not an SVG: there is no <svg> element' ].
+	rootTag := anSvgString readStream position: start - 1; upTo: $>.
+	extent := self extentOfSvgRoot: rootTag.
 	svg := anSvgString.
-	"Skia draws nothing when the root has a viewBox but no width and height"
-	start := svg indexOfSubCollection: '<svg'.
-	rootTag := svg readStream position: start - 1; upTo: $>.
 	(rootTag includesSubstring: ' width=') ifFalse: [
-		svg := (svg first: start + 3), ' width="', numbers third printString, '" height="', numbers fourth printString, '"', (svg allButFirst: start + 3) ].
+		svg := (svg first: start + 3), ' width="', extent x printString, '" height="', extent y printString, '"', (svg allButFirst: start + 3) ].
 	^ BlSkiaSvgElement new
 		svg: svg;
-		size: numbers third @ numbers fourth;
+		size: extent;
 		yourself
+]
+
+{ #category : 'private' }
+Pele2svg >> extentOfSvgRoot: aRootTagString [
+	"Answer the width@height of the viewBox, or else of the width and height attributes, of the root <svg> tag."
+	| numbers width height |
+	numbers := (((self attribute: 'viewBox' inTag: aRootTagString) ifNil: [ '' ]) substrings: ', ')
+		collect: #asNumber.
+	numbers size = 4 ifTrue: [ ^ numbers third @ numbers fourth ].
+	width := self attribute: 'width' inTag: aRootTagString.
+	height := self attribute: 'height' inTag: aRootTagString.
+	(width notNil and: [ height notNil and: [ (width includes: $%) not and: [ (height includes: $%) not ] ] ])
+		ifTrue: [ ^ width asNumber @ height asNumber ].
+	Pele2svgError signal: 'The SVG has neither a viewBox nor a width and height in pixels'
 ]
 
 { #category : 'accessing' }
