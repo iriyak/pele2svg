@@ -211,7 +211,7 @@ Pele2svg new theme: { '--gt-font-mono' -> 'Courier New' } asDictionary; asElemen
 
 `--gt-font-sans` and `--gt-font-serif` work the same way. The details are in [docs/standalone.md](docs/standalone.md#fonts).
 
-### What happens when you render
+## What happens when you render
 
 - The class writes the Mermaid source to a temporary file, runs the script as an external process, reads the SVG back,
   and deletes the temporary files.
