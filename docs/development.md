@@ -48,8 +48,10 @@ These tests need no GToolkit. What they cannot check is how a renderer draws the
 
 ### What pele2svg is
 
-`pele2svg` is a pre-processor that evaluates the part of CSS which Skia's SVG module lacks. It is not a general CSS
-engine. Pele writes its SVG as if a browser were going to draw it, so colors, fonts and some geometry are expressed with
+`pele2svg` is a pre-processor that evaluates CSS features ahead of time, so that Skia's SVG module does not have to. It
+was written on the assumption that Skia lacks those features; the [Skia SVG baseline](skia-svg-baseline.md) later
+measured that assumption, and it holds only in part (see
+[Which steps does Skia really need?](#which-steps-does-skia-really-need)). It is not a general CSS engine. Pele writes its SVG as if a browser were going to draw it, so colors, fonts and some geometry are expressed with
 CSS features: custom properties, `style` attributes, `color-mix()`, `currentColor`, nested `<svg>` elements. `flatten`
 evaluates those features *once, ahead of time*, and writes the result back as plain SVG presentation attributes. After
 that, the renderer has nothing left to evaluate.
@@ -73,20 +75,45 @@ numbering in the header comment of `pele2svg.mjs` and in the README table, which
 | # | Step | What it actually does | Example | CSS / SVG concept |
 |---|---|---|---|---|
 | 1 | Read the root `style` | **Builds the environment.** Collects the custom properties (`--pele-*` …) from the root `<svg>`'s `style`. Theme values are put into the table first and are not overwritten; each collected value is itself passed through `var()` resolution, so variables may refer to variables. | `--_s:#f3f3f3;--_fg:…` → variable table | scope, environment |
-| 2 | Root `font-family` | **Lowers an inherited property to an attribute.** The root `style` is removed; `font-family` becomes an attribute, `font-size` is fixed at 16 (the `font:` shorthand is not interpreted as a whole). | `style="font-family:…"` → `font-family="…" font-size="16"` | inheritance (approximated) |
+| 2 | Root `font-family` | **Lowers an inherited property to an attribute.** The root `style` is removed; `font-family` becomes an attribute, `font-size` is fixed at 16 (the `font:` shorthand is not interpreted as a whole). Skia's own default size is not 16 (about 24 in the [baseline](skia-svg-baseline.md)), so leaving it out would change the layout Pele computed. | `style="font-family:…"` → `font-family="…" font-size="16"` | inheritance (approximated) |
 | 3 | `<style>` class rules | **Selector evaluation.** For rules of the form `.name { … }` (also `.a, .b { … }`), the declarations are prepended to the `style` attribute of every element that has the class, so an element's own `style` is later and wins. The `<style>` element is removed only if all its rules were of this simple form. | `.a{fill:red}` + `<g class="a">` → `<g style="fill:red">` | cascade, a minimal selector subset |
 | 4 | `var()` | **Expression evaluation.** Looks the name up in the variable table; if it is missing, uses the fallback; repeats while the result still changes (at most 20 rounds), so nested `var()` and variables whose values contain `var()` are resolved. | `var(--a, var(--x, #fff))` → `#205ea6` or `#fff` | custom properties |
 | 5 | `currentColor` | **Resolves an inherited color.** Replaced by the foreground color (`--_fg`, else `--pele-fg`, else black). Per-element `color` is *not* tracked. | `currentColor` → `#1f1f1f` | `color` inheritance (approximated) |
 | 6 | Nested `<svg>` | **Coordinate-system change.** From `x`, `y`, `width`, `height`, `viewBox` it computes the scale and offset equivalent to `preserveAspectRatio="xMidYMid meet"` and emits a `<g transform>`. `</svg>` closers are paired with their openers by a depth counter. | `<svg x y width height viewBox>` → `<g transform="translate() scale()">` | `viewBox`, `preserveAspectRatio` |
-| 7 | `style` → attributes | **Reproduces cascade precedence.** Each declaration becomes an attribute of the same name; an existing attribute of that name is replaced, because in CSS a `style` declaration beats a presentation attribute. `rx`/`ry` lose a trailing `px`. `!important` is dropped. | `style="fill:#f00;rx:4px"` → `fill="#f00" rx="4"` | cascade order, units |
+| 7 | `style` → attributes | **Reproduces cascade precedence.** Each declaration becomes an attribute of the same name; an existing attribute of that name is replaced, because in CSS a `style` declaration beats a presentation attribute. `rx`/`ry` lose a trailing `px`. `!important` is dropped (Skia discards a declaration that has it, so the attribute underneath would win). | `style="fill:#f00;rx:4px"` → `fill="#f00" rx="4"` | cascade order, units |
 | 8 | `color-mix()` | **Function evaluation.** Linear interpolation in sRGB, written as `#rrggbb`. Only opaque colors given as `#rgb`, `#rrggbb`, `rgb()`, `white` or `black` are understood; otherwise a warning is recorded and the text is left alone. | `color-mix(in srgb,#000 50%,#fff)` → `#808080` | color functions |
 | 9 | `<a>` | **Element rewrite.** Links are useless in a Skia view, so `<a …>` becomes a bare `<g>` and its attributes are discarded. | `<a href="…">` → `<g>` | — |
 | 10 | External `<image>` | **Removal of what cannot be fetched.** An `<image>` whose `href` starts with `http:` or `https:` is deleted and a warning is recorded. | `<image href="https://…"/>` → (nothing) | external resources |
-| 11 | Generic font names | **Name resolution.** `monospace`, `sans-serif`, `serif` are replaced by `--gt-font-mono`, `--gt-font-sans`, `--gt-font-serif` from the theme, if given. | `font-family="monospace"` → `font-family="Consolas"` | font matching |
+| 11 | Generic font names | **Name resolution.** `monospace`, `sans-serif`, `serif` are replaced by `--gt-font-mono`, `--gt-font-sans`, `--gt-font-serif` from the theme, if given. In Skia all three generic names draw the same default font, only the first name of a family list is tried, and quoted names do not match. | `font-family="monospace"` → `font-family="Consolas"` | font matching |
 | 12 | Final check | **Verification only.** Adds a warning if `var(`, `<style` or `color-mix(` is still in the output. | — | — |
 
 `asElementFromSvg:` and `--svg` run exactly the same `flatten` on an SVG that already exists; only the Pele rendering
 step is skipped.
+
+### Which steps does Skia really need?
+
+The design above was written on the assumption that Skia lacks the CSS features Pele uses. The
+[Skia SVG baseline](skia-svg-baseline.md) measured it with minimal SVGs drawn by `BlSkiaSvgElement` (GToolkit v1.1.624,
+Windows). The assumption holds for some steps and not for others:
+
+| Step | Measured in Skia | Status in `flatten` |
+|---|---|---|
+| 3 `<style>` class rules | not applied (class, tag selector, CDATA) | required |
+| 4 `var()` | the fallback is used; definitions are ignored | required |
+| 5 `currentColor` | honored, including per-element inheritance | kept as a precaution |
+| 6 nested `<svg>` | position, scale, `meet` and `viewBox` origin are right; overflow is not clipped (same as `<g>`) | kept as a precaution |
+| 7 `style` → attributes | plain declarations are honored; `!important`, the `font:` shorthand, and values with `var()` / `color-mix()` are not | partly required |
+| 8 `color-mix()` | not supported | required |
+| 9 `<a>` | drawn normally | kept as a precaution |
+| 10 external `<image>` | does not stop drawing; the image itself was not examined | unclear |
+| 11 generic font names | all draw the same default font | required |
+| 2 root `font-size` | Skia's default is not 16 | required |
+
+"Kept as a precaution" means that Skia coped with the inputs used in the baseline, not that the step may be removed.
+Pele's own SVG is more varied than those inputs. For example, step 5 as implemented replaces `currentColor` with one
+foreground color, which discards the per-element `color` that Skia would honor; but if Pele defines `color` through a
+`var()`, Skia could not resolve it without that step. Removing or narrowing a step should be checked against the whole
+corpus (`npm test`) and the examples in GToolkit.
 
 ### Ordering constraints
 
@@ -105,7 +132,7 @@ Steps 6 to 11 do not depend on each other in the same way; their order in the co
 
 `flatten` knows what Pele writes, and does not claim to implement CSS. The known gaps are:
 
-- `currentColor` is a single foreground color; `color` is not inherited per element.
+- `currentColor` is a single foreground color; `color` is not inherited per element. (Skia itself honors per-element `color`; see the baseline.)
 - `font-size` of the root is fixed at 16 and the `font:` shorthand is not parsed.
 - `<style>` support covers `.class` selectors only. Tag, id, attribute, descendant selectors and `@` rules are left in
   place, and the final check reports the remaining `<style>`.
