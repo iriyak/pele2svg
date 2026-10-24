@@ -20,8 +20,8 @@ Pele2svgOptionsTest >> testConditionallyDuringKeepsEnclosingOptions [
 	inner := Pele2svgOptions globalDefault clone at: #runtime put: 'x'; yourself.
 	Pele2svgOptions globalDefault clone
 		at: #runtime put: 'bun';
-		during: [ inner conditionallyDuring: [ self assert: Pele2svg new runtime equals: 'bun' ] ].
-	inner conditionallyDuring: [ self assert: Pele2svg new runtime equals: 'x' ]
+		during: [ inner conditionallyDuring: [ self assert: (Pele2svgCurrentOptions at: #runtime) equals: 'bun' ] ].
+	inner conditionallyDuring: [ self assert: (Pele2svgCurrentOptions at: #runtime) equals: 'x' ]
 ]
 
 { #category : 'tests' }
@@ -51,6 +51,18 @@ Pele2svgOptionsTest >> testDuringIsNotVisibleAfterAnError [
 ]
 
 { #category : 'tests' }
+Pele2svgOptionsTest >> testEnclosingDuringTakesPrecedenceOverInstanceValue [
+	"As with ZnClient, the options of an enclosing #during: win over what was set on the instance."
+
+	| pele |
+	pele := Pele2svg new runtime: '/path/to/node'; yourself.
+	Pele2svgOptions globalDefault clone
+		at: #runtime put: 'bun';
+		during: [ self assert: pele runtime equals: 'bun' ].
+	self assert: pele runtime equals: '/path/to/node'
+]
+
+{ #category : 'tests' }
 Pele2svgOptionsTest >> testEveryOptionHasOneDefinition [
 	#(#runtime #script #theme #timeout #installTimeout) do: [ :key |
 		self assert: (Pele2svgOptions definitionOf: key) methodClass equals: Pele2svgOptions class ]
@@ -66,16 +78,41 @@ Pele2svgOptionsTest >> testGlobalDefaultIsWritable [
 ]
 
 { #category : 'tests' }
-Pele2svgOptionsTest >> testInstanceValueWinsOverOptions [
-	Pele2svgOptions globalDefault clone
-		at: #runtime put: 'bun';
-		at: #timeout put: 10;
-		during: [
-			| pele |
-			pele := Pele2svg new runtime: '/path/to/node'; timeout: 5; yourself.
-			self assert: pele runtime equals: '/path/to/node'.
-			self assert: pele timeout equals: 5.
-			self assert: Pele2svg new timeout equals: 10 ]
+Pele2svgOptionsTest >> testInstanceSeesALaterGlobalDefaultAndAReset [
+	| pele |
+	pele := Pele2svg new.
+	Pele2svgOptions globalDefault at: #runtime put: 'bun'.
+	self assert: pele runtime equals: 'bun'.
+	Pele2svgOptions resetGlobalDefault.
+	self assert: pele runtime equals: 'node'
+]
+
+{ #category : 'tests' }
+Pele2svgOptionsTest >> testInstanceValueIsLocalToTheInstance [
+	Pele2svg new runtime: '/path/to/node'.
+	self assert: Pele2svg new runtime equals: 'node'
+]
+
+{ #category : 'tests' }
+Pele2svgOptionsTest >> testInstanceValueIsUsedWithoutDuring [
+	| pele |
+	Pele2svgOptions globalDefault at: #timeout put: 10.
+	pele := Pele2svg new runtime: '/path/to/node'; timeout: 5; yourself.
+	self assert: pele runtime equals: '/path/to/node'.
+	self assert: pele timeout equals: 5.
+	"what was not set on the instance comes from the global default"
+	self assert: pele theme isNil.
+	self assert: Pele2svg new timeout equals: 10
+]
+
+{ #category : 'tests' }
+Pele2svgOptionsTest >> testRenderUsesTheInstanceRuntime [
+	"A runtime that cannot be started is reported as Pele2svgError: the instance value reaches the process."
+
+	self
+		should: [ Pele2svg new runtime: 'no-such-runtime-for-pele2svg'; render: 'flowchart LR
+  A --> B' ]
+		raise: Pele2svgError
 ]
 
 { #category : 'tests' }
@@ -97,4 +134,9 @@ Pele2svgOptionsTest >> testRootIsReadOnly [
 Pele2svgOptionsTest >> testUnknownKeyIsRejected [
 	self should: [ Pele2svgOptions globalDefault at: #nope put: 1 ] raise: KeyNotFound.
 	self should: [ Pele2svgCurrentOptions at: #nope ] raise: KeyNotFound
+]
+
+{ #category : 'tests' }
+Pele2svgOptionsTest >> testUnknownKeyIsRejectedOnTheInstance [
+	self should: [ Pele2svg new optionAt: #nope put: 1 ] raise: KeyNotFound
 ]

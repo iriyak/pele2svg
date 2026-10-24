@@ -182,7 +182,8 @@ The package also adds an `SvgInWeb` view to `.svg` files in the GT inspector
 
 The class `Pele2svgExamples` has one `<gtExample>` per diagram — Pele's 58 featured examples (`featured…`, with their sources copied from Pele) and short
 examples of the basic diagram types, 82 in all. Each answers a `BlSkiaSvgElement`; open the class in the GT Coder and
-look at the results.
+look at the results. Eight more examples, `optionsXxx`, show the [settings](#settings): the defaults, `during:`, the global
+default, values set on a converter and their precedence. They answer the options or the converter, not a diagram.
 
 ### Settings
 
@@ -213,10 +214,15 @@ Pele2svgOptions globalDefault clone
   A --> B' ].
 ```
 
-Or set it on one instance, as `theme:` is set below. `script:`, `runtime:`, `theme:` and `timeout:` take precedence over
-the options; an instance that has not been given a value asks `Pele2svgCurrentOptions`. Only an existing option can be
-set (`at:put:` signals `KeyNotFound` for any other key). `Pele2svgOptions resetGlobalDefault` restores the
-defaults.
+Or set it on one instance, as `theme:` is set below. `script:`, `runtime:`, `theme:` and `timeout:` are kept in the
+instance and applied on top of the global default when it renders, the way `ZnClient` does it. The options of an
+enclosing `during:` take precedence over both: in the block above, an instance that was given `runtime: 'node'` still
+runs with Bun. The getters (`runtime`, `timeout`, `theme`,
+`script`) answer what rendering would use at that moment.
+
+Only an existing option can be set (`at:put:` signals `KeyNotFound` for any other key).
+`Pele2svgOptions resetGlobalDefault` restores the defaults. The current options belong to the process that called
+`during:`: inside a `fork`ed block, call `during:` again.
 
 ### Fonts in GToolkit
 

@@ -7,7 +7,7 @@ I convert Mermaid source to a GToolkit-friendly SVG string by running pele2svg (
 	Pele2svg new renderSvg: peleSvg.	""an SVG that Pele has already produced""
 	Pele2svg new asElementFromSvg: peleSvg.
 
-Settings (script, runtime, theme, timeout) are options in the sense of ZnOptions. An instance uses what was set on it with #script:, #runtime:, #theme: or #timeout:; otherwise it asks Pele2svgCurrentOptions, that is the Pele2svgOptions activated by an enclosing #during:, or else Pele2svgOptions globalDefault.
+Settings (script, runtime, theme, timeout) are options in the sense of ZnOptions, and an instance works like a ZnClient. What is set on it with #script:, #runtime:, #theme: or #timeout: is kept in the instance and applied on top of Pele2svgOptions globalDefault when it renders. The options of an enclosing Pele2svgOptions>>#during: take precedence over both. The getters answer the value that rendering would use now.
 
 	Pele2svgOptions globalDefault at: #runtime put: 'bun'.	""for everything""
 	Pele2svgOptions globalDefault clone
@@ -25,10 +25,7 @@ Class {
 	#name : 'Pele2svg',
 	#superclass : 'Object',
 	#instVars : [
-		'script',
-		'runtime',
-		'theme',
-		'timeout'
+		'options'
 	],
 	#category : 'Pele2svg',
 	#package : 'Pele2svg'
@@ -89,8 +86,7 @@ Pele2svg >> attribute: aName inTag: aTagString [
 ]
 
 { #category : 'private' }
-Pele2svg >> convert: aString extension: anExtension flags: anArray [
-	"Write aString to a temporary file, run pele2svg.mjs on it and answer the SVG it wrote."
+Pele2svg >> basicConvert: aString extension: anExtension flags: anArray [
 	| dir in out process |
 	dir := (FileLocator temp / 'pele2svg' / UUID new asString) ensureCreateDirectory.
 	^ [ in := dir / ('in.', anExtension).
@@ -107,6 +103,36 @@ Pele2svg >> convert: aString extension: anExtension flags: anArray [
 			Pele2svgError signal: (message first: (message size min: 600)) ].
 		out binaryReadStreamDo: [ :s | s upToEnd utf8Decoded ] ]
 			ensure: [ dir ensureDeleteAll ]
+]
+
+{ #category : 'private' }
+Pele2svg >> basicInstallDependencies [
+	"Install pele next to pele2svg.mjs: npm install, or bun install when the runtime is bun. Does nothing when pele is already installed there."
+	| directory command arguments process message |
+	directory := self script asFileReference parent.
+	(directory / 'node_modules' / 'pele') exists ifTrue: [ ^ self ].
+	self runtime = 'bun'
+		ifTrue: [ command := 'bun'. arguments := #('install') ]
+		ifFalse: [
+			OSPlatform current isWindows
+				ifTrue: [ command := 'cmd'. arguments := #('/c' 'npm' 'install') ]
+				ifFalse: [ command := 'npm'. arguments := #('install') ] ].
+	process := GtSubprocessWithInMemoryOutput new
+		command: command;
+		arguments: arguments;
+		workingDirectory: directory;
+		yourself.
+	self runProcess: process timeout: (Pele2svgCurrentOptions at: #installTimeout) description: 'npm install in ', directory fullName.
+	process exitCode = 0 ifFalse: [
+		message := process stderr trimBoth.
+		Pele2svgError signal: 'install failed: ', (message last: (message size min: 600)) ]
+]
+
+{ #category : 'converting' }
+Pele2svg >> convert: aString extension: anExtension flags: anArray [
+	"Write aString to a temporary file, run pele2svg.mjs on it and answer the SVG it wrote."
+
+	^ self withDynamicVariablesDo: [ self basicConvert: aString extension: anExtension flags: anArray ]
 ]
 
 { #category : 'private' }
@@ -143,24 +169,28 @@ Pele2svg >> extentOfSvgRoot: aRootTagString [
 { #category : 'installing' }
 Pele2svg >> installDependencies [
 	"Install pele next to pele2svg.mjs: npm install, or bun install when the runtime is bun. Does nothing when pele is already installed there."
-	| directory command arguments process message |
-	directory := self script asFileReference parent.
-	(directory / 'node_modules' / 'pele') exists ifTrue: [ ^ self ].
-	self runtime = 'bun'
-		ifTrue: [ command := 'bun'. arguments := #('install') ]
-		ifFalse: [
-			OSPlatform current isWindows
-				ifTrue: [ command := 'cmd'. arguments := #('/c' 'npm' 'install') ]
-				ifFalse: [ command := 'npm'. arguments := #('install') ] ].
-	process := GtSubprocessWithInMemoryOutput new
-		command: command;
-		arguments: arguments;
-		workingDirectory: directory;
-		yourself.
-	self runProcess: process timeout: (Pele2svgCurrentOptions at: #installTimeout) description: 'npm install in ', directory fullName.
-	process exitCode = 0 ifFalse: [
-		message := process stderr trimBoth.
-		Pele2svgError signal: 'install failed: ', (message last: (message size min: 600)) ]
+
+	^ self withDynamicVariablesDo: [ self basicInstallDependencies ]
+]
+
+{ #category : 'options' }
+Pele2svg >> localOptions [
+	"The options of this instance: the global default, with what was set on this instance on top."
+
+	| local |
+	local := Pele2svgOptions globalDefault clone.
+	options ifNotNil: [ options keysAndValuesDo: [ :key :value | local at: key put: value ] ].
+	^ local
+]
+
+{ #category : 'options' }
+Pele2svg >> optionAt: key put: value [
+	"Set the option key for this instance only. The key must be one of the options of Pele2svgOptions."
+
+	(Pele2svgOptions globalDefault includesKey: key)
+		ifFalse: [ KeyNotFound signalFor: key in: Pele2svgOptions globalDefault ].
+	options ifNil: [ options := Dictionary new ].
+	options at: key put: value
 ]
 
 { #category : 'accessing' }
@@ -193,39 +223,41 @@ Pele2svg >> runProcess: aProcess timeout: milliseconds description: aString [
 
 { #category : 'accessing' }
 Pele2svg >> runtime [
-	"The executable: what was set with #runtime:, else the #runtime option of the current Pele2svgOptions."
+	"The executable: 'node' or 'bun'. See Pele2svgOptions."
 
-	^ runtime ifNil: [ Pele2svgCurrentOptions at: #runtime ]
+	^ self withDynamicVariablesDo: [ Pele2svgCurrentOptions at: #runtime ]
 ]
 
 { #category : 'accessing' }
 Pele2svg >> runtime: anExecutableName [
-	runtime := anExecutableName
+	self optionAt: #runtime put: anExecutableName
 ]
 
 { #category : 'accessing' }
 Pele2svg >> script [
-	"What was set with #script:, else the #script option of the current Pele2svgOptions, else the pele2svg.mjs in the Iceberg clone of pele2svg."
+	"The path of pele2svg.mjs: the script option, or else the pele2svg.mjs in the Iceberg clone of pele2svg."
 
-	^ script ifNil: [ (Pele2svgCurrentOptions at: #script) ifNil: [ self class defaultScript ] ]
+	^ (self withDynamicVariablesDo: [ Pele2svgCurrentOptions at: #script ])
+		ifNil: [ self class defaultScript ]
 ]
 
 { #category : 'accessing' }
 Pele2svg >> script: aPathString [
-	script := aPathString
+	self optionAt: #script put: aPathString
 ]
 
 { #category : 'accessing' }
 Pele2svg >> theme [
-	"What was set with #theme:, else the #theme option of the current Pele2svgOptions."
+	"nil, the path of a theme JSON file, or a Dictionary of theme variables. See Pele2svgOptions."
 
-	^ theme ifNil: [ Pele2svgCurrentOptions at: #theme ]
+	^ self withDynamicVariablesDo: [ Pele2svgCurrentOptions at: #theme ]
 ]
 
 { #category : 'accessing' }
 Pele2svg >> theme: nilOrPathOrDictionary [
 	"Theme variables for pele2svg: nil, the path of a theme JSON file, or a Dictionary. See docs/standalone.md."
-	theme := nilOrPathOrDictionary
+
+	self optionAt: #theme put: nilOrPathOrDictionary
 ]
 
 { #category : 'private' }
@@ -245,12 +277,21 @@ Pele2svg >> themeArgumentIn: aDirectory [
 
 { #category : 'accessing' }
 Pele2svg >> timeout [
-	"What was set with #timeout:, else the #timeout option of the current Pele2svgOptions."
+	"Milliseconds a conversion may take. See Pele2svgOptions."
 
-	^ timeout ifNil: [ Pele2svgCurrentOptions at: #timeout ]
+	^ self withDynamicVariablesDo: [ Pele2svgCurrentOptions at: #timeout ]
 ]
 
 { #category : 'accessing' }
 Pele2svg >> timeout: milliseconds [
-	timeout := milliseconds
+	self optionAt: #timeout put: milliseconds
+]
+
+{ #category : 'options' }
+Pele2svg >> withDynamicVariablesDo: block [
+	"Evaluate block with the options of this instance, unless an enclosing Pele2svgOptions>>#during: has already activated others; those then take precedence."
+
+	^ Pele2svgCurrentOptions value
+		ifNil: [ self localOptions during: block ]
+		ifNotNil: block
 ]

@@ -2,6 +2,8 @@
 GToolkit examples for Pele2svg: each <gtExample> method renders a Mermaid diagram through pele2svg and answers a BlSkiaSvgElement. Open the class in the GT Coder and click the example results to see the diagrams. Requires Node.js (or Bun) and `npm install` in the Iceberg clone of pele2svg.
 
 The 58 featured... methods use the Mermaid sources of the featured examples of pele (https://pele.run/examples, https://github.com/obsidianmd/pele, MIT License, Copyright (c) 2026 kepano), copied unchanged; the same sources are in test/fixtures/featured.json of the repository. The other examples (flowchart, sequenceDiagram, ...) are short diagrams written for this package.
+
+The optionsXxx examples show the options of Pele2svgOptions (defaults, #during:, the global default, values set on a converter, precedence). They do not run Node.js or Bun, except optionsRuntimeReachesTheProcess, which tries to start a runtime that does not exist.
 "
 Class {
 	#name : 'Pele2svgExamples',
@@ -1439,6 +1441,115 @@ Pele2svgExamples >> mindmap [
   root((GT))
     Pharo
     Skia'
+]
+
+{ #category : 'examples' }
+Pele2svgExamples >> optionsDefaults [
+	<gtExample>
+	| options |
+	options := Pele2svgOptions globalDefault.
+	self assert: (options at: #runtime) equals: 'node'.
+	self assert: (options at: #timeout) equals: 30000.
+	self assert: (options at: #installTimeout) equals: 300000.
+	self assert: (options at: #theme) isNil.
+	self assert: (options at: #script) isNil.
+	^ options
+]
+
+{ #category : 'examples' }
+Pele2svgExamples >> optionsDuringIsLocal [
+	<gtExample>
+	"A clone of the global default, activated for a block only."
+
+	| options inside |
+	options := Pele2svgOptions globalDefault clone at: #runtime put: 'bun'; yourself.
+	inside := options during: [ self renderer runtime ].
+	self assert: inside equals: 'bun'.
+	self assert: self renderer runtime equals: 'node'.
+	^ options
+]
+
+{ #category : 'examples' }
+Pele2svgExamples >> optionsEnclosingDuringWins [
+	<gtExample>
+	"The options of an enclosing #during: take precedence over what was set on the converter."
+
+	| pele inside |
+	pele := self renderer runtime: '/path/to/node'; yourself.
+	inside := Pele2svgOptions globalDefault clone
+		at: #runtime put: 'bun';
+		during: [ pele runtime ].
+	self assert: inside equals: 'bun'.
+	self assert: pele runtime equals: '/path/to/node'.
+	^ pele
+]
+
+{ #category : 'examples' }
+Pele2svgExamples >> optionsGlobalDefaultIsWritable [
+	<gtExample>
+	"Changing the global default changes every converter that has not been set otherwise. The example restores the default."
+
+	| changed |
+	changed := [
+		Pele2svgOptions globalDefault at: #runtime put: 'bun'.
+		self renderer runtime ]
+			ensure: [ Pele2svgOptions resetGlobalDefault ].
+	self assert: changed equals: 'bun'.
+	self assert: self renderer runtime equals: 'node'.
+	^ changed
+]
+
+{ #category : 'examples' }
+Pele2svgExamples >> optionsRootIsReadOnly [
+	<gtExample>
+	| root message |
+	root := Pele2svgOptions root.
+	message := [ root at: #runtime put: 'bun'. nil ]
+		on: ModificationForbidden
+		do: [ :error | error messageText ].
+	self assert: message isNotNil.
+	^ root
+]
+
+{ #category : 'examples' }
+Pele2svgExamples >> optionsRuntimeReachesTheProcess [
+	<gtExample>
+	"A runtime that cannot be started is reported as Pele2svgError, which shows that the option reaches the process."
+
+	| message |
+	message := [
+		self renderer runtime: 'no-such-runtime-for-pele2svg'; render: 'flowchart LR
+  A --> B'.
+		nil ]
+			on: Pele2svgError
+			do: [ :error | error messageText ].
+	self assert: message isNotNil.
+	^ message
+]
+
+{ #category : 'examples' }
+Pele2svgExamples >> optionsSetOnTheInstance [
+	<gtExample>
+	"What is set on a converter is kept in the converter, as in a ZnClient. Another converter is not affected."
+
+	| pele |
+	pele := self renderer runtime: 'bun'; timeout: 5000; yourself.
+	self assert: pele runtime equals: 'bun'.
+	self assert: pele timeout equals: 5000.
+	self assert: pele theme isNil.
+	self assert: self renderer runtime equals: 'node'.
+	^ pele
+]
+
+{ #category : 'examples' }
+Pele2svgExamples >> optionsUnknownKeyIsRejected [
+	<gtExample>
+	| message |
+	message := [ Pele2svgOptions globalDefault at: #nope put: 1. nil ]
+		on: KeyNotFound
+		do: [ :error | error messageText ].
+	self assert: message isNotNil.
+	^ message
 ]
 
 { #category : 'examples' }

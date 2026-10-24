@@ -17,7 +17,7 @@ Options can be cloned to make a local, writable copy that inherits from the orig
 		at: #runtime put: 'bun';
 		during: [ Pele2svg new render: aMermaidString ].
 
-An instance of Pele2svg that has been given an explicit #runtime:, #script:, #theme: or #timeout: uses it; otherwise it asks the current options.
+An instance of Pele2svg keeps the options set on it with #runtime:, #script:, #theme: or #timeout: (as ZnClient does) and applies them with #conditionallyDuring:. So the options of an enclosing #during: take precedence over what was set on the instance, and what was set on the instance takes precedence over the global default.
 
 Options: #runtime (executable, 'node' or 'bun'), #script (path of pele2svg.mjs; nil means the Iceberg clone of pele2svg), #theme (nil, a path to a theme JSON file or a Dictionary of theme variables), #timeout (milliseconds for one conversion), #installTimeout (milliseconds for installDependencies).
 "
