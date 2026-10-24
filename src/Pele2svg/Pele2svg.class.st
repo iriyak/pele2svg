@@ -7,6 +7,13 @@ I convert Mermaid source to a GToolkit-friendly SVG string by running pele2svg (
 	Pele2svg new renderSvg: peleSvg.	""an SVG that Pele has already produced""
 	Pele2svg new asElementFromSvg: peleSvg.
 
+Settings (script, runtime, theme, timeout) are options in the sense of ZnOptions. An instance uses what was set on it with #script:, #runtime:, #theme: or #timeout:; otherwise it asks Pele2svgCurrentOptions, that is the Pele2svgOptions activated by an enclosing #during:, or else Pele2svgOptions globalDefault.
+
+	Pele2svgOptions globalDefault at: #runtime put: 'bun'.	""for everything""
+	Pele2svgOptions globalDefault clone
+		at: #runtime put: 'bun';
+		during: [ Pele2svg new render: mmd ].	""for this block only""
+
 script: path to pele2svg.mjs (default: the Iceberg clone of pele2svg).
 runtime: executable, 'node' by default ('bun' also works).
 theme: nil (default), a path to a theme JSON file, or a Dictionary of theme variables. Generic font families such as monospace are left as they are; Skia does not resolve monospace (the text comes out proportional), so map it to a real font name with the theme key --gt-font-mono, e.g. { '--gt-font-mono' -> 'Consolas' } asDictionary on Windows.
@@ -90,10 +97,10 @@ Pele2svg >> convert: aString extension: anExtension flags: anArray [
 		out := dir / 'out.svg'.
 		in binaryWriteStreamDo: [ :s | s nextPutAll: aString utf8Encoded ].
 		process := GtSubprocessWithInMemoryOutput new
-			command: runtime;
+			command: self runtime;
 			arguments: { self script }, anArray, { in fullName. out fullName }, (self themeArgumentIn: dir);
 			yourself.
-		self runProcess: process timeout: timeout description: runtime.
+		self runProcess: process timeout: self timeout description: self runtime.
 		(process exitCode = 0 and: [ out exists ]) ifFalse: [
 			| message |
 			message := process stderr trimBoth.
@@ -133,20 +140,13 @@ Pele2svg >> extentOfSvgRoot: aRootTagString [
 	Pele2svgError signal: 'The SVG has neither a viewBox nor a width and height in pixels'
 ]
 
-{ #category : 'accessing' }
-Pele2svg >> initialize [
-	super initialize.
-	runtime := 'node'.
-	timeout := 30000
-]
-
 { #category : 'installing' }
 Pele2svg >> installDependencies [
 	"Install pele next to pele2svg.mjs: npm install, or bun install when the runtime is bun. Does nothing when pele is already installed there."
 	| directory command arguments process message |
 	directory := self script asFileReference parent.
 	(directory / 'node_modules' / 'pele') exists ifTrue: [ ^ self ].
-	runtime = 'bun'
+	self runtime = 'bun'
 		ifTrue: [ command := 'bun'. arguments := #('install') ]
 		ifFalse: [
 			OSPlatform current isWindows
@@ -157,7 +157,7 @@ Pele2svg >> installDependencies [
 		arguments: arguments;
 		workingDirectory: directory;
 		yourself.
-	self runProcess: process timeout: 300000 description: 'npm install in ', directory fullName.
+	self runProcess: process timeout: (Pele2svgCurrentOptions at: #installTimeout) description: 'npm install in ', directory fullName.
 	process exitCode = 0 ifFalse: [
 		message := process stderr trimBoth.
 		Pele2svgError signal: 'install failed: ', (message last: (message size min: 600)) ]
@@ -193,7 +193,9 @@ Pele2svg >> runProcess: aProcess timeout: milliseconds description: aString [
 
 { #category : 'accessing' }
 Pele2svg >> runtime [
-	^ runtime
+	"The executable: what was set with #runtime:, else the #runtime option of the current Pele2svgOptions."
+
+	^ runtime ifNil: [ Pele2svgCurrentOptions at: #runtime ]
 ]
 
 { #category : 'accessing' }
@@ -203,7 +205,9 @@ Pele2svg >> runtime: anExecutableName [
 
 { #category : 'accessing' }
 Pele2svg >> script [
-	^ script ifNil: [ self class defaultScript ]
+	"What was set with #script:, else the #script option of the current Pele2svgOptions, else the pele2svg.mjs in the Iceberg clone of pele2svg."
+
+	^ script ifNil: [ (Pele2svgCurrentOptions at: #script) ifNil: [ self class defaultScript ] ]
 ]
 
 { #category : 'accessing' }
@@ -213,7 +217,9 @@ Pele2svg >> script: aPathString [
 
 { #category : 'accessing' }
 Pele2svg >> theme [
-	^ theme
+	"What was set with #theme:, else the #theme option of the current Pele2svgOptions."
+
+	^ theme ifNil: [ Pele2svgCurrentOptions at: #theme ]
 ]
 
 { #category : 'accessing' }
@@ -225,20 +231,23 @@ Pele2svg >> theme: nilOrPathOrDictionary [
 { #category : 'private' }
 Pele2svg >> themeArgumentIn: aDirectory [
 	"Answer the theme arguments for the command line: none, or the path of a theme file."
-	| file |
-	theme ifNil: [ ^ #() ].
-	theme isDictionary ifFalse: [
-		file := theme asFileReference.
+	| file aTheme |
+	aTheme := self theme.
+	aTheme ifNil: [ ^ #() ].
+	aTheme isDictionary ifFalse: [
+		file := aTheme asFileReference.
 		file exists ifFalse: [ Pele2svgError signal: 'Theme file not found: ', file fullName ].
 		^ { file fullName } ].
 	file := aDirectory / 'theme.json'.
-	file binaryWriteStreamDo: [ :s | s nextPutAll: (NeoJSONWriter toString: theme) utf8Encoded ].
+	file binaryWriteStreamDo: [ :s | s nextPutAll: (NeoJSONWriter toString: aTheme) utf8Encoded ].
 	^ { file fullName }
 ]
 
 { #category : 'accessing' }
 Pele2svg >> timeout [
-	^ timeout
+	"What was set with #timeout:, else the #timeout option of the current Pele2svgOptions."
+
+	^ timeout ifNil: [ Pele2svgCurrentOptions at: #timeout ]
 ]
 
 { #category : 'accessing' }

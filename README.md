@@ -186,14 +186,37 @@ look at the results.
 
 ### Settings
 
-Set these on the instance before rendering, as `theme:` is set above.
+Pele2svg has four settings, plus one for `installDependencies`. They follow the pattern of Zinc's `ZnOptions`: the
+defaults live in a `Pele2svgOptions` object, and the code that renders reads them through the dynamic variable
+`Pele2svgCurrentOptions`.
 
-| Setting | Default | |
+| Option | Default | |
 |---|---|---|
-| `script:` | `pele2svg.mjs` in the Iceberg clone named `pele2svg` | Path of `pele2svg.mjs`. Set it when no Iceberg repository named `pele2svg` exists in the image (the class then signals `Pele2svgError`). |
-| `runtime:` | `'node'` | The executable to run. `'bun'` is also possible. Give the full path if `node` is not on the PATH that GToolkit sees (for example, an app started from the macOS Finder does not use your shell's PATH; not tried). |
-| `theme:` | none | `nil`, the path of a theme JSON file, or a Dictionary of theme variables. See [Themes](docs/standalone.md#themes). |
-| `timeout:` | `30000` | Milliseconds; the process is killed when it is exceeded. |
+| `#script` | `nil`: `pele2svg.mjs` in the Iceberg clone named `pele2svg` | Path of `pele2svg.mjs`. Set it when no Iceberg repository named `pele2svg` exists in the image (the class then signals `Pele2svgError`). |
+| `#runtime` | `'node'` | The executable to run. `'bun'` is also possible. Give the full path if `node` is not on the PATH that GToolkit sees (for example, an app started from the macOS Finder does not use your shell's PATH; not tried). |
+| `#theme` | `nil` | `nil`, the path of a theme JSON file, or a Dictionary of theme variables. See [Themes](docs/standalone.md#themes). |
+| `#timeout` | `30000` | Milliseconds; the process is killed when it is exceeded. |
+| `#installTimeout` | `300000` | Milliseconds `installDependencies` may take. |
+
+Change the default for everything, for example to run with Bun:
+
+```smalltalk
+Pele2svgOptions globalDefault at: #runtime put: 'bun'.
+```
+
+Change it only for the code in a block. `clone` makes a writable copy that inherits from the global default:
+
+```smalltalk
+Pele2svgOptions globalDefault clone
+    at: #runtime put: 'bun';
+    during: [ Pele2svg new render: 'flowchart LR
+  A --> B' ].
+```
+
+Or set it on one instance, as `theme:` is set below. `script:`, `runtime:`, `theme:` and `timeout:` take precedence over
+the options; an instance that has not been given a value asks `Pele2svgCurrentOptions`. Only an existing option can be
+set (`at:put:` signals `KeyNotFound` for any other key). `Pele2svgOptions resetGlobalDefault` restores the
+defaults.
 
 ### Fonts in GToolkit
 

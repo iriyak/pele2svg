@@ -22,10 +22,14 @@ BaselineOfPele2svg class >> loadLepiter [
 		ifNone: [ self inform: 'Repository pele2svg not found in Iceberg.' ]
 ]
 
-{ #category : 'baseline' }
+{ #category : 'accessing' }
 BaselineOfPele2svg >> baseline: spec [
 	<baseline>
 		^ spec for: #common do: [
-			spec package: 'Pele2svg'
-		]
+			spec
+				package: 'Pele2svg';
+				package: 'Pele2svg-Tests' with: [ spec requires: #('Pele2svg') ].
+			spec
+				group: 'default' with: #('Pele2svg');
+				group: 'Tests' with: #('Pele2svg' 'Pele2svg-Tests') ]
 ]
