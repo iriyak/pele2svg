@@ -6,8 +6,9 @@ The 58 featured... methods use the Mermaid sources of the featured examples of p
 Class {
 	#name : 'Pele2svgExamples',
 	#superclass : 'Object',
-	#category : 'Pele2svg',
-	#package : 'Pele2svg'
+	#category : 'Pele2svg-Examples',
+	#package : 'Pele2svg',
+	#tag : 'Examples'
 }
 
 { #category : 'examples' }

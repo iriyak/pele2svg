@@ -8,8 +8,9 @@ I provide access to the current Pele2svgOptions instance: the options activated 
 Class {
 	#name : 'Pele2svgCurrentOptions',
 	#superclass : 'DynamicVariable',
-	#category : 'Pele2svg',
-	#package : 'Pele2svg'
+	#category : 'Pele2svg-Options',
+	#package : 'Pele2svg',
+	#tag : 'Options'
 }
 
 { #category : 'accessing' }

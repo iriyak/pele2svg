@@ -32,8 +32,9 @@ Class {
 	#classVars : [
 		'globalDefault'
 	],
-	#category : 'Pele2svg',
-	#package : 'Pele2svg'
+	#category : 'Pele2svg-Options',
+	#package : 'Pele2svg',
+	#tag : 'Options'
 }
 
 { #category : 'utilities' }
