@@ -1,3 +1,6 @@
+"
+Metacello baseline of Pele2svg. The default group loads the package Pele2svg; the group Tests also loads Pele2svg-Tests. Run Pele2svg installDependencies once afterwards to install Pele next to pele2svg.mjs.
+"
 Class {
 	#name : 'BaselineOfPele2svg',
 	#superclass : 'BaselineOf',
