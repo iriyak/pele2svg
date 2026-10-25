@@ -16,17 +16,33 @@ examples, before the layout cases were added. `npm test` covers all 659.
 - Compared by eye in GToolkit (Skia) and in WebView2 on Windows, they match for: colors, `tspan` / `text-anchor`, bold and
   italic text, rounded corners, arrowheads, dashed lines, translucent overlaps, rotated text, icons, ellipses and polygons,
   characters such as `« »` and `ʻ`, and monospace text (replaced by Consolas).
+- All 659 were also compared with a browser. For each, Chromium drew Pele's own SVG and GToolkit (Skia) drew the converted
+  SVG (written at 2x, white background), and the two images were compared in 8x8 pixel blocks, which tolerates the
+  different glyph shapes of the two machines. None failed or came out with another size; the median difference per block
+  was 0.0026 (0 is identical). The pairs can be looked at side by side in the gallery (see
+  [`pele-upgrade.md`](pele-upgrade.md)). The comparison found one real bug (`fill:Purple`: Skia understands only
+  lower-case colour keywords, fixed in `styleToAttrs`) and the differences listed under *Known differences in Skia* below.
 - Every `<gtExample>` of `Pele2svgFeaturedExamples` (58) and the 24 short ones of `Pele2svgExamples` (82 in all) was run through the Pharo class and
   looked at in GToolkit (Skia), including a flowchart with Japanese labels (`japaneseLabels`), which draws correctly.
 
 Not verified:
 
 - Selecting examples in the *Examples* view of `Pele2svgExamples` by hand in the GT UI. The view builds, and all `<gtExample>` methods of `Pele2svgExamples` and `Pele2svgFeaturedExamples` (86) and the tests of the package `Pele2svg-Tests` (22) were run in a GToolkit image, but the 659 examples were not clicked through.
-- The 81 layout cases in GToolkit and WebView2. `npm test` checks only that they convert cleanly.
+- The 81 layout cases in WebView2, and by eye in GToolkit. They are covered by the browser comparison above and by `npm test`.
 - Other full-width text than that one flowchart. Pele measures text itself, so label boxes may not fit full-width glyphs
   in every font GT picks.
 - One `<image>` with an external URL (a flowchart example) is removed.
 - The converted SVG keeps Pele's intrinsic `width`/`height`; how it is scaled depends on the viewer.
+
+Known differences in Skia (not bugs of pele2svg):
+
+- Text with an emoji can lose its bold weight, and text after an emoji with U+FE0F may shift (`treeview-12`).
+- A glyph that the font lacks, such as ♥ in `er-05` and `flowchart-03`, is drawn as a box.
+- An external `<image>` is removed on purpose (`flowchart-70`).
+- Fonts: Pele's SVG asks for the generic `sans-serif`. A browser on Windows uses Arial for it, Skia another, thinner face.
+  [`themes/gt-windows.json`](../themes/gt-windows.json) sets `--pele-font` to Arial and `--gt-font-mono` to Consolas, and
+  `Pele2svgExamples` applies it on Windows. `Pele2svg` itself applies no theme unless one is given.
+- `gantt-07` is an empty diagram (17x17): Pele draws nothing there either.
 
 ## Running the tests
 
@@ -217,3 +233,5 @@ A practical split would be: gather the environment with a visitor, apply the loc
 verification as a separate traversal. The 659-example corpus and `test/corpus.test.js` would serve as the oracle for such
 an implementation, comparing canonicalized XML rather than bytes, because attribute order is not preserved identically
 by both approaches.
+
+When Pele has a new version, follow [`pele-upgrade.md`](pele-upgrade.md).
