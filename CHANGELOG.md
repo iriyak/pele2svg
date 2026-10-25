@@ -24,7 +24,12 @@ Formulas, render options, and a pele 1.10 baseline.
 ### Known limits
 
 - `<sub>`, `<sup>` and `<u>` are ignored by Skia; emoji can render with the wrong font.
-- Still as in 0.2.0: only Windows has been checked, external `<image>` URLs are removed, and the package is not on npm.
+- Skia does not resolve the `monospace` family; a theme key maps it to a real font.
+- Only Windows has been checked (GToolkit and WebView2); macOS and Linux have not been tried.
+- Images with external URLs are removed.
+- Converted SVGs keep pele's intrinsic size, so scaling depends on the viewer.
+- Only simple class rules are converted; other rules are left in place with a warning.
+- Not yet on the npm registry.
 
 ## 0.2.0 (2026-10-19, pre-release)
 
