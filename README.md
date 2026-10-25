@@ -180,10 +180,18 @@ The package also adds an `SvgInWeb` view to `.svg` files in the GT inspector
 
 ### Examples
 
-The class `Pele2svgExamples` has one `<gtExample>` per diagram — Pele's 58 featured examples (`featured…`, with their sources copied from Pele) and short
-examples of the basic diagram types, 82 in all. Each answers a `BlSkiaSvgElement`; open the class in the GT Coder and
-look at the results. Eight more examples, `optionsXxx`, show the [settings](#settings): the defaults, `during:`, the global
-default, values set on a converter and their precedence. They answer the options or the converter, not a diagram.
+`Pele2svgExamples` shows all of Pele's published examples (659: the 58 featured examples, the 520 documentation examples and
+the 81 layout cases), read from [`test/fixtures`](test/fixtures). Evaluate `Pele2svgExamples new` and look at its
+*Examples* view: it lists them by corpus, type and name, and selecting one draws it through pele2svg as a `BlSkiaSvgElement`.
+`Pele2svgExamples new elementOfExampleNamed: 'flowchart-layout-curves-1'` answers the element of one example.
+The class also has 24 short `<gtExample>` methods (the basic diagram types and a few checks) and 4 for the examples it reads.
+
+`Pele2svgFeaturedExamples` has one `<gtExample>` per featured example (58, named `<type><n>` after the fixture, for example `c41` for `c4-1`, with their sources copied from Pele);
+each answers a `BlSkiaSvgElement`. Open the class in the GT Coder and look at the results.
+
+The tests of the [settings](#settings) (the defaults, `during:`, the global default, values set on a converter and their
+precedence) are in `Pele2svgOptionsTest`, in the package `Pele2svg-Tests`, together with `Pele2svgExamplesTest`, which
+checks the fixtures that the examples read. Neither runs Node.js.
 
 ### Settings
 
@@ -271,8 +279,8 @@ Copyright (c) 2026 Kazunori Iriya (pele2svg post-processing and GToolkit adaptat
 [Pele](https://github.com/obsidianmd/pele) is the work of its original author and is MIT-licensed
 ([its LICENSE](https://github.com/obsidianmd/pele/blob/main/LICENSE)). This repository contains no Pele code: it
 post-processes Pele's output, and Pele is installed with npm. The example diagram sources in `examples`,
-`test/fixtures` and the `featured…` methods of `Pele2svgExamples` are taken from Pele, and Pele itself is run by the
+`test/fixtures` and the methods of `Pele2svgFeaturedExamples` are taken from Pele, and Pele itself is run by the
 tests and the examples. Each of these says so where it is used: `examples/README.md`, `test/fixtures/README.md`, the
-header of `test/corpus.test.js` and the class comment of `Pele2svgExamples`.
+header of `test/corpus.test.js` and the class comments of `Pele2svgExamples` and `Pele2svgFeaturedExamples`.
 
 See [LICENSE](LICENSE) for the full text.

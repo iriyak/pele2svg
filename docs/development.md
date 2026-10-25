@@ -16,11 +16,12 @@ examples, before the layout cases were added. `npm test` covers all 659.
 - Compared by eye in GToolkit (Skia) and in WebView2 on Windows, they match for: colors, `tspan` / `text-anchor`, bold and
   italic text, rounded corners, arrowheads, dashed lines, translucent overlaps, rotated text, icons, ellipses and polygons,
   characters such as `« »` and `ʻ`, and monospace text (replaced by Consolas).
-- Every example of the `Pele2svgExamples` class (82: the 58 featured ones and 24 others) was run through the Pharo class and
+- Every `<gtExample>` of `Pele2svgFeaturedExamples` (58) and the 24 short ones of `Pele2svgExamples` (82 in all) was run through the Pharo class and
   looked at in GToolkit (Skia), including a flowchart with Japanese labels (`japaneseLabels`), which draws correctly.
 
 Not verified:
 
+- Selecting examples in the *Examples* view of `Pele2svgExamples` by hand in the GT UI. The view builds, and all `<gtExample>` methods of `Pele2svgExamples` and `Pele2svgFeaturedExamples` (86) and the tests of the package `Pele2svg-Tests` (22) were run in a GToolkit image, but the 659 examples were not clicked through.
 - The 81 layout cases in GToolkit and WebView2. `npm test` checks only that they convert cleanly.
 - Other full-width text than that one flowchart. Pele measures text itself, so label boxes may not fit full-width glyphs
   in every font GT picks.
