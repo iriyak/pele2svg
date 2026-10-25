@@ -118,7 +118,8 @@ numbering in the header comment of `pele2svg.mjs` and in the README table, which
 | 9 | `<a>` | **Element rewrite.** Links are useless in a Skia view, so `<a …>` becomes a bare `<g>` and its attributes are discarded. | `<a href="…">` → `<g>` | — |
 | 10 | External `<image>` | **Removal of what cannot be fetched.** An `<image>` whose `href` starts with `http:` or `https:` is deleted and a warning is recorded. | `<image href="https://…"/>` → (nothing) | external resources |
 | 11 | Generic font names | **Name resolution.** `monospace`, `sans-serif`, `serif` are replaced by `--gt-font-mono`, `--gt-font-sans`, `--gt-font-serif` from the theme, if given. In Skia all three generic names draw the same default font, only the first name of a family list is tried, and quoted names do not match. | `font-family="monospace"` → `font-family="Consolas"` | font matching |
-| 12 | Final check | **Verification only.** Adds a warning if `var(`, `<style` or `color-mix(` is still in the output. | — | — |
+| 12 | Color keywords | **Normalization.** Every CSS color keyword in `fill`, `stroke`, `color`, `stop-color`, `flood-color` and `lighting-color` is written as `#rrggbb` (148 names, any case), and `transparent` as `none`. Skia understands only some spellings and only in lower case. | `grey` → `#808080`, `Purple` → `#800080` | named colors |
+| 13 | Final check | **Verification only.** Adds a warning if `var(`, `<style` or `color-mix(` is still in the output. | — | — |
 
 `asElementFromSvg:` and `--svg` run exactly the same `flatten` on an SVG that already exists; only the Pele rendering
 step is skipped.
@@ -140,6 +141,7 @@ Windows). The assumption holds for some steps and not for others:
 | 9 `<a>` | drawn normally | kept as a precaution |
 | 10 external `<image>` | does not stop drawing; the image itself was not examined | unclear |
 | 11 generic font names | all draw the same default font | required |
+| 12 color keywords | 8 of the 148 keywords draw black, keywords are case-sensitive, `transparent` as a fill draws black | required |
 | 2 root `font-size` | Skia's default is not 16 | required |
 
 "Kept as a precaution" means that Skia coped with the inputs used in the baseline, not that the step may be removed.
@@ -227,12 +229,12 @@ How well each step would map:
 
 | Step | Fit for tree rewriting | Why |
 |---|---|---|
-| 4 `var()`, 5 `currentColor`, 11 fonts | good | local replacement of one node by a value computed from a table |
+| 4 `var()`, 5 `currentColor`, 11 fonts, 12 color keywords | good | local replacement of one node by a value computed from a table |
 | 8 `color-mix()` | fair | the matching is local, but the arithmetic is code anyway |
 | 7 `style` → attributes | fair | needs the CSS declaration grammar *and* a condition ("replace an existing attribute of that name") |
 | 1 variable table, 3 class rules | poor | they need whole-document information (all variable definitions; all rules matched against all classes); this is a pass that gathers facts, not a local rewrite |
 | 6, 9, 10 structural | good, once an XML grammar exists | pairing `<svg>` with `</svg>` is trivial on a tree |
-| 12 final check | not a rewrite | a traversal that reports |
+| 13 final check | not a rewrite | a traversal that reports |
 
 A practical split would be: gather the environment with a visitor, apply the local rewrites as rules, and keep
 verification as a separate traversal. The 659-example corpus and `test/corpus.test.js` would serve as the oracle for such
