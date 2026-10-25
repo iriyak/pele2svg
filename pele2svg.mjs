@@ -301,6 +301,21 @@ export async function peleOptions(json = {}) {
   return options;
 }
 
+// ---------- Mermaid text -> SVG ----------
+// Run Pele on Mermaid source and flatten the result: { svg, warnings }. This is what the command line does for an .mmd
+// file. theme is an object of theme variables (see flatten); renderOptions is the JSON of --render-options (see
+// peleOptions). It throws when the Mermaid is invalid or a render option is unknown.
+// MathJax takes about 0.2 s to load, so it is loaded only for a source that has a $$ in it (and once per option set).
+// Pele is imported on the first call, so flatten, mathToSvg and --svg work without it.
+const optionsCache = new Map();
+export async function mermaidToSvg(source, { theme = {}, renderOptions = {} } = {}) {
+  const { render } = await import('pele');
+  const math = Boolean(renderOptions.math) && source.includes('$$');
+  const key = JSON.stringify({ ...renderOptions, math });
+  if (!optionsCache.has(key)) optionsCache.set(key, await peleOptions({ ...renderOptions, math }));
+  return flatten(render(source, optionsCache.get(key)).svg, theme);
+}
+
 // ---------- A formula on its own ----------
 // Typeset one formula with MathJax (math.mjs) and answer plain SVG that Skia can draw: { svg, width, height } with the
 // size in pixels. format is 'tex' (default), 'mathml' or 'asciimath'; display: true is the larger display style;
@@ -377,15 +392,7 @@ async function main(args) {
     console.log(`ok=${ok} failed=${failed} -> ${outDir}`);
     return;
   }
-  const { render: peleRender } = await import('pele');
   const json = optionsFile ? JSON.parse(readFileSync(optionsFile, 'utf8')) : {};
-  // MathJax takes about 0.2 s to load, so it is loaded only for a source that has a $$ in it (and once per run)
-  const optionsCache = {};
-  const optionsFor = async source => {
-    const key = json.math && source.includes('$$') ? 'withMath' : 'withoutMath';
-    return optionsCache[key] ??= await peleOptions(key === 'withMath' ? json : { ...json, math: false });
-  };
-  const render = async source => peleRender(source, await optionsFor(source));
   if (argv[0] === '--batch') {
     const [, listFile, outDir, themeFile] = argv;
     const theme = themeOf(themeFile);
@@ -393,8 +400,7 @@ async function main(args) {
     let ok = 0, failed = 0, warned = 0;
     for (const { name, source } of JSON.parse(readFileSync(listFile, 'utf8'))) {
       try {
-        const { svg } = await render(source);
-        const flat = flatten(svg, theme);
+        const flat = await mermaidToSvg(source, { theme, renderOptions: json });
         writeFileSync(`${outDir}/${name}.svg`, flat.svg);
         ok++;
         if (flat.warnings.length) { warned++; console.error(`${name}: ${[...new Set(flat.warnings)].join(' / ')}`); }
@@ -406,8 +412,7 @@ async function main(args) {
     console.log(`ok=${ok} failed=${failed} withWarnings=${warned} -> ${outDir}`);
   } else {
     const [inFile, outFile, themeFile] = argv;
-    const { svg } = await render(readFileSync(inFile, 'utf8'));
-    const flat = flatten(svg, themeOf(themeFile));
+    const flat = await mermaidToSvg(readFileSync(inFile, 'utf8'), { theme: themeOf(themeFile), renderOptions: json });
     writeFileSync(outFile, flat.svg);
     for (const w of new Set(flat.warnings)) console.error('warning:', w);
     console.log('wrote', outFile);

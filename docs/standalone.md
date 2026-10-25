@@ -76,14 +76,27 @@ as a warning.
 As a library:
 
 ```js
+import { mermaidToSvg } from 'pele2svg';      // from a clone: import { mermaidToSvg } from './pele2svg.mjs';
+
+const { svg, warnings } = await mermaidToSvg('flowchart LR\n A-->B', {
+  theme: { '--gt-font-mono': 'Consolas' },          // optional: theme variables, as in a theme.json
+  renderOptions: { maxWidth: 360, math: true },     // optional: the JSON of --render-options
+});
+```
+
+`mermaidToSvg()` is what the command line does for an `.mmd` file: it runs Pele and then `flatten`. It throws when the
+Mermaid is invalid or a render option is unknown. MathJax is loaded only for a source that contains `$$`, and Pele is
+imported on the first call. To convert an SVG that Pele has already made, call `flatten()` yourself:
+
+```js
 import { render } from 'pele';
-import { flatten } from 'pele2svg';      // from a clone: import { flatten } from './pele2svg.mjs';
+import { flatten } from 'pele2svg';
 
 const { svg, warnings } = flatten(render('flowchart LR\n A-->B').svg, { '--gt-font-mono': 'Consolas' });
 ```
 
 With formulas or other render options, `peleOptions()` turns the JSON of `--render-options` into Pele's options
-(`math: true` becomes the MathJax resolver of [`math.mjs`](../math.mjs), which answers SVG in pixels):
+(`math: true` becomes the MathJax resolver of [`math.mjs`](../math.mjs), which answers SVG in pixels); `mermaidToSvg()` calls it for you:
 
 ```js
 import { peleOptions } from 'pele2svg';

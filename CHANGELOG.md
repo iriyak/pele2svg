@@ -6,6 +6,8 @@
 
 - **A formula on its own.** `mathToSvg(source, { format, display, size, color })` typesets one formula with MathJax and answers plain SVG, as large as the formula in pixels. The format is TeX, MathML or AsciiMath. On the command line: `--math` and `--math-batch`. In Pharo: `elementFor:format:`, `svgFor:format:`, `elementForTex:`, `svgForTex:`, and the longer `elementFor:format:display:size:color:` and `svgFor:format:display:size:color:`. Five new gtExamples in `Pele2svgMathExamples` (the fifth, `asciimathSets`, is a table of AsciiMath sources for sets and logic), `test/math.test.js` and a new test.
 
+- **`mermaidToSvg(source, { theme, renderOptions })`**, the library form of what the command line does for an `.mmd` file: it runs Pele, then `flatten`, and answers `{ svg, warnings }`. MathJax is still loaded only for a source that contains `$$`. The command line (`input.mmd`, `--batch`) now calls it. New file `test/mermaid-to-svg.test.js`.
+
 ### Changed
 
 - A TeX error in a `$$...$$` label now shows the TeX source (as when MathJax is not available) instead of MathJax's red error message.
