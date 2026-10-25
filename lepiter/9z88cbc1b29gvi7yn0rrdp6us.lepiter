@@ -1929,6 +1929,80 @@
 							"elementHeight" : 50,
 							"codeHeight" : 60,
 							"codeVisible" : true
+						},
+						{
+							"__type" : "textSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T16:48:04.086+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T16:48:04.086+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "8ETn85y6TdMh40tIDLdIAQ=="
+							},
+							"paragraphStyle" : {
+								"__type" : "textStyle"
+							},
+							"string" : "AsciiMath is short enough to type by hand, which suits a definition with sets. The table below lists some sources (left) and the formulas they give (right); {{gtMethod:name=Pele2svgMathExamples>>asciimathSets}} builds it, and each row starts one process, so it takes a few seconds. Not in the table, because they do not give the expected sign: `emptyset` (write `O/`), `A \\ B` and `card A`."
+						},
+						{
+							"__type" : "elementSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T16:48:04.087+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T16:48:04.087+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "T/9YvJvNG5TygzLSJ79DzA=="
+							},
+							"code" : "Pele2svgMathExamples new asciimathSets",
+							"elementHeight" : 470,
+							"codeHeight" : 40,
+							"codeVisible" : true
 						}
 					]
 				},

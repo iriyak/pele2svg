@@ -4,7 +4,7 @@
 
 ### Added
 
-- **A formula on its own.** `mathToSvg(source, { format, display, size, color })` typesets one formula with MathJax and answers plain SVG, as large as the formula in pixels. The format is TeX, MathML or AsciiMath. On the command line: `--math` and `--math-batch`. In Pharo: `elementFor:format:`, `svgFor:format:`, `elementForTex:`, `svgForTex:`, and the longer `elementFor:format:display:size:color:` and `svgFor:format:display:size:color:`. Four new gtExamples in `Pele2svgMathExamples`, `test/math.test.js` and a new test.
+- **A formula on its own.** `mathToSvg(source, { format, display, size, color })` typesets one formula with MathJax and answers plain SVG, as large as the formula in pixels. The format is TeX, MathML or AsciiMath. On the command line: `--math` and `--math-batch`. In Pharo: `elementFor:format:`, `svgFor:format:`, `elementForTex:`, `svgForTex:`, and the longer `elementFor:format:display:size:color:` and `svgFor:format:display:size:color:`. Five new gtExamples in `Pele2svgMathExamples` (the fifth, `asciimathSets`, is a table of AsciiMath sources for sets and logic), `test/math.test.js` and a new test.
 
 ### Changed
 

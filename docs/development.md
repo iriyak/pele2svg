@@ -27,7 +27,7 @@ examples, before the layout cases were added. `npm test` covers all 659.
 
 Not verified:
 
-- Selecting examples in the *Examples* view of `Pele2svgExamples` by hand in the GT UI. The view builds, and all `<gtExample>` methods of `Pele2svgExamples` and `Pele2svgFeaturedExamples` and `Pele2svgMathExamples` (102) and the tests of the package `Pele2svg-Tests` (30) were run in a GToolkit image, but the 659 examples were not clicked through.
+- Selecting examples in the *Examples* view of `Pele2svgExamples` by hand in the GT UI. The view builds, and all `<gtExample>` methods of `Pele2svgExamples` and `Pele2svgFeaturedExamples` and `Pele2svgMathExamples` (103) and the tests of the package `Pele2svg-Tests` (30) were run in a GToolkit image, but the 659 examples were not clicked through.
 - The 81 layout cases in WebView2, and by eye in GToolkit. They are covered by the browser comparison above and by `npm test`.
 - Other full-width text than that one flowchart. Pele measures text itself, so label boxes may not fit full-width glyphs
   in every font GT picks.

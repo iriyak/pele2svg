@@ -91,7 +91,7 @@ Pele2svgExamplesTest >> testMathExamplesAgreeWithTheSources [
 		self assert: ((Pele2svgMathExamples >> each asSymbol) hasPragmaNamed: #gtExample) ].
 	self
 		assert: (Pele2svgMathExamples selectors select: [ :each | (Pele2svgMathExamples >> each) hasPragmaNamed: #gtExample ]) asSet
-		equals: (selectors collect: #asSymbol) asSet , #(withoutMathOption texFormula mathmlFormula asciimathFormula displayFormula) asSet
+		equals: (selectors collect: #asSymbol) asSet , #(withoutMathOption texFormula mathmlFormula asciimathFormula displayFormula asciimathSets) asSet
 ]
 
 { #category : 'tests' }
@@ -115,6 +115,7 @@ Pele2svgExamplesTest >> testMathFormulasOnTheirOwn [
 	examples := Pele2svgMathExamples new.
 	#(texFormula mathmlFormula asciimathFormula displayFormula) do: [ :each |
 		self assert: (examples perform: each) class equals: BlSkiaSvgElement ].
+	self assert: Pele2svgMathExamples new asciimathSets children size equals: Pele2svgMathExamples asciimathSetRows size.
 	svg := Pele2svg new svgFor: 'E=mc^2' format: #tex display: false size: 16 color: '#205ea6'.
 	self assert: (svg includesSubstring: 'fill="#205ea6"').
 	self assert: (svg includesSubstring: 'currentColor') not.

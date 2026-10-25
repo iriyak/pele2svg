@@ -1,7 +1,7 @@
 "
 GToolkit examples for formulas: one <gtExample> for each diagram type in which Pele can typeset $$...$$ labels (flowchart, sequence, class, state, ER, mindmap, kanban, block, requirement, swimlane and use case diagrams). Each renders the source through pele2svg with the render option #math -> true, which typesets the formulas with MathJax, and answers a BlSkiaSvgElement. Open the class in the GT Coder and click the example results. Requires Node.js (or Bun) and `npm install` in the Iceberg clone of pele2svg, which also installs mathjax-full, the optional dependency that typesets the formulas.
 
-#texFormula, #mathmlFormula, #asciimathFormula and #displayFormula typeset a formula on its own, without Mermaid (Pele2svg>>#elementFor:format:).
+#texFormula, #mathmlFormula, #asciimathFormula and #displayFormula typeset a formula on its own, without Mermaid (Pele2svg>>#elementFor:format:); #asciimathSets shows a table of AsciiMath sources for sets next to the formulas they give.
 
 The sources are in Pele2svgMathExamples class >> #sources; Pele2svgExamplesTest checks that each has an example and that its formulas are typeset. #withoutMathOption shows what the same kind of label looks like without the option (the TeX source). See docs/mermaid-in-gt.md.
 "
@@ -12,6 +12,13 @@ Class {
 	#package : 'Pele2svg',
 	#tag : 'Examples'
 }
+
+{ #category : 'accessing' }
+Pele2svgMathExamples class >> asciimathSetRows [
+	"AsciiMath sources for sets and logic that MathJax draws as expected (see #asciimathSets). Not here: emptyset (a word, not the sign: write O/), A \ B (the backslash does not work) and card A (a name, not a function)."
+
+	^ #('A = {x in RR | x > 0}' 'A uu B' 'A nn B' 'A sub B' 'A sube B' 'x notin A' 'NN sub ZZ sub QQ sub RR' 'AA x in A, EE y in B: x < y' 'O/' 'P(A) = {B | B sube A}' 'S := {(x,y) | x^2+y^2 <= 1}' 'f: A -> B' 'x |-> x^2' 'not (A sub B)' '|A|')
+]
 
 { #category : 'accessing' }
 Pele2svgMathExamples class >> sourceNamed: aName [
@@ -85,6 +92,30 @@ Pele2svgMathExamples >> asciimathFormula [
 
 	<gtExample>
 	^ self formulaElement: 'sum_(i=1)^n i^3=((n(n+1))/2)^2' format: #asciimath
+]
+
+{ #category : 'examples' }
+Pele2svgMathExamples >> asciimathSets [
+	"A table of AsciiMath sources for sets and logic (left) and the formulas they give (right), 12 px, black. Each row starts a process, so this takes a few seconds."
+
+	<gtExample>
+	| pele table |
+	pele := Pele2svg new.
+	table := BlElement new
+		layout: (BlLinearLayout vertical cellSpacing: 6);
+		constraintsDo: [ :c | c horizontal fitContent. c vertical fitContent ];
+		padding: (BlInsets all: 12).
+	self class asciimathSetRows do: [ :each | | label |
+		label := BlTextElement new
+			text: (each asRopedText fontName: 'Consolas'; fontSize: 14);
+			constraintsDo: [ :c | c horizontal exact: 300. c vertical fitContent ].
+		table addChild: (BlElement new
+			layout: (BlLinearLayout horizontal alignCenterLeft);
+			constraintsDo: [ :c | c horizontal fitContent. c vertical fitContent ];
+			addChildren: { label. pele elementFor: each format: #asciimath display: false size: 12 color: '#000000' };
+			yourself) ].
+	self assert: table children size equals: self class asciimathSetRows size.
+	^ table
 ]
 
 { #category : 'examples' }
