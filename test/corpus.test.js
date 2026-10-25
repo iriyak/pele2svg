@@ -13,7 +13,7 @@ import { flatten } from '../pele2svg.mjs';
 
 const here = new URL('.', import.meta.url);
 const load = name => JSON.parse(readFileSync(new URL(`fixtures/${name}.json`, here), 'utf8'));
-const corpora = { featured: load('featured'), docs: load('docs'), reference: load('reference') };
+const corpora = { featured: load('featured'), docs: load('docs'), layout: load('layout'), reference: load('reference') };
 const theme = name => JSON.parse(readFileSync(new URL(`../themes/${name}.json`, here), 'utf8'));
 
 // Constructs that a renderer without a CSS engine cannot handle.
@@ -76,7 +76,7 @@ for (const [corpus, items] of Object.entries(corpora)) {
 
 test('flatten is idempotent: converting converted output changes nothing', () => {
   const failures = [];
-  for (const { name, source } of [...corpora.featured, ...corpora.docs]) {
+  for (const { name, source } of [...corpora.featured, ...corpora.docs, ...corpora.layout]) {
     const once = flatten(render(source).svg).svg;
     if (flatten(once).svg !== once) failures.push(name);
   }

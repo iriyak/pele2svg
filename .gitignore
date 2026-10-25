@@ -2,3 +2,5 @@ node_modules/
 out/
 *.log
 *.bak
+# Output of scripts/export-pele-examples.mjs (the same sources are in the fixtures *.json)
+test/fixtures/pele-examples/

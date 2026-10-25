@@ -1,0 +1,326 @@
+[
+  {
+    "name": "architecture-layout-narrow-screens-1",
+    "source": "architecture-beta\n    group sources(cloud)[Sources]\n        service src_a(server)[Source A] in sources\n        service src_b(server)[Source B] in sources\n        service src_c(server)[Source C] in sources\n\n    group storage(database)[Storage]\n        service db_one(database)[DB One] in storage\n        service db_two(database)[DB Two] in storage\n        service db_three(database)[DB Three] in storage\n\n    group output(disk)[Output]\n        service brief(disk)[Brief] in output\n        service analyst(server)[Analyst] in output\n        service delivery(cloud)[Delivery] in output\n\n    src_a:B --> T:db_one\n    src_b:B --> T:db_two\n    src_c:B --> T:db_three\n    db_two:B --> T:brief\n    brief:R --> L:analyst\n    analyst:R --> L:delivery\n\n    align row src_a src_b src_c\n    align row db_one db_two db_three\n    align row brief analyst delivery\n\n    align column src_a db_one\n    align column src_b db_two brief\n    align column src_c db_three\n"
+  },
+  {
+    "name": "block-layout-narrow-screens-1",
+    "source": "block\ncolumns 1\n  db((\"DB\"))\n  blockArrowId6<[\"&nbsp;&nbsp;&nbsp;\"]>(down)\n  block:ID\n    A\n    B[\"A wide one in the middle\"]\n    C\n  end\n  space\n  D\n  ID --> D\n  C --> D\n  style B fill:#969,stroke:#333,stroke-width:4px\n"
+  },
+  {
+    "name": "c4-layout-narrow-screens-1",
+    "source": "    C4Context\n      title System Context diagram for Internet Banking System\n      Enterprise_Boundary(b0, \"BankBoundary0\") {\n        Person(customerA, \"Banking Customer A\", \"A customer of the bank, with personal bank accounts.\")\n        Person(customerB, \"Banking Customer B\")\n        Person_Ext(customerC, \"Banking Customer C\", \"desc\")\n\n        Person(customerD, \"Banking Customer D\", \"A customer of the bank, <br/> with personal bank accounts.\")\n\n        System(SystemAA, \"Internet Banking System\", \"Allows customers to view information about their bank accounts, and make payments.\")\n\n        Enterprise_Boundary(b1, \"BankBoundary\") {\n\n          SystemDb_Ext(SystemE, \"Mainframe Banking System\", \"Stores all of the core banking information about customers, accounts, transactions, etc.\")\n\n          System_Boundary(b2, \"BankBoundary2\") {\n            System(SystemA, \"Banking System A\")\n            System(SystemB, \"Banking System B\", \"A system of the bank, with personal bank accounts. next line.\")\n          }\n\n          System_Ext(SystemC, \"E-mail system\", \"The internal Microsoft Exchange e-mail system.\")\n          SystemDb(SystemD, \"Banking System D Database\", \"A system of the bank, with personal bank accounts.\")\n\n          Boundary(b3, \"BankBoundary3\", \"boundary\") {\n            SystemQueue(SystemF, \"Banking System F Queue\", \"A system of the bank.\")\n            SystemQueue_Ext(SystemG, \"Banking System G Queue\", \"A system of the bank, with personal bank accounts.\")\n          }\n        }\n      }\n\n      BiRel(customerA, SystemAA, \"Uses\")\n      BiRel(SystemAA, SystemE, \"Uses\")\n      Rel(SystemAA, SystemC, \"Sends e-mails\", \"SMTP\")\n      Rel(SystemC, customerA, \"Sends e-mails to\")\n\n      UpdateElementStyle(customerA, $fontColor=\"red\", $bgColor=\"grey\", $borderColor=\"red\")\n      UpdateRelStyle(customerA, SystemAA, $textColor=\"blue\", $lineColor=\"blue\", $offsetX=\"5\")\n      UpdateRelStyle(SystemAA, SystemE, $textColor=\"blue\", $lineColor=\"blue\", $offsetY=\"-10\")\n      UpdateRelStyle(SystemAA, SystemC, $textColor=\"blue\", $lineColor=\"blue\", $offsetY=\"-40\", $offsetX=\"-50\")\n      UpdateRelStyle(SystemC, customerA, $textColor=\"red\", $lineColor=\"red\", $offsetX=\"-50\", $offsetY=\"20\")\n\n      UpdateLayoutConfig($c4ShapeInRow=\"3\", $c4BoundaryInRow=\"1\")\n\n\n"
+  },
+  {
+    "name": "class-layout-edges-1",
+    "source": "classDiagram\n  Animal <|-- Turtle\n  Animal <|-- Shark\n  Animal <|-- Whale\n  Animal *-- Habitat\n  Habitat o-- Animal\n  Turtle --> Shark : fears\n  Shark --> Turtle : hunts\n"
+  },
+  {
+    "name": "class-layout-edges-2",
+    "source": "classDiagram\n  Shape <|-- Circle\n  Shape <|-- Square\n  Shape <|-- Triangle\n  Shape <|-- Hexagon\n  Shape <|-- Ellipse\n  Shape <|-- Diamond\n  Shape <|-- Trapezoid\n  Circle --> Canvas\n  Trapezoid --> Canvas\n  Canvas --> Shape\n"
+  },
+  {
+    "name": "er-layout-edges-1",
+    "source": "erDiagram\n  CUSTOMER ||--o{ ORDER : places\n  ORDER ||--|{ LINE_ITEM : contains\n  CUSTOMER }|..|{ ADDRESS : uses\n  ORDER }o--|| ADDRESS : \"ships to\"\n  PRODUCT ||--o{ LINE_ITEM : \"appears in\"\n"
+  },
+  {
+    "name": "eventmodeling-layout-narrow-screens-1",
+    "source": "eventmodeling\n\ntf 01 ui CartUI\ntf 02 cmd AddItem [[AddItem01]]\ntf 03 evt ItemAdded [[ItemAdded]]\ntf 04 cmd AddItem [[AddItem02]]\ntf 05 evt ItemAdded [[ItemAdded]]\n\ndata AddItem01 {\n  description: 'john'\n  image: 'avatar_john'\n  price: 20.4\n}\n\ndata AddItem02 {\n  description: 'jack'\n  image: 'avatar_jack'\n  price: 12.5\n}\n\ndata ItemAdded {\n  description: string\n  image: string\n  price: number\n}\n"
+  },
+  {
+    "name": "flowchart-layout-edges-1",
+    "source": "flowchart TD\n  A --> B\n  B --> A\n"
+  },
+  {
+    "name": "flowchart-layout-edges-2",
+    "source": "flowchart TD\n  A --> B\n  B --> A\n  B --> C\n  C --> B\n  C --> A\n"
+  },
+  {
+    "name": "flowchart-layout-edges-3",
+    "source": "flowchart TD\n  D{Data, settings or context changed} -->|Yes| F\n  F --> D\n  D -->|Container removed| G\n"
+  },
+  {
+    "name": "flowchart-layout-edges-4",
+    "source": "flowchart TD\n  A[Christmas] -->|Get money| B(Go shopping)\n  B --> C{Let me think}\n  C -->|One| D[Laptop]\n  C -->|Two| E[iPhone]\n  C -->|Three| F[Car]\n  D --> B\n  E --> A\n"
+  },
+  {
+    "name": "flowchart-layout-edges-5",
+    "source": "flowchart TD\n  A[Start] --> B[Parse]\n  A --> C[Measure]\n  B --> D[Layout]\n  C --> D\n  D --> E[Draw]\n  D --> F[Export]\n  D --> G[Cache]\n"
+  },
+  {
+    "name": "flowchart-layout-edges-6",
+    "source": "flowchart TD\n  hub[Hub] --> n1[Note 1]\n  hub[Hub] --> n2[Note 2]\n  hub[Hub] --> n3[Note 3]\n"
+  },
+  {
+    "name": "flowchart-layout-edges-7",
+    "source": "flowchart TD\n  hub[Hub] --> n1[Note 1]\n  hub[Hub] --> n2[Note 2]\n  hub[Hub] --> n3[Note 3]\n  hub[Hub] --> n4[Note 4]\n  hub[Hub] --> n5[Note 5]\n  hub[Hub] --> n6[Note 6]\n  hub[Hub] --> n7[Note 7]\n"
+  },
+  {
+    "name": "flowchart-layout-edges-8",
+    "source": "flowchart TD\n  n1[Note 1] --> hub[Hub]\n  n2[Note 2] --> hub[Hub]\n  n3[Note 3] --> hub[Hub]\n"
+  },
+  {
+    "name": "flowchart-layout-edges-9",
+    "source": "flowchart TD\n  n1[Note 1] --> hub[Hub]\n  n2[Note 2] --> hub[Hub]\n  n3[Note 3] --> hub[Hub]\n  n4[Note 4] --> hub[Hub]\n  n5[Note 5] --> hub[Hub]\n  n6[Note 6] --> hub[Hub]\n  n7[Note 7] --> hub[Hub]\n"
+  },
+  {
+    "name": "flowchart-layout-edges-10",
+    "source": "flowchart TD\n  a --> hub[A wide hub with room]\n  b --> hub\n  hub --> a\n  c --> hub\n  hub --> d\n  hub --> e\n  e --> hub\n  f --> hub\n  hub --> f\n"
+  },
+  {
+    "name": "flowchart-layout-edges-11",
+    "source": "flowchart TD\n  A -->|first| B\n  A -->|second| B\n  A --> B\n  B --> C\n  B --> C\n"
+  },
+  {
+    "name": "flowchart-layout-edges-12",
+    "source": "flowchart TD\n  A --> A\n  A --> B\n  B --> B\n  B -->|again| B\n  B --> A\n  B --> C\n"
+  },
+  {
+    "name": "flowchart-layout-edges-13",
+    "source": "flowchart TD\n  A <--> B\n  A --o C\n  A --x D\n  B -.-> E\n  C ==> E\n  D --- E\n  E o--o A\n"
+  },
+  {
+    "name": "flowchart-layout-directions-1",
+    "source": "flowchart TD\n  A[Start] --> B{Ready?}\n  B -->|Yes| C[Ship]\n  B -->|No| D[Fix]\n  D --> B\n  C --> E([Done])\n  D -->|Give up| E\n"
+  },
+  {
+    "name": "flowchart-layout-directions-2",
+    "source": "flowchart BT\n  A[Start] --> B{Ready?}\n  B -->|Yes| C[Ship]\n  B -->|No| D[Fix]\n  D --> B\n  C --> E([Done])\n  D -->|Give up| E\n"
+  },
+  {
+    "name": "flowchart-layout-directions-3",
+    "source": "flowchart LR\n  A[Start] --> B{Ready?}\n  B -->|Yes| C[Ship]\n  B -->|No| D[Fix]\n  D --> B\n  C --> E([Done])\n  D -->|Give up| E\n"
+  },
+  {
+    "name": "flowchart-layout-directions-4",
+    "source": "flowchart RL\n  A[Start] --> B{Ready?}\n  B -->|Yes| C[Ship]\n  B -->|No| D[Fix]\n  D --> B\n  C --> E([Done])\n  D -->|Give up| E\n"
+  },
+  {
+    "name": "flowchart-layout-shapes-1",
+    "source": "flowchart TD\n  a0[a] & b0[b] & c0[c] --> n0@{ shape: rect, label: \"rect\" } --> x0[x] & y0[y] & z0[z]\n  x0 --> n0\n  a1[a] & b1[b] & c1[c] --> n1@{ shape: rounded, label: \"rounded\" } --> x1[x] & y1[y] & z1[z]\n  x1 --> n1\n  a2[a] & b2[b] & c2[c] --> n2@{ shape: stadium, label: \"stadium\" } --> x2[x] & y2[y] & z2[z]\n  x2 --> n2\n  a3[a] & b3[b] & c3[c] --> n3@{ shape: fr-rect, label: \"fr-rect\" } --> x3[x] & y3[y] & z3[z]\n  x3 --> n3\n  a4[a] & b4[b] & c4[c] --> n4@{ shape: cyl, label: \"cyl\" } --> x4[x] & y4[y] & z4[z]\n  x4 --> n4\n  a5[a] & b5[b] & c5[c] --> n5@{ shape: circle, label: \"circle\" } --> x5[x] & y5[y] & z5[z]\n  x5 --> n5\n  a6[a] & b6[b] & c6[c] --> n6@{ shape: dbl-circ, label: \"dbl-circ\" } --> x6[x] & y6[y] & z6[z]\n  x6 --> n6\n  a7[a] & b7[b] & c7[c] --> n7@{ shape: diam, label: \"diam\" } --> x7[x] & y7[y] & z7[z]\n  x7 --> n7\n"
+  },
+  {
+    "name": "flowchart-layout-shapes-2",
+    "source": "flowchart TD\n  a0[a] & b0[b] & c0[c] --> n0@{ shape: hex, label: \"hex\" } --> x0[x] & y0[y] & z0[z]\n  x0 --> n0\n  a1[a] & b1[b] & c1[c] --> n1@{ shape: odd, label: \"odd\" } --> x1[x] & y1[y] & z1[z]\n  x1 --> n1\n  a2[a] & b2[b] & c2[c] --> n2@{ shape: lean-r, label: \"lean-r\" } --> x2[x] & y2[y] & z2[z]\n  x2 --> n2\n  a3[a] & b3[b] & c3[c] --> n3@{ shape: lean-l, label: \"lean-l\" } --> x3[x] & y3[y] & z3[z]\n  x3 --> n3\n  a4[a] & b4[b] & c4[c] --> n4@{ shape: trap-b, label: \"trap-b\" } --> x4[x] & y4[y] & z4[z]\n  x4 --> n4\n  a5[a] & b5[b] & c5[c] --> n5@{ shape: trap-t, label: \"trap-t\" } --> x5[x] & y5[y] & z5[z]\n  x5 --> n5\n  a6[a] & b6[b] & c6[c] --> n6@{ shape: text, label: \"text\" } --> x6[x] & y6[y] & z6[z]\n  x6 --> n6\n  a7[a] & b7[b] & c7[c] --> n7@{ shape: bow-rect, label: \"bow-rect\" } --> x7[x] & y7[y] & z7[z]\n  x7 --> n7\n"
+  },
+  {
+    "name": "flowchart-layout-shapes-3",
+    "source": "flowchart TD\n  a0[a] & b0[b] & c0[c] --> n0@{ shape: sm-circ, label: \"sm-circ\" } --> x0[x] & y0[y] & z0[z]\n  x0 --> n0\n  a1[a] & b1[b] & c1[c] --> n1@{ shape: f-circ, label: \"f-circ\" } --> x1[x] & y1[y] & z1[z]\n  x1 --> n1\n  a2[a] & b2[b] & c2[c] --> n2@{ shape: fr-circ, label: \"fr-circ\" } --> x2[x] & y2[y] & z2[z]\n  x2 --> n2\n  a3[a] & b3[b] & c3[c] --> n3@{ shape: fork, label: \"fork\" } --> x3[x] & y3[y] & z3[z]\n  x3 --> n3\n  a4[a] & b4[b] & c4[c] --> n4@{ shape: notch-rect, label: \"notch-rect\" } --> x4[x] & y4[y] & z4[z]\n  x4 --> n4\n  a5[a] & b5[b] & c5[c] --> n5@{ shape: lin-rect, label: \"lin-rect\" } --> x5[x] & y5[y] & z5[z]\n  x5 --> n5\n  a6[a] & b6[b] & c6[c] --> n6@{ shape: div-rect, label: \"div-rect\" } --> x6[x] & y6[y] & z6[z]\n  x6 --> n6\n  a7[a] & b7[b] & c7[c] --> n7@{ shape: win-pane, label: \"win-pane\" } --> x7[x] & y7[y] & z7[z]\n  x7 --> n7\n"
+  },
+  {
+    "name": "flowchart-layout-shapes-4",
+    "source": "flowchart TD\n  a0[a] & b0[b] & c0[c] --> n0@{ shape: notch-pent, label: \"notch-pent\" } --> x0[x] & y0[y] & z0[z]\n  x0 --> n0\n  a1[a] & b1[b] & c1[c] --> n1@{ shape: cross-circ, label: \"cross-circ\" } --> x1[x] & y1[y] & z1[z]\n  x1 --> n1\n  a2[a] & b2[b] & c2[c] --> n2@{ shape: st-rect, label: \"st-rect\" } --> x2[x] & y2[y] & z2[z]\n  x2 --> n2\n  a3[a] & b3[b] & c3[c] --> n3@{ shape: datastore, label: \"datastore\" } --> x3[x] & y3[y] & z3[z]\n  x3 --> n3\n  a4[a] & b4[b] & c4[c] --> n4@{ shape: lin-cyl, label: \"lin-cyl\" } --> x4[x] & y4[y] & z4[z]\n  x4 --> n4\n  a5[a] & b5[b] & c5[c] --> n5@{ shape: tag-rect, label: \"tag-rect\" } --> x5[x] & y5[y] & z5[z]\n  x5 --> n5\n  a6[a] & b6[b] & c6[c] --> n6@{ shape: doc, label: \"doc\" } --> x6[x] & y6[y] & z6[z]\n  x6 --> n6\n  a7[a] & b7[b] & c7[c] --> n7@{ shape: tri, label: \"tri\" } --> x7[x] & y7[y] & z7[z]\n  x7 --> n7\n"
+  },
+  {
+    "name": "flowchart-layout-shapes-5",
+    "source": "flowchart TD\n  a0[a] & b0[b] & c0[c] --> n0@{ shape: flip-tri, label: \"flip-tri\" } --> x0[x] & y0[y] & z0[z]\n  x0 --> n0\n  a1[a] & b1[b] & c1[c] --> n1@{ shape: sl-rect, label: \"sl-rect\" } --> x1[x] & y1[y] & z1[z]\n  x1 --> n1\n  a2[a] & b2[b] & c2[c] --> n2@{ shape: hourglass, label: \"hourglass\" } --> x2[x] & y2[y] & z2[z]\n  x2 --> n2\n  a3[a] & b3[b] & c3[c] --> n3@{ shape: delay, label: \"delay\" } --> x3[x] & y3[y] & z3[z]\n  x3 --> n3\n  a4[a] & b4[b] & c4[c] --> n4@{ shape: h-cyl, label: \"h-cyl\" } --> x4[x] & y4[y] & z4[z]\n  x4 --> n4\n  a5[a] & b5[b] & c5[c] --> n5@{ shape: curv-trap, label: \"curv-trap\" } --> x5[x] & y5[y] & z5[z]\n  x5 --> n5\n  a6[a] & b6[b] & c6[c] --> n6@{ shape: docs, label: \"docs\" } --> x6[x] & y6[y] & z6[z]\n  x6 --> n6\n  a7[a] & b7[b] & c7[c] --> n7@{ shape: flag, label: \"flag\" } --> x7[x] & y7[y] & z7[z]\n  x7 --> n7\n"
+  },
+  {
+    "name": "flowchart-layout-shapes-6",
+    "source": "flowchart TD\n  a0[a] & b0[b] & c0[c] --> n0@{ shape: bolt, label: \"bolt\" } --> x0[x] & y0[y] & z0[z]\n  x0 --> n0\n  a1[a] & b1[b] & c1[c] --> n1@{ shape: bang, label: \"bang\" } --> x1[x] & y1[y] & z1[z]\n  x1 --> n1\n  a2[a] & b2[b] & c2[c] --> n2@{ shape: cloud, label: \"cloud\" } --> x2[x] & y2[y] & z2[z]\n  x2 --> n2\n  a3[a] & b3[b] & c3[c] --> n3@{ shape: brace, label: \"brace\" } --> x3[x] & y3[y] & z3[z]\n  x3 --> n3\n  a4[a] & b4[b] & c4[c] --> n4@{ shape: brace-r, label: \"brace-r\" } --> x4[x] & y4[y] & z4[z]\n  x4 --> n4\n  a5[a] & b5[b] & c5[c] --> n5@{ shape: braces, label: \"braces\" } --> x5[x] & y5[y] & z5[z]\n  x5 --> n5\n  a6[a] & b6[b] & c6[c] --> n6@{ shape: tag-doc, label: \"tag-doc\" } --> x6[x] & y6[y] & z6[z]\n  x6 --> n6\n  a7[a] & b7[b] & c7[c] --> n7@{ shape: lin-doc, label: \"lin-doc\" } --> x7[x] & y7[y] & z7[z]\n  x7 --> n7\n"
+  },
+  {
+    "name": "flowchart-layout-shapes-7",
+    "source": "flowchart LR\n  a0[a] & b0[b] & c0[c] --> n0@{ shape: rect, label: \"rect\" } --> x0[x] & y0[y] & z0[z]\n  x0 --> n0\n  a1[a] & b1[b] & c1[c] --> n1@{ shape: rounded, label: \"rounded\" } --> x1[x] & y1[y] & z1[z]\n  x1 --> n1\n  a2[a] & b2[b] & c2[c] --> n2@{ shape: stadium, label: \"stadium\" } --> x2[x] & y2[y] & z2[z]\n  x2 --> n2\n  a3[a] & b3[b] & c3[c] --> n3@{ shape: fr-rect, label: \"fr-rect\" } --> x3[x] & y3[y] & z3[z]\n  x3 --> n3\n  a4[a] & b4[b] & c4[c] --> n4@{ shape: cyl, label: \"cyl\" } --> x4[x] & y4[y] & z4[z]\n  x4 --> n4\n  a5[a] & b5[b] & c5[c] --> n5@{ shape: circle, label: \"circle\" } --> x5[x] & y5[y] & z5[z]\n  x5 --> n5\n  a6[a] & b6[b] & c6[c] --> n6@{ shape: dbl-circ, label: \"dbl-circ\" } --> x6[x] & y6[y] & z6[z]\n  x6 --> n6\n  a7[a] & b7[b] & c7[c] --> n7@{ shape: diam, label: \"diam\" } --> x7[x] & y7[y] & z7[z]\n  x7 --> n7\n"
+  },
+  {
+    "name": "flowchart-layout-shapes-8",
+    "source": "flowchart LR\n  a0[a] & b0[b] & c0[c] --> n0@{ shape: hex, label: \"hex\" } --> x0[x] & y0[y] & z0[z]\n  x0 --> n0\n  a1[a] & b1[b] & c1[c] --> n1@{ shape: odd, label: \"odd\" } --> x1[x] & y1[y] & z1[z]\n  x1 --> n1\n  a2[a] & b2[b] & c2[c] --> n2@{ shape: lean-r, label: \"lean-r\" } --> x2[x] & y2[y] & z2[z]\n  x2 --> n2\n  a3[a] & b3[b] & c3[c] --> n3@{ shape: lean-l, label: \"lean-l\" } --> x3[x] & y3[y] & z3[z]\n  x3 --> n3\n  a4[a] & b4[b] & c4[c] --> n4@{ shape: trap-b, label: \"trap-b\" } --> x4[x] & y4[y] & z4[z]\n  x4 --> n4\n  a5[a] & b5[b] & c5[c] --> n5@{ shape: trap-t, label: \"trap-t\" } --> x5[x] & y5[y] & z5[z]\n  x5 --> n5\n  a6[a] & b6[b] & c6[c] --> n6@{ shape: text, label: \"text\" } --> x6[x] & y6[y] & z6[z]\n  x6 --> n6\n  a7[a] & b7[b] & c7[c] --> n7@{ shape: bow-rect, label: \"bow-rect\" } --> x7[x] & y7[y] & z7[z]\n  x7 --> n7\n"
+  },
+  {
+    "name": "flowchart-layout-shapes-9",
+    "source": "flowchart LR\n  a0[a] & b0[b] & c0[c] --> n0@{ shape: sm-circ, label: \"sm-circ\" } --> x0[x] & y0[y] & z0[z]\n  x0 --> n0\n  a1[a] & b1[b] & c1[c] --> n1@{ shape: f-circ, label: \"f-circ\" } --> x1[x] & y1[y] & z1[z]\n  x1 --> n1\n  a2[a] & b2[b] & c2[c] --> n2@{ shape: fr-circ, label: \"fr-circ\" } --> x2[x] & y2[y] & z2[z]\n  x2 --> n2\n  a3[a] & b3[b] & c3[c] --> n3@{ shape: fork, label: \"fork\" } --> x3[x] & y3[y] & z3[z]\n  x3 --> n3\n  a4[a] & b4[b] & c4[c] --> n4@{ shape: notch-rect, label: \"notch-rect\" } --> x4[x] & y4[y] & z4[z]\n  x4 --> n4\n  a5[a] & b5[b] & c5[c] --> n5@{ shape: lin-rect, label: \"lin-rect\" } --> x5[x] & y5[y] & z5[z]\n  x5 --> n5\n  a6[a] & b6[b] & c6[c] --> n6@{ shape: div-rect, label: \"div-rect\" } --> x6[x] & y6[y] & z6[z]\n  x6 --> n6\n  a7[a] & b7[b] & c7[c] --> n7@{ shape: win-pane, label: \"win-pane\" } --> x7[x] & y7[y] & z7[z]\n  x7 --> n7\n"
+  },
+  {
+    "name": "flowchart-layout-shapes-10",
+    "source": "flowchart LR\n  a0[a] & b0[b] & c0[c] --> n0@{ shape: notch-pent, label: \"notch-pent\" } --> x0[x] & y0[y] & z0[z]\n  x0 --> n0\n  a1[a] & b1[b] & c1[c] --> n1@{ shape: cross-circ, label: \"cross-circ\" } --> x1[x] & y1[y] & z1[z]\n  x1 --> n1\n  a2[a] & b2[b] & c2[c] --> n2@{ shape: st-rect, label: \"st-rect\" } --> x2[x] & y2[y] & z2[z]\n  x2 --> n2\n  a3[a] & b3[b] & c3[c] --> n3@{ shape: datastore, label: \"datastore\" } --> x3[x] & y3[y] & z3[z]\n  x3 --> n3\n  a4[a] & b4[b] & c4[c] --> n4@{ shape: lin-cyl, label: \"lin-cyl\" } --> x4[x] & y4[y] & z4[z]\n  x4 --> n4\n  a5[a] & b5[b] & c5[c] --> n5@{ shape: tag-rect, label: \"tag-rect\" } --> x5[x] & y5[y] & z5[z]\n  x5 --> n5\n  a6[a] & b6[b] & c6[c] --> n6@{ shape: doc, label: \"doc\" } --> x6[x] & y6[y] & z6[z]\n  x6 --> n6\n  a7[a] & b7[b] & c7[c] --> n7@{ shape: tri, label: \"tri\" } --> x7[x] & y7[y] & z7[z]\n  x7 --> n7\n"
+  },
+  {
+    "name": "flowchart-layout-shapes-11",
+    "source": "flowchart LR\n  a0[a] & b0[b] & c0[c] --> n0@{ shape: flip-tri, label: \"flip-tri\" } --> x0[x] & y0[y] & z0[z]\n  x0 --> n0\n  a1[a] & b1[b] & c1[c] --> n1@{ shape: sl-rect, label: \"sl-rect\" } --> x1[x] & y1[y] & z1[z]\n  x1 --> n1\n  a2[a] & b2[b] & c2[c] --> n2@{ shape: hourglass, label: \"hourglass\" } --> x2[x] & y2[y] & z2[z]\n  x2 --> n2\n  a3[a] & b3[b] & c3[c] --> n3@{ shape: delay, label: \"delay\" } --> x3[x] & y3[y] & z3[z]\n  x3 --> n3\n  a4[a] & b4[b] & c4[c] --> n4@{ shape: h-cyl, label: \"h-cyl\" } --> x4[x] & y4[y] & z4[z]\n  x4 --> n4\n  a5[a] & b5[b] & c5[c] --> n5@{ shape: curv-trap, label: \"curv-trap\" } --> x5[x] & y5[y] & z5[z]\n  x5 --> n5\n  a6[a] & b6[b] & c6[c] --> n6@{ shape: docs, label: \"docs\" } --> x6[x] & y6[y] & z6[z]\n  x6 --> n6\n  a7[a] & b7[b] & c7[c] --> n7@{ shape: flag, label: \"flag\" } --> x7[x] & y7[y] & z7[z]\n  x7 --> n7\n"
+  },
+  {
+    "name": "flowchart-layout-shapes-12",
+    "source": "flowchart LR\n  a0[a] & b0[b] & c0[c] --> n0@{ shape: bolt, label: \"bolt\" } --> x0[x] & y0[y] & z0[z]\n  x0 --> n0\n  a1[a] & b1[b] & c1[c] --> n1@{ shape: bang, label: \"bang\" } --> x1[x] & y1[y] & z1[z]\n  x1 --> n1\n  a2[a] & b2[b] & c2[c] --> n2@{ shape: cloud, label: \"cloud\" } --> x2[x] & y2[y] & z2[z]\n  x2 --> n2\n  a3[a] & b3[b] & c3[c] --> n3@{ shape: brace, label: \"brace\" } --> x3[x] & y3[y] & z3[z]\n  x3 --> n3\n  a4[a] & b4[b] & c4[c] --> n4@{ shape: brace-r, label: \"brace-r\" } --> x4[x] & y4[y] & z4[z]\n  x4 --> n4\n  a5[a] & b5[b] & c5[c] --> n5@{ shape: braces, label: \"braces\" } --> x5[x] & y5[y] & z5[z]\n  x5 --> n5\n  a6[a] & b6[b] & c6[c] --> n6@{ shape: tag-doc, label: \"tag-doc\" } --> x6[x] & y6[y] & z6[z]\n  x6 --> n6\n  a7[a] & b7[b] & c7[c] --> n7@{ shape: lin-doc, label: \"lin-doc\" } --> x7[x] & y7[y] & z7[z]\n  x7 --> n7\n"
+  },
+  {
+    "name": "flowchart-layout-subgraphs-1",
+    "source": "flowchart TD\n  subgraph one [Group one]\n    a1 --> a2\n    a1 --> a3\n  end\n  subgraph two [Group two]\n    b1 --> b2\n  end\n  a2 --> b1\n  a3 --> b1\n  b2 --> a1\n  c --> one\n  c --> two\n  one --> d\n  two --> d\n"
+  },
+  {
+    "name": "flowchart-layout-subgraphs-2",
+    "source": "flowchart LR\n  subgraph Client\n    UI[Web app]\n    Cache[(Local cache)]\n  end\n  subgraph Services\n    API[API gateway] --> Orders[Order service]\n    API --> Auth[Auth service]\n  end\n  UI --> Cache\n  UI --> API\n  API --> UI\n  Auth -.->|token| UI\n  Orders --> DB[(Orders DB)]\n"
+  },
+  {
+    "name": "flowchart-layout-subgraphs-3",
+    "source": "flowchart TD\n  subgraph outer [Outer]\n    subgraph inner [Inner]\n      a --> b\n      b --> a\n    end\n    c --> a\n    b --> d\n  end\n  start --> c\n  start --> a\n  d --> finish\n  b --> finish\n  finish --> start\n"
+  },
+  {
+    "name": "flowchart-layout-subgraphs-4",
+    "source": "flowchart LR\n  subgraph top [Runs down]\n    direction TB\n    t1 --> t2 --> t3\n  end\n  subgraph side [Runs across]\n    direction LR\n    s1 --> s2 --> s3\n  end\n  outside --> top\n  outside --> s1\n  t3 --> s2\n  s3 --> t1\n"
+  },
+  {
+    "name": "flowchart-layout-subgraphs-5",
+    "source": "flowchart TD\n  subgraph A [First]\n    a1\n    a2\n  end\n  subgraph B [Second]\n    b1\n    b2\n  end\n  A --> B\n  B --> A\n  a1 --> b1\n  b2 --> a2\n"
+  },
+  {
+    "name": "flowchart-layout-wide-1",
+    "source": "flowchart TD\n  a0[\"Flex layout\"] --> MOC[_MOC]\n  a1[\"New home page and PARA design\"] --> MOC[_MOC]\n  a2[\"2024-07-15\"] --> MOC[_MOC]\n  a3[\"2024-06-13\"] --> MOC[_MOC]\n  a4[\"2025-04-17\"] --> MOC[_MOC]\n  a5[\"Test note\"] --> MOC[_MOC]\n  a6[\"Medium draft\"] --> MOC[_MOC]\n  a7[\"Reading list\"] --> MOC[_MOC]\n  a8[\"Garden\"] --> MOC[_MOC]\n  a9[\"Inbox\"] --> MOC[_MOC]\n  a10[\"Archive\"] --> MOC[_MOC]\n  a11[\"Ideas\"] --> MOC[_MOC]\n  a0 --> Weekly\n  a1 --> Weekly\n  a2 --> Weekly\n  a3 --> Weekly\n  a9 --> Weekly\n  a11 --> Weekly\n"
+  },
+  {
+    "name": "flowchart-layout-wide-2",
+    "source": "graph TD\n  hub[\"Hub\"]\n  index[\"Index\"]\n  Plugins[\"Plugins\"] --> hub\n  Medium_draft[\"Medium draft\"] --> hub\n  Medium_draft[\"Medium draft\"] --> hub\n  Test_note[\"Test note\"] --> hub\n  2025_04_17[\"2025-04-17\"] --> hub\n  2024_06_13[\"2024-06-13\"] --> hub\n  2024_07_15[\"2024-07-15\"] --> hub\n  PARA_design[\"PARA design\"] --> hub\n  index --> Notes[\"Notes\"]\n  index --> Obsidian[\"Obsidian\"]\n  index --> Reading[\"Reading\"]\n  index --> Reading[\"Reading\"]\n  index --> Clippings[\"Clippings\"]\n  index --> Daily[\"Daily\"]\n  index --> Weekly[\"Weekly\"]\n  index --> Monthly[\"Monthly\"]\n  index --> Projects[\"Projects\"]\n  index --> Project_log[\"Project log\"]\n"
+  },
+  {
+    "name": "flowchart-layout-wide-3",
+    "source": "flowchart TD\n  n1[Note 1] --> hub[Hub]\n  n2[Note 2] --> hub[Hub]\n  n3[Note 3] --> hub[Hub]\n  n4[Note 4] --> hub[Hub]\n  n5[Note 5] --> hub[Hub]\n  n6[Note 6] --> hub[Hub]\n  n7[Note 7] --> hub[Hub]\n  n8[Note 8] --> hub[Hub]\n  n9[Note 9] --> hub[Hub]\n  n10[Note 10] --> hub[Hub]\n  n11[Note 11] --> hub[Hub]\n  n12[Note 12] --> hub[Hub]\n  n13[Note 13] --> hub[Hub]\n  n14[Note 14] --> hub[Hub]\n  n15[Note 15] --> hub[Hub]\n  n16[Note 16] --> hub[Hub]\n  n17[Note 17] --> hub[Hub]\n  n18[Note 18] --> hub[Hub]\n  n19[Note 19] --> hub[Hub]\n  n20[Note 20] --> hub[Hub]\n  n21[Note 21] --> hub[Hub]\n  n22[Note 22] --> hub[Hub]\n  n23[Note 23] --> hub[Hub]\n  n24[Note 24] --> hub[Hub]\n  n25[Note 25] --> hub[Hub]\n  n26[Note 26] --> hub[Hub]\n  n27[Note 27] --> hub[Hub]\n  n28[Note 28] --> hub[Hub]\n  n29[Note 29] --> hub[Hub]\n  n30[Note 30] --> hub[Hub]\n"
+  },
+  {
+    "name": "flowchart-layout-wide-4",
+    "source": "flowchart LR\n  hub[Hub] --> n1[Note 1]\n  hub[Hub] --> n2[Note 2]\n  hub[Hub] --> n3[Note 3]\n  hub[Hub] --> n4[Note 4]\n  hub[Hub] --> n5[Note 5]\n  hub[Hub] --> n6[Note 6]\n  hub[Hub] --> n7[Note 7]\n  hub[Hub] --> n8[Note 8]\n  hub[Hub] --> n9[Note 9]\n  hub[Hub] --> n10[Note 10]\n  hub[Hub] --> n11[Note 11]\n  hub[Hub] --> n12[Note 12]\n  hub[Hub] --> n13[Note 13]\n  hub[Hub] --> n14[Note 14]\n  hub[Hub] --> n15[Note 15]\n  hub[Hub] --> n16[Note 16]\n  hub[Hub] --> n17[Note 17]\n  hub[Hub] --> n18[Note 18]\n  hub[Hub] --> n19[Note 19]\n  hub[Hub] --> n20[Note 20]\n  hub[Hub] --> n21[Note 21]\n  hub[Hub] --> n22[Note 22]\n  hub[Hub] --> n23[Note 23]\n  hub[Hub] --> n24[Note 24]\n  hub[Hub] --> n25[Note 25]\n  hub[Hub] --> n26[Note 26]\n  hub[Hub] --> n27[Note 27]\n  hub[Hub] --> n28[Note 28]\n  hub[Hub] --> n29[Note 29]\n  hub[Hub] --> n30[Note 30]\n"
+  },
+  {
+    "name": "flowchart-layout-wide-5",
+    "source": "flowchart TD\n  top1 --> low1\n  top1 --> low3\n  top1 --> low4\n  top1 --> low6\n  top2 --> low1\n  top2 --> low3\n  top2 --> low4\n  top2 --> low6\n  top4 --> low1\n  top4 --> low3\n  top4 --> low4\n  top4 --> low6\n  top5 --> low1\n  top5 --> low3\n  top5 --> low4\n  top5 --> low6\n"
+  },
+  {
+    "name": "flowchart-layout-wide-6",
+    "source": "flowchart TD\n  s1[Step 1] --> s2[Step 2]\n  s2[Step 2] --> s3[Step 3]\n  s3[Step 3] --> s4[Step 4]\n  s4[Step 4] --> s5[Step 5]\n  s5[Step 5] --> s6[Step 6]\n  s6[Step 6] --> s7[Step 7]\n  s7[Step 7] --> s8[Step 8]\n  s1 --> s4\n  s1 --> s8\n  s2 --> s6\n  s3 --> s7\n  s7 --> s2\n  s8 --> s1\n"
+  },
+  {
+    "name": "flowchart-layout-wide-7",
+    "source": "flowchart TD\n  a[Short] --> far[Far away]\n  b[\"A tall node<br>with four<br>lines of<br>text\"] --> near\n  c[Short] --> near\n  d[One] --> near\n  e[Two] --> near\n  f[Three] --> near\n  g[Four] --> far\n  a --> near\n"
+  },
+  {
+    "name": "flowchart-layout-wide-8",
+    "source": "flowchart TD\n  root --> a[A fairly long label here] & b[Another long label] & c[Third long label] & d[Fourth long label] & e[Fifth long label]\n  a & e --> x\n  b & d --> y\n  a --> y\n  e --> y\n  c --> x\n"
+  },
+  {
+    "name": "flowchart-layout-labels-1",
+    "source": "flowchart TD\n  A{Which way?} -->|The first and longest of the answers| B\n  A -->|Second| C\n  A -->|A third answer| D\n  A -->|Fourth| E\n  B -->|Back| A\n"
+  },
+  {
+    "name": "flowchart-layout-labels-2",
+    "source": "flowchart LR\n  A[Client] -->|request| B[Server]\n  B -->|response| A\n  B -->|query| C[(Database)]\n  C -->|rows| B\n"
+  },
+  {
+    "name": "flowchart-layout-labels-3",
+    "source": "flowchart TD\n  A[\"One line\"] --> B[\"A node whose label is long enough that it wraps onto several lines of text\"]\n  A --> C[\"Short\"]\n  B --> D[\"Line one<br>line two<br>line three<br>line four\"]\n  C --> D\n  D --> A\n  D --> B\n"
+  },
+  {
+    "name": "flowchart-layout-right-angles-1",
+    "source": "---\nconfig:\n  flowchart:\n    curve: step\n---\nflowchart TD\n  A[Start] --> B[Parse]\n  A --> C[Measure]\n  A --> D[Theme]\n  B --> E{Fits?}\n  C --> E\n  D --> E\n  E -->|Yes| F[Draw]\n  E -->|No| A\n"
+  },
+  {
+    "name": "flowchart-layout-right-angles-2",
+    "source": "---\nconfig:\n  flowchart:\n    curve: step\n---\nflowchart TD\n  A[\"One line\"] --> B[\"A node whose label is long enough that it wraps onto several lines of text\"]\n  A --> C[\"Short\"]\n  B --> D[\"Line one<br>line two<br>line three<br>line four\"]\n  C --> D\n  D --> A\n  D --> B\n"
+  },
+  {
+    "name": "flowchart-layout-right-angles-3",
+    "source": "---\nconfig:\n  flowchart:\n    curve: step\n---\nflowchart TD\n  A[Christmas] -->|Get money| B(Go shopping)\n  B --> C{Let me think}\n  C -->|One| D[Laptop]\n  C -->|Two| E[iPhone]\n  C -->|Three| F[Car]\n  D --> B\n  E --> A\n"
+  },
+  {
+    "name": "flowchart-layout-right-angles-4",
+    "source": "---\nconfig:\n  flowchart:\n    curve: step\n---\nflowchart LR\n  A[Start] --> B{Ready?}\n  B -->|Yes| C[Ship]\n  B -->|No| D[Fix]\n  D --> B\n  C --> E([Done])\n  D -->|Give up| E\n"
+  },
+  {
+    "name": "flowchart-layout-right-angles-5",
+    "source": "---\nconfig:\n  flowchart:\n    curve: step\n---\nflowchart TD\n  a --> hub[A wide hub with room]\n  b --> hub\n  hub --> a\n  c --> hub\n  hub --> d\n  hub --> e\n  e --> hub\n  f --> hub\n  hub --> f\n"
+  },
+  {
+    "name": "flowchart-layout-right-angles-6",
+    "source": "---\nconfig:\n  flowchart:\n    curve: step\n---\nflowchart TD\n  subgraph one [Group one]\n    a1 --> a2\n    a1 --> a3\n  end\n  subgraph two [Group two]\n    b1 --> b2\n  end\n  a2 --> b1\n  a3 --> b1\n  b2 --> a1\n  c --> one\n  c --> two\n  one --> d\n  two --> d\n"
+  },
+  {
+    "name": "flowchart-layout-right-angles-7",
+    "source": "---\nconfig:\n  flowchart:\n    curve: step\n---\nflowchart TD\n  a0[\"Flex layout\"] --> MOC[_MOC]\n  a1[\"New home page and PARA design\"] --> MOC[_MOC]\n  a2[\"2024-07-15\"] --> MOC[_MOC]\n  a3[\"2024-06-13\"] --> MOC[_MOC]\n  a4[\"2025-04-17\"] --> MOC[_MOC]\n  a5[\"Test note\"] --> MOC[_MOC]\n  a6[\"Medium draft\"] --> MOC[_MOC]\n  a7[\"Reading list\"] --> MOC[_MOC]\n  a8[\"Garden\"] --> MOC[_MOC]\n  a9[\"Inbox\"] --> MOC[_MOC]\n  a10[\"Archive\"] --> MOC[_MOC]\n  a11[\"Ideas\"] --> MOC[_MOC]\n  a0 --> Weekly\n  a1 --> Weekly\n  a2 --> Weekly\n  a3 --> Weekly\n  a9 --> Weekly\n  a11 --> Weekly\n"
+  },
+  {
+    "name": "flowchart-layout-right-angles-8",
+    "source": "---\nconfig:\n  flowchart:\n    curve: step\n---\ngraph TD\n  hub[\"Hub\"]\n  index[\"Index\"]\n  Plugins[\"Plugins\"] --> hub\n  Medium_draft[\"Medium draft\"] --> hub\n  Medium_draft[\"Medium draft\"] --> hub\n  Test_note[\"Test note\"] --> hub\n  2025_04_17[\"2025-04-17\"] --> hub\n  2024_06_13[\"2024-06-13\"] --> hub\n  2024_07_15[\"2024-07-15\"] --> hub\n  PARA_design[\"PARA design\"] --> hub\n  index --> Notes[\"Notes\"]\n  index --> Obsidian[\"Obsidian\"]\n  index --> Reading[\"Reading\"]\n  index --> Reading[\"Reading\"]\n  index --> Clippings[\"Clippings\"]\n  index --> Daily[\"Daily\"]\n  index --> Weekly[\"Weekly\"]\n  index --> Monthly[\"Monthly\"]\n  index --> Projects[\"Projects\"]\n  index --> Project_log[\"Project log\"]\n"
+  },
+  {
+    "name": "flowchart-layout-right-angles-9",
+    "source": "---\nconfig:\n  flowchart:\n    curve: step\n---\nflowchart TD\n  top1 --> low1\n  top1 --> low3\n  top1 --> low4\n  top1 --> low6\n  top2 --> low1\n  top2 --> low3\n  top2 --> low4\n  top2 --> low6\n  top4 --> low1\n  top4 --> low3\n  top4 --> low4\n  top4 --> low6\n  top5 --> low1\n  top5 --> low3\n  top5 --> low4\n  top5 --> low6\n"
+  },
+  {
+    "name": "flowchart-layout-right-angles-10",
+    "source": "---\nconfig:\n  flowchart:\n    curve: step\n---\nflowchart TD\n  s1[Step 1] --> s2[Step 2]\n  s2[Step 2] --> s3[Step 3]\n  s3[Step 3] --> s4[Step 4]\n  s4[Step 4] --> s5[Step 5]\n  s5[Step 5] --> s6[Step 6]\n  s6[Step 6] --> s7[Step 7]\n  s7[Step 7] --> s8[Step 8]\n  s1 --> s4\n  s1 --> s8\n  s2 --> s6\n  s3 --> s7\n  s7 --> s2\n  s8 --> s1\n"
+  },
+  {
+    "name": "flowchart-layout-right-angles-11",
+    "source": "---\nconfig:\n  flowchart:\n    curve: step\n---\nflowchart TD\n  n1[Note 1] --> hub[Hub]\n  n2[Note 2] --> hub[Hub]\n  n3[Note 3] --> hub[Hub]\n  n4[Note 4] --> hub[Hub]\n  n5[Note 5] --> hub[Hub]\n  n6[Note 6] --> hub[Hub]\n  n7[Note 7] --> hub[Hub]\n  n8[Note 8] --> hub[Hub]\n  n9[Note 9] --> hub[Hub]\n  n10[Note 10] --> hub[Hub]\n  n11[Note 11] --> hub[Hub]\n  n12[Note 12] --> hub[Hub]\n  n13[Note 13] --> hub[Hub]\n  n14[Note 14] --> hub[Hub]\n  n15[Note 15] --> hub[Hub]\n  n16[Note 16] --> hub[Hub]\n  n17[Note 17] --> hub[Hub]\n  n18[Note 18] --> hub[Hub]\n  n19[Note 19] --> hub[Hub]\n  n20[Note 20] --> hub[Hub]\n  n21[Note 21] --> hub[Hub]\n  n22[Note 22] --> hub[Hub]\n  n23[Note 23] --> hub[Hub]\n  n24[Note 24] --> hub[Hub]\n  n25[Note 25] --> hub[Hub]\n  n26[Note 26] --> hub[Hub]\n  n27[Note 27] --> hub[Hub]\n  n28[Note 28] --> hub[Hub]\n  n29[Note 29] --> hub[Hub]\n  n30[Note 30] --> hub[Hub]\n"
+  },
+  {
+    "name": "flowchart-layout-curves-1",
+    "source": "---\nconfig:\n  flowchart:\n    curve: basis\n---\nflowchart TD\n  A[Start] --> B[Parse]\n  A --> C[Measure]\n  A --> D[Theme]\n  B --> E{Fits?}\n  C --> E\n  D --> E\n  E -->|Yes| F[Draw]\n  E -->|No| A\n"
+  },
+  {
+    "name": "flowchart-layout-curves-2",
+    "source": "---\nconfig:\n  flowchart:\n    curve: linear\n---\nflowchart TD\n  A[Start] --> B[Parse]\n  A --> C[Measure]\n  A --> D[Theme]\n  B --> E{Fits?}\n  C --> E\n  D --> E\n  E -->|Yes| F[Draw]\n  E -->|No| A\n"
+  },
+  {
+    "name": "flowchart-layout-curves-3",
+    "source": "---\nconfig:\n  flowchart:\n    curve: step\n---\nflowchart TD\n  A[Start] --> B[Parse]\n  A --> C[Measure]\n  A --> D[Theme]\n  B --> E{Fits?}\n  C --> E\n  D --> E\n  E -->|Yes| F[Draw]\n  E -->|No| A\n"
+  },
+  {
+    "name": "flowchart-layout-curves-4",
+    "source": "---\nconfig:\n  flowchart:\n    curve: stepBefore\n---\nflowchart TD\n  A[Start] --> B[Parse]\n  A --> C[Measure]\n  A --> D[Theme]\n  B --> E{Fits?}\n  C --> E\n  D --> E\n  E -->|Yes| F[Draw]\n  E -->|No| A\n"
+  },
+  {
+    "name": "flowchart-layout-curves-5",
+    "source": "---\nconfig:\n  flowchart:\n    curve: stepAfter\n---\nflowchart TD\n  A[Start] --> B[Parse]\n  A --> C[Measure]\n  A --> D[Theme]\n  B --> E{Fits?}\n  C --> E\n  D --> E\n  E -->|Yes| F[Draw]\n  E -->|No| A\n"
+  },
+  {
+    "name": "ishikawa-layout-narrow-screens-1",
+    "source": "ishikawa-beta\n    Blurry Photo\n    Process\n        Out of focus\n        Shutter speed too slow\n        Protective film not removed\n        Beautification filter applied\n    User\n        Shaky hands\n    Equipment\n        LENS\n            Inappropriate lens\n            Damaged lens\n            Dirty lens\n        SENSOR\n            Damaged sensor\n            Dirty sensor\n    Environment\n        Subject moved too quickly\n        Too dark\n"
+  },
+  {
+    "name": "journey-layout-narrow-screens-1",
+    "source": "journey\n    title My working day\n    section Go to work\n      Make tea: 5: Me\n      Go upstairs: 3: Me\n      Do work: 1: Me, Cat\n    section Go home\n      Go downstairs: 5: Me\n      Sit down: 5: Me\n"
+  },
+  {
+    "name": "packet-layout-narrow-screens-1",
+    "source": "---\ntitle: \"TCP Packet\"\n---\npacket\n0-15: \"Source Port\"\n16-31: \"Destination Port\"\n32-63: \"Sequence Number\"\n64-95: \"Acknowledgment Number\"\n96-99: \"Data Offset\"\n100-105: \"Reserved\"\n106: \"URG\"\n107: \"ACK\"\n108: \"PSH\"\n109: \"RST\"\n110: \"SYN\"\n111: \"FIN\"\n112-127: \"Window\"\n128-143: \"Checksum\"\n144-159: \"Urgent Pointer\"\n160-191: \"(Options and Padding)\"\n192-255: \"Data (variable length)\"\n"
+  },
+  {
+    "name": "quadrant-layout-narrow-screens-1",
+    "source": "quadrantChart\n    title Reach and engagement of campaigns\n    x-axis Low Reach --> High Reach\n    y-axis Low Engagement --> High Engagement\n    quadrant-1 We should expand\n    quadrant-2 Need to promote\n    quadrant-3 Re-evaluate\n    quadrant-4 May be improved\n    Campaign A: [0.3, 0.6]\n    Campaign B: [0.45, 0.23]\n    Campaign C: [0.57, 0.69]\n    Campaign D: [0.78, 0.34]\n    Campaign E: [0.40, 0.34]\n    Campaign F: [0.35, 0.78]\n"
+  },
+  {
+    "name": "railroad-layout-narrow-screens-1",
+    "source": "railroad-ebnf-beta\ntitle \"JSON Grammar\"\n\njson = element ;\nelement = object | array | string | number | \"true\" | \"false\" | \"null\" ;\nobject = \"{\" [ member ( \",\" member )* ] \"}\" ;\narray = \"[\" [ element ( \",\" element )* ] \"]\" ;\nmember = string \":\" element ;\n"
+  },
+  {
+    "name": "requirement-layout-edges-1",
+    "source": "requirementDiagram\n  requirement fast {\n    id: 1\n    text: Renders quickly\n  }\n  requirement small {\n    id: 2\n    text: Ships little code\n  }\n  element layout {\n    type: module\n  }\n  layout - satisfies -> fast\n  layout - satisfies -> small\n  fast - derives -> small\n  small - refines -> fast\n"
+  },
+  {
+    "name": "sequence-layout-narrow-screens-1",
+    "source": "sequenceDiagram\n  autonumber\n  actor Customer\n  participant Web as Web app\n  participant API as API gateway\n  participant Bank\n  Customer->>Web: Place order\n  Web->>API: POST /orders\n  activate API\n  API->>Bank: Authorise payment\n  Bank-->>API: Approved\n  API-->>Web: 201 Created\n  deactivate API\n  Web-->>Customer: Order confirmed\n  Note over Customer,Bank: One order, one transaction\n"
+  },
+  {
+    "name": "state-layout-edges-1",
+    "source": "stateDiagram-v2\n  [*] --> Idle\n  Idle --> Running : start\n  Running --> Idle : stop\n  Running --> Paused : pause\n  Paused --> Running : resume\n  Paused --> Idle : stop\n  Running --> [*]\n"
+  },
+  {
+    "name": "state-layout-edges-2",
+    "source": "stateDiagram-v2\n  [*] --> Active\n  state Active {\n    [*] --> Typing\n    Typing --> Waiting : pause\n    Waiting --> Typing : key\n  }\n  Active --> Saved : save\n  Saved --> Active : edit\n  Saved --> [*]\n"
+  },
+  {
+    "name": "state-layout-edges-3",
+    "source": "stateDiagram-v2\n  [*] --> Menu\n  Menu --> Open\n  Menu --> Save\n  Menu --> Export\n  Menu --> Print\n  Menu --> Share\n  Menu --> Settings\n  Menu --> Help\n  Open --> Done\n  Save --> Done\n  Export --> Done\n  Print --> Done\n  Share --> Done\n  Settings --> Done\n  Help --> Done\n  Done --> Menu\n"
+  },
+  {
+    "name": "swimlane-layout-narrow-screens-1",
+    "source": "swimlane-beta LR\n  subgraph Customer\n    Browse[Browse catalogue]\n    Pay[Pay]\n  end\n  subgraph Warehouse\n    Pick[Pick items]\n    Ship[Ship order]\n  end\n  subgraph Finance\n    Invoice[Raise invoice]\n  end\n  Browse --> Pay\n  Pay --> Pick\n  Pick --> Ship\n  Pay --> Invoice\n"
+  },
+  {
+    "name": "treeview-layout-narrow-screens-1",
+    "source": "treeView-beta\n  project/\n    this_is_a_long_filename_that_needs_to_wrap_on_a_phone.ts :::highlight ## A description that stays with the file when the layout narrows\n    source/\n      app.ts\n"
+  },
+  {
+    "name": "wardley-layout-narrow-screens-1",
+    "source": "wardley-beta\ntitle Tea Shop Value Chain\n\nanchor Business [0.95, 0.63]\ncomponent Cup of Tea [0.79, 0.61]\ncomponent Tea [0.63, 0.81]\ncomponent Hot Water [0.52, 0.80]\ncomponent Kettle [0.43, 0.35]\ncomponent Power [0.10, 0.70]\n\nBusiness -> Cup of Tea\nCup of Tea -> Tea\nCup of Tea -> Hot Water\nHot Water -> Kettle\nKettle -> Power\n\nevolve Kettle 0.62\nevolve Power 0.89\n\nnote \"Standardising power allows Kettles to evolve faster\" [0.30, 0.49]\n"
+  }
+]

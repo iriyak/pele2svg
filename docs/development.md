@@ -2,8 +2,11 @@
 
 ## What has been checked
 
-Using Pele's published examples ([pele.run/examples](https://pele.run/examples)) — 32 diagram types, 58 featured examples
-plus the 520 documentation examples on the per-type pages (578 in total):
+Using Pele's published examples ([pele.run/examples](https://pele.run/examples)) — 32 diagram types, 58 featured examples,
+the 520 documentation examples and the 81 layout cases on the per-type pages (659 in total, Pele 1.10.0).
+
+The by-hand checks below (`xmllint`, resvg, GToolkit and WebView2) were made on the 578 featured and documentation
+examples, before the layout cases were added. `npm test` covers all 659.
 
 - All of them convert, and none keeps a `var()`, `style` attribute, `<style>` element, `currentColor`,
   `color-mix()`, nested `<svg>` or `<a>`. These sources are kept in `test/fixtures/` and checked by `npm test`
@@ -18,6 +21,7 @@ plus the 520 documentation examples on the per-type pages (578 in total):
 
 Not verified:
 
+- The 81 layout cases in GToolkit and WebView2. `npm test` checks only that they convert cleanly.
 - Other full-width text than that one flowchart. Pele measures text itself, so label boxes may not fit full-width glyphs
   in every font GT picks.
 - One `<image>` with an external URL (a flowchart example) is removed.
@@ -34,12 +38,19 @@ npm test
 
 - [`test/flatten.test.js`](../test/flatten.test.js): small unit tests of `resolveVars` and `flatten`, including the inlining of simple `<style>` class rules.
 - [`test/corpus.test.js`](../test/corpus.test.js): converts every source in [`test/fixtures/`](../test/fixtures) — Pele's
-  58 featured examples, its 520 documentation examples and 170 sources from its own test corpus — and checks that the
+  58 featured examples, its 520 documentation examples, its 81 layout cases and 170 sources from its own test corpus — and checks that the
   output has no `var()`, `style` attribute, `<style>`, `currentColor`, `color-mix()`, `<a>`, external `<image>` or
   nested `<svg>`, that it is well-formed, and that converting it again changes nothing. It also repeats the featured
   examples with each theme in [`themes/`](../themes) and runs `--batch` on a whole corpus file.
 
 These tests need no GToolkit. What they cannot check is how a renderer draws the result; that was looked at by eye (see above).
+
+The featured, documentation and layout fixtures are generated from a clone of the Pele repository, so they can be
+refreshed after a Pele update (see [`test/fixtures/README.md`](../test/fixtures/README.md)):
+
+```sh
+node scripts/build-fixtures.mjs --pele <path to the pele clone>
+```
 
 [`examples/`](../examples) has Mermaid sources and the converted SVGs. `eventmodeling-1.svg` is made with
 [`themes/gt-windows.json`](../themes/gt-windows.json) (`monospace` → `Consolas`); the other two have no `monospace` text.
@@ -140,7 +151,7 @@ Steps 6 to 11 do not depend on each other in the same way; their order in the co
 - `style` is split on `;` and `:` without understanding CSS strings or `url(…)`.
 - Nested `<svg>` is converted with `xMidYMid meet` only; other `preserveAspectRatio` values and `overflow` are ignored.
 
-These are enough for the 578 published examples (see [What has been checked](#what-has-been-checked)). For SVGs from
+These are enough for the 659 published examples (see [What has been checked](#what-has-been-checked)). For SVGs from
 other tools they are the first places to look when a drawing is wrong.
 
 ### Text processing, not a tree
@@ -202,6 +213,6 @@ How well each step would map:
 | 12 final check | not a rewrite | a traversal that reports |
 
 A practical split would be: gather the environment with a visitor, apply the local rewrites as rules, and keep
-verification as a separate traversal. The 578-example corpus and `test/corpus.test.js` would serve as the oracle for such
+verification as a separate traversal. The 659-example corpus and `test/corpus.test.js` would serve as the oracle for such
 an implementation, comparing canonicalized XML rather than bytes, because attribute order is not preserved identically
 by both approaches.

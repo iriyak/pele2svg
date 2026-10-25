@@ -250,8 +250,9 @@ Pele2svg new theme: { '--gt-font-mono' -> 'Courier New' } asDictionary; asElemen
 
 ## What has been checked
 
-Every one of Pele's published examples (578) converts cleanly, and the converted SVGs match in GToolkit (Skia) and in
-WebView2 on Windows. The details, what is not verified, and how to run the tests are in
+Every one of Pele's published examples (659: 58 featured, 520 documentation examples and 81 layout cases; checked with
+Pele 1.10.0) converts cleanly. For the first 578 (the featured and documentation examples), the converted SVGs also match
+in GToolkit (Skia) and in WebView2 on Windows; the 81 layout cases have not been looked at there yet. The details, what is not verified, and how to run the tests are in
 [docs/development.md](docs/development.md).
 
 ## More documentation
