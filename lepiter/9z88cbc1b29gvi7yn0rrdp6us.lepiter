@@ -1722,6 +1722,266 @@
 								"__type" : "time",
 								"time" : {
 									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T16:21:54.095+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T16:21:54.095+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "XUZYa2gSzLIdOeCv17/7Hg=="
+							},
+							"paragraphStyle" : {
+								"__type" : "textStyle"
+							},
+							"string" : "An *element snippet* runs Pharo code that answers an object with `#asElement` (a `BlElement`) and shows it right below the code. With {{gtMethod:name=Pele2svg>>elementFor:format:}} the page can hold a formula next to its text. First TeX: the Gaussian integral is a classic, and the line below is typeset from the TeX source in the snippet:"
+						},
+						{
+							"__type" : "elementSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T16:21:54.095+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T16:21:54.095+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "0puvVDj5Qvpu4fEiVSThXA=="
+							},
+							"code" : "Pele2svg new\n\telementFor: '\\int_{-\\infty}^{\\infty} e^{-x^2}\\,dx=\\sqrt{\\pi}'\n\tformat: #tex\n\tdisplay: true size: 24 color: '#205ea6'",
+							"elementHeight" : 90,
+							"codeHeight" : 60,
+							"codeVisible" : true
+						},
+						{
+							"__type" : "textSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T16:21:54.095+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T16:21:54.095+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "av9eKsdAq2cOlWckEA5bYQ=="
+							},
+							"paragraphStyle" : {
+								"__type" : "textStyle"
+							},
+							"string" : "The same kind of formula in AsciiMath, which is easier to type by hand: `sum_(k=1)^n k = (n(n+1))/2`. `#asciimath` reads it, and `#mathml` reads MathML. The notation is chosen by the `format:` argument, so the text of the page does not change when you change it:"
+						},
+						{
+							"__type" : "elementSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T16:21:54.095+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T16:21:54.095+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "HhPILuWz1hAjadpZT0CN6Q=="
+							},
+							"code" : "Pele2svg new\n\telementFor: 'sum_(k=1)^n k = (n(n+1))/2'\n\tformat: #asciimath\n\tdisplay: true size: 24 color: '#205ea6'",
+							"elementHeight" : 110,
+							"codeHeight" : 60,
+							"codeVisible" : true
+						},
+						{
+							"__type" : "textSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T16:21:54.095+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T16:21:54.095+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "Td6/7R7iaDhk5Dkl2qcu6w=="
+							},
+							"paragraphStyle" : {
+								"__type" : "textStyle"
+							},
+							"string" : "A formula inside a sentence is a small element in the inline style: the energy of a mass is the one below, and a sentence cannot flow around an element, so a text snippet holds the sentence and an element snippet holds the formula. {{gtClass:name=Pele2svgMathExamples}} has more. The default color is black; give `color:` a lighter one on a dark theme."
+						},
+						{
+							"__type" : "elementSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T16:21:54.095+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T16:21:54.095+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "vqOwzF4bdjj+Poh4syz3vQ=="
+							},
+							"code" : "Pele2svg new elementForTex: 'E=mc^2'",
+							"elementHeight" : 50,
+							"codeHeight" : 60,
+							"codeVisible" : true
+						}
+					]
+				},
+				"createEmail" : {
+					"__type" : "email",
+					"emailString" : "<unknown>"
+				},
+				"createTime" : {
+					"__type" : "time",
+					"time" : {
+						"__type" : "dateAndTime",
+						"dateAndTimeString" : "2026-10-25T16:21:54.095+09:00"
+					}
+				},
+				"editEmail" : {
+					"__type" : "email",
+					"emailString" : "<unknown>"
+				},
+				"editTime" : {
+					"__type" : "time",
+					"time" : {
+						"__type" : "dateAndTime",
+						"dateAndTimeString" : "2026-10-25T16:21:54.095+09:00"
+					}
+				},
+				"uid" : {
+					"__type" : "uid",
+					"uidString" : "mZmfX+NIV+7CHCrrmbW8KA=="
+				},
+				"paragraphStyle" : {
+					"__type" : "textStyle"
+				},
+				"string" : "#### Formulas in the page"
+			},
+			{
+				"__type" : "textSnippet",
+				"children" : {
+					"__type" : "snippets",
+					"items" : [
+						{
+							"__type" : "textSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
 									"dateAndTimeString" : "2026-10-18T19:00:07.145+09:00"
 								}
 							},
