@@ -57,7 +57,7 @@ test('flatten: simple <style> class rules become attributes', () => {
   assert.deepEqual(warnings, []);
   assert.doesNotMatch(svg, /<style|<defs/);
   assert.match(svg, /<path d="M0 0h5v5z" class="a" fill="#bb5938"\/>/);
-  assert.match(svg, /class="b" fill="red"/); // the element's own style wins
+  assert.match(svg, /class="b" fill="#ff0000"/); // the element's own style wins (red, as hex)
 });
 
 test('flatten: <style> rules that cannot be inlined are kept and reported', () => {
@@ -67,9 +67,13 @@ test('flatten: <style> rules that cannot be inlined are kept and reported', () =
   assert.ok(warnings.some(w => /<style> left/.test(w)));
 });
 
-test('flatten: color keywords in style are lower-cased (Skia is case-sensitive)', () => {
-  const src = '<svg xmlns="http://www.w3.org/2000/svg"><rect width="8" height="8" style="fill:Purple;stroke:#FFF"/></svg>';
+test('flatten: color keywords become hex (Skia knows only some, and only in lower case)', () => {
+  const src = '<svg xmlns="http://www.w3.org/2000/svg"><rect width="8" height="8" style="fill:Purple;stroke:#FFF"/>'
+    + '<circle r="2" style="fill:grey"/><path d="M0 0" fill="LightGray" stroke="transparent"/><rect fill="none" stroke="red"/></svg>';
   const { svg } = flatten(src);
-  assert.match(svg, /fill="purple"/);
+  assert.match(svg, /fill="#800080"/);
   assert.match(svg, /stroke="#FFF"/); // hex values are left alone
+  assert.match(svg, /fill="#808080"/); // grey, which Skia draws as black
+  assert.match(svg, /fill="#d3d3d3" stroke="none"/); // LightGray; transparent
+  assert.match(svg, /fill="none" stroke="#ff0000"/);
 });

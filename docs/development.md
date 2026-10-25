@@ -20,8 +20,8 @@ examples, before the layout cases were added. `npm test` covers all 659.
   SVG (written at 2x, white background), and the two images were compared in 8x8 pixel blocks, which tolerates the
   different glyph shapes of the two machines. None failed or came out with another size; the median difference per block
   was 0.0026 (0 is identical). The pairs can be looked at side by side in the gallery (see
-  [`pele-upgrade.md`](pele-upgrade.md)). The comparison found one real bug (`fill:Purple`: Skia understands only
-  lower-case colour keywords, fixed in `styleToAttrs`) and the differences listed under *Known differences in Skia* below.
+  [`pele-upgrade.md`](pele-upgrade.md)). The comparison, and a look at the gallery by eye, found one kind of bug (Skia did
+  not understand some color names such as `Purple` and `grey`; `flatten` now writes them as hex) and the differences listed under *Known differences in Skia* below.
 - Every `<gtExample>` of `Pele2svgFeaturedExamples` (58) and the 28 of `Pele2svgExamples` (24 short diagrams and checks, and 4 that read the fixtures; 86 in all) was run through the Pharo class and
   looked at in GToolkit (Skia), including a flowchart with Japanese labels (`japaneseLabels`), which draws correctly.
 
@@ -37,8 +37,13 @@ Not verified:
 Known differences in Skia (not bugs of pele2svg):
 
 - Text with an emoji can lose its bold weight, and text after an emoji with U+FE0F may shift (`treeview-12`).
-- A glyph that the font lacks, such as ♥ in `er-05` and `flowchart-03`, is drawn as a box.
 - An external `<image>` is removed on purpose (`flowchart-70`).
+- A character that the font lacks and that Skia cannot replace is drawn as a box. This is also the case for the emoji in
+  `mindmap-13` (🤓) with Arial: Skia does not look for another font. Naming `Segoe UI Emoji` draws it, but loses the bold
+  weight of its line, and font lists such as `Arial, Segoe UI Emoji` are not used.
+- Skia knows only some CSS color names, and only in lower case: `grey`, `lightgray` and `Purple` came out black or
+  unpainted. `flatten` therefore writes every color keyword as `#rrggbb` (found with `c4-layout-narrow-screens-1`, where the
+  source says `$bgColor="grey"`, and `sequence-17`).
 - Fonts: Pele's SVG asks for the generic `sans-serif`. A browser on Windows uses Arial for it, Skia another, thinner face.
   [`themes/gt-windows.json`](../themes/gt-windows.json) sets `--gt-font-sans` to Arial and `--gt-font-mono` to Consolas, and
   `Pele2svgExamples` applies it on Windows. `Pele2svg` itself applies no theme unless one is given.

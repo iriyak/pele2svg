@@ -81,9 +81,56 @@ Pele2svgExamples class >> galleryDirectory [
 ]
 
 { #category : 'gallery' }
+Pele2svgExamples class >> galleryElement [
+	"Answer a GtWebViewElement (WebView2) that shows out/gallery/index.html, the pictures of Pele's own SVG next to the Skia pictures. Run scripts/gallery-svgs.mjs, exportGalleryPngs and scripts/gallery-index.mjs first (docs/pele-upgrade.md)."
+
+	^ GtWebViewElement new
+		matchParent;
+		url: self galleryUrl;
+		yourself
+]
+
+{ #category : 'gallery' }
 Pele2svgExamples class >> galleryScale [
 	"The gallery PNGs are written at this multiple of the SVG size, so that they stay sharp on a high-resolution screen."
 	^ 2
+]
+
+{ #category : 'gallery' }
+Pele2svgExamples class >> galleryUrl [
+	"The file: URL of out/gallery/index.html. When the page has not been made, signal Pele2svgError that lists the steps of docs/pele-upgrade.md in order and marks the ones whose output exists."
+
+	| index |
+	index := self galleryDirectory / 'index.html'.
+	index exists ifFalse: [
+		Pele2svgError signal: (String streamContents: [ :stream |
+			stream
+				nextPutAll: 'The gallery has not been made (no ' , index fullName , '). Run, in this order:';
+				cr;
+				nextPutAll: '  1. node scripts/gallery-svgs.mjs';
+				nextPutAll: ((self galleryDirectory / 'svg') exists ifTrue: [ '   (done)' ] ifFalse: [ '' ]);
+				cr;
+				nextPutAll: '  2. Pele2svgExamples exportGalleryPngs   (in GToolkit, about 20 minutes)';
+				nextPutAll: ((self galleryDirectory / 'skia-metrics.json') exists ifTrue: [ '   (done)' ] ifFalse: [ '' ]);
+				cr;
+				nextPutAll: '  3. node scripts/gallery-index.mjs';
+				cr;
+				nextPutAll: 'See docs/pele-upgrade.md.' ]) ].
+	^ 'file:///' , (index fullName copyReplaceAll: '\' with: '/')
+]
+
+{ #category : 'gallery' }
+Pele2svgExamples class >> openGallery [
+	"Open the gallery in a new window, in WebView2. Typical use, after the steps in docs/pele-upgrade.md:
+	Pele2svgExamples exportGalleryPngs. Pele2svgExamples openGallery"
+
+	| space |
+	space := BlSpace new.
+	space title: 'Pele2svg gallery'.
+	space extent: 1280 @ 900.
+	space addChild: self galleryElement.
+	space show.
+	^ space
 ]
 
 { #category : 'examples' }

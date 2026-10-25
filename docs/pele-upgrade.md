@@ -56,8 +56,9 @@ The gallery shows, for every example, what a browser draws from pele's own SVG n
 
 1. `node scripts/gallery-svgs.mjs`: raw and converted SVGs (`out/gallery/raw`, `out/gallery/svg`), converted with `themes/gt-windows.json`.
 2. In GToolkit, run `Pele2svgExamples exportGalleryPngs`. It draws every converted SVG with Skia into `out/gallery/skia/<name>.png` at 2x on a white background and writes `out/gallery/skia-metrics.json`; it answers the number of failures and takes about 20 minutes (`[ Pele2svgExamples exportGalleryPngs ] fork` keeps the image usable).
-3. `node scripts/gallery-index.mjs`: `index.html` with filters; examples that Skia drew differently (failure, size, nothing drawn) are flagged. Open `out/gallery/index.html`.
-4. Optional: `python3 -I scripts/gallery-compare.py` draws every raw SVG in Chromium and compares it with the Skia PNG in 8x8 pixel blocks (it needs numpy, pillow and playwright with Chromium); the result is `out/gallery/compare/compare.json`.
+3. `node scripts/gallery-index.mjs`: `index.html` with filters; examples that Skia drew differently (failure, size, nothing drawn) are flagged.
+4. In GToolkit, run `Pele2svgExamples openGallery`: it opens `out/gallery/index.html` in a window with WebView2. The page only shows what steps 1 to 3 made, so run them first when the SVGs or PNGs changed.
+5. Optional: `python3 -I scripts/gallery-compare.py` draws every raw SVG in Chromium and compares it with the Skia PNG in 8x8 pixel blocks (it needs numpy, pillow and playwright with Chromium); the result is `out/gallery/compare/compare.json`.
 
 Things that are known to differ and are not bugs of pele2svg: external images are removed, emoji in text may lose bold or shift the following text, and glyphs missing from the font (for example ♥) are drawn as boxes.
 
