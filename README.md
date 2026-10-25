@@ -242,7 +242,7 @@ Pele2svg new
 Other keys of Pele's `RenderOptions` that JSON can carry are accepted too; an unknown key signals `Pele2svgError` and names the known ones.
 The formulas are drawn as paths, so they need no font and follow the theme's foreground color. `renderOptions` apply to Mermaid
 source (`render:`, `asElement:`), not to `renderSvg:`. Evaluate `Pele2svgOptions globalDefault at: #renderOptions put: { #math -> true } asDictionary`
-to turn formulas on for everything.
+to turn formulas on for everything. `Pele2svgMathExamples` has an example for each diagram type that can hold a formula (see [Examples](#examples)).
 
 ### Settings
 

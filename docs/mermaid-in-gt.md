@@ -99,6 +99,7 @@ cache, so every glyph is an inline path and the picture needs no font. *Checked*
 state, ER, mindmap, kanban, block, requirement, swimlane and use case diagrams (`npm test` has one case for each, and each was drawn once and looked at), and
 the formula takes the foreground color of the theme. Pele (1.8.0) lists the same types for `math`.
 
+- `Pele2svgMathExamples` (in the Pharo package) has a `<gtExample>` for each of these types, and `withoutMathOption`; `Pele2svgExamplesTest` runs them.
 - MathJax writes each formula with `stroke="currentColor" stroke-width="0"`. Skia draws a stroke of width 0 as 1 px, which made the
   glyphs look bold (next to a browser's drawing); `flatten` now writes `stroke="none"` there (step 13 in development.md).
 - KaTeX cannot be used: it answers HTML and MathML, and Pele embeds HTML in a `<foreignObject>`, which Skia does not draw.

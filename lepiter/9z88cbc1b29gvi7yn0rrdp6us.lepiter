@@ -1153,7 +1153,7 @@
 								"__type" : "time",
 								"time" : {
 									"__type" : "dateAndTime",
-									"dateAndTimeString" : "2026-10-25T12:22:14.64+09:00"
+									"dateAndTimeString" : "2026-10-25T14:48:36.431+09:00"
 								}
 							},
 							"uid" : {
@@ -1163,7 +1163,7 @@
 							"paragraphStyle" : {
 								"__type" : "textStyle"
 							},
-							"string" : "{{gtClass:name=Pele2svgExamples}} shows all of pele's published examples (659: the 58 featured examples, the 520 documentation examples and the 81 layout cases), read from `test/fixtures`. Evaluate `Pele2svgExamples new` and look at its *Examples* view: it lists them by corpus, type and name, and selecting one draws it. The class also has short examples of the basic diagram types and a few checks. {{gtClass:name=Pele2svgFeaturedExamples}} has one example for each featured example (58, named `<type><n>`, for example `c41`). Open the classes in the GT Coder and look at the results."
+							"string" : "{{gtClass:name=Pele2svgExamples}} shows all of pele's published examples (659: the 58 featured examples, the 520 documentation examples and the 81 layout cases), read from `test/fixtures`. Evaluate `Pele2svgExamples new` and look at its *Examples* view: it lists them by corpus, type and name, and selecting one draws it. The class also has short examples of the basic diagram types and a few checks. {{gtClass:name=Pele2svgFeaturedExamples}} has one example for each featured example (58, named `<type><n>`, for example `c41`). Open the classes in the GT Coder and look at the results. {{gtClass:name=Pele2svgMathExamples}} has one example for each diagram type that can hold a `$$...$$` formula (11), and `withoutMathOption`; they need `mathjax-full` (see **Formulas and narrow layouts** below)."
 						}
 					]
 				},
@@ -1444,7 +1444,7 @@
 								"__type" : "time",
 								"time" : {
 									"__type" : "dateAndTime",
-									"dateAndTimeString" : "2026-10-25T14:15:57.07+09:00"
+									"dateAndTimeString" : "2026-10-25T14:48:41.57+09:00"
 								}
 							},
 							"uid" : {
@@ -1454,7 +1454,7 @@
 							"paragraphStyle" : {
 								"__type" : "textStyle"
 							},
-							"string" : "Pele has options of its own. Give them to a converter as `renderOptions`. `#math -> true` typesets `$$...$$` in a label as a formula (MathJax draws it as paths, so no font is needed). It works in flowchart, sequence, class, state, ER, mindmap, kanban, block, requirement, swimlane and use case diagrams. It needs `mathjax-full`, which `Pele2svg installDependencies` installs:"
+							"string" : "Pele has options of its own. Give them to a converter as `renderOptions`. `#math -> true` typesets `$$...$$` in a label as a formula (MathJax draws it as paths, so no font is needed). It works in flowchart, sequence, class, state, ER, mindmap, kanban, block, requirement, swimlane and use case diagrams ({{gtClass:name=Pele2svgMathExamples}} has an example of each). It needs `mathjax-full`, which `Pele2svg installDependencies` installs:"
 						},
 						{
 							"__type" : "pharoSnippet",

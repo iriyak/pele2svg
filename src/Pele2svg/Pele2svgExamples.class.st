@@ -3,7 +3,7 @@ GToolkit examples for Pele2svg. Evaluate `Pele2svgExamples new` and look at the 
 
 The sources are those of pele (https://github.com/obsidianmd/pele, MIT License, Copyright (c) 2026 kepano), copied unchanged into test/fixtures/featured.json, docs.json and layout.json by scripts/build-fixtures.mjs. Each example is a Dictionary with the keys 'corpus' (featured, docs or layout), 'type' (the diagram type), 'name' and 'source'. #elementOfExampleNamed: answers the element of one example.
 
-The <gtExample> methods below are short diagrams written for this package (flowchart, sequenceDiagram, ...), a few checks, and one example for each corpus. The featured examples also have a <gtExample> each in Pele2svgFeaturedExamples. The tests of the options are in Pele2svgOptionsTest and Pele2svgExamplesTest (package Pele2svg-Tests).
+The <gtExample> methods below are short diagrams written for this package (flowchart, sequenceDiagram, ...), a few checks, and one example for each corpus. The featured examples also have a <gtExample> each in Pele2svgFeaturedExamples, and the examples with $$...$$ formulas (render option #math -> true) are in Pele2svgMathExamples. The tests of the options are in Pele2svgOptionsTest and Pele2svgExamplesTest (package Pele2svg-Tests).
 "
 Class {
 	#name : 'Pele2svgExamples',
