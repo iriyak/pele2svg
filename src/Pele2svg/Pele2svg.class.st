@@ -6,6 +6,8 @@ I convert Mermaid source to a GToolkit-friendly SVG string by running pele2svg (
 	Pele2svg new theme: 'path/to/theme.json'; asElement: mmd.
 	Pele2svg new renderSvg: peleSvg.	""an SVG that Pele has already produced""
 	Pele2svg new asElementFromSvg: peleSvg.
+	Pele2svg new elementForTex: 'E=mc^2'.	""a formula on its own, no Mermaid""
+	Pele2svg new elementFor: '<math>...</math>' format: #mathml.	""also #tex and #asciimath""
 
 Settings (script, runtime, theme, renderOptions, timeout) are options in the sense of ZnOptions, and an instance works like a ZnClient. What is set on it with #script:, #runtime:, #theme:, #renderOptions: or #timeout: is kept in the instance and applied on top of Pele2svgOptions globalDefault when it renders. The options of an enclosing Pele2svgOptions>>#during: take precedence over both. The getters answer the value that rendering would use now.
 
@@ -20,6 +22,7 @@ theme: nil (default), a path to a theme JSON file, or a Dictionary of theme vari
 renderOptions: nil (default) or a Dictionary of options for Pele's render(), for example { #maxWidth -> 360 } asDictionary for a narrow layout, or { #math -> true } asDictionary to typeset $$...$$ with MathJax (see docs/mermaid-in-gt.md). They apply to Mermaid source, not to #renderSvg:.
 timeout: milliseconds, 30000 by default.
 installDependencies installs pele and, as an optional dependency, mathjax-full (npm install, or bun install) in the directory of the script, unless both are already there.
+A formula on its own is typeset with MathJax: #elementFor:format: (an element), #svgFor:format: (the SVG string), #elementForTex: and #svgForTex: for TeX; #elementFor:format:display:size:color: and #svgFor:format:display:size:color: also take display style, font size in pixels and color (#rrggbb). Like the $$...$$ of Mermaid labels this needs mathjax-full, which #installDependencies installs.
 Failures signal Pele2svgError.
 "
 Class {
@@ -95,7 +98,7 @@ Pele2svg >> basicConvert: aString extension: anExtension flags: anArray [
 		in binaryWriteStreamDo: [ :s | s nextPutAll: aString utf8Encoded ].
 		process := GtSubprocessWithInMemoryOutput new
 			command: self runtime;
-			arguments: { self script }, anArray, (anExtension = 'mmd' ifTrue: [ self renderOptionsArgumentIn: dir ] ifFalse: [ #() ]), { in fullName. out fullName }, (self themeArgumentIn: dir);
+			arguments: { self script }, anArray, (anExtension = 'mmd' ifTrue: [ self renderOptionsArgumentIn: dir ] ifFalse: [ #() ]), { in fullName. out fullName }, (anExtension = 'txt' ifTrue: [ #() ] ifFalse: [ self themeArgumentIn: dir ]);
 			yourself.
 		self runProcess: process timeout: self timeout description: self runtime.
 		(process exitCode = 0 and: [ out exists ]) ifFalse: [
@@ -134,6 +137,24 @@ Pele2svg >> convert: aString extension: anExtension flags: anArray [
 	"Write aString to a temporary file, run pele2svg.mjs on it and answer the SVG it wrote."
 
 	^ self withDynamicVariablesDo: [ self basicConvert: aString extension: anExtension flags: anArray ]
+]
+
+{ #category : 'converting' }
+Pele2svg >> elementFor: aFormulaString format: aFormatSymbol [
+	"Answer a BlSkiaSvgElement for a formula typeset with MathJax. aFormatSymbol is #tex, #mathml or #asciimath."
+	^ self elementFromSvg: (self svgFor: aFormulaString format: aFormatSymbol)
+]
+
+{ #category : 'converting' }
+Pele2svg >> elementFor: aFormulaString format: aFormatSymbol display: aBoolean size: pixels color: aColorString [
+	"Answer a BlSkiaSvgElement for a formula. See #svgFor:format:display:size:color:."
+	^ self elementFromSvg: (self svgFor: aFormulaString format: aFormatSymbol display: aBoolean size: pixels color: aColorString)
+]
+
+{ #category : 'converting' }
+Pele2svg >> elementForTex: aTexString [
+	"Answer a BlSkiaSvgElement for a TeX formula, for example 'E=mc^2'."
+	^ self elementFor: aTexString format: #tex
 ]
 
 { #category : 'private' }
@@ -270,6 +291,27 @@ Pele2svg >> script [
 { #category : 'accessing' }
 Pele2svg >> script: aPathString [
 	self optionAt: #script put: aPathString
+]
+
+{ #category : 'converting' }
+Pele2svg >> svgFor: aFormulaString format: aFormatSymbol [
+	"Answer the SVG string of a formula typeset with MathJax, in the inline style, 16 px, black. aFormatSymbol is #tex, #mathml or #asciimath."
+	^ self svgFor: aFormulaString format: aFormatSymbol display: false size: 16 color: '#000000'
+]
+
+{ #category : 'converting' }
+Pele2svg >> svgFor: aFormulaString format: aFormatSymbol display: aBoolean size: pixels color: aColorString [
+	"Answer the SVG string of a formula typeset with MathJax (mathjax-full). aFormatSymbol is #tex, #mathml or #asciimath, aBoolean true for the display style, pixels the font size and aColorString the color of the glyphs (#rrggbb). The SVG is as large as the formula, in pixels. Signal Pele2svgError when MathJax cannot read the formula."
+	^ self
+		convert: aFormulaString
+		extension: 'txt'
+		flags: { '--math'. '--format'. aFormatSymbol asString. '--size'. pixels printString. '--color'. aColorString }, (aBoolean ifTrue: [ #('--display') ] ifFalse: [ #() ])
+]
+
+{ #category : 'converting' }
+Pele2svg >> svgForTex: aTexString [
+	"Answer the SVG string of a TeX formula, for example 'E=mc^2'."
+	^ self svgFor: aTexString format: #tex
 ]
 
 { #category : 'accessing' }

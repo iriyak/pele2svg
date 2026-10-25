@@ -1,6 +1,8 @@
 "
 GToolkit examples for formulas: one <gtExample> for each diagram type in which Pele can typeset $$...$$ labels (flowchart, sequence, class, state, ER, mindmap, kanban, block, requirement, swimlane and use case diagrams). Each renders the source through pele2svg with the render option #math -> true, which typesets the formulas with MathJax, and answers a BlSkiaSvgElement. Open the class in the GT Coder and click the example results. Requires Node.js (or Bun) and `npm install` in the Iceberg clone of pele2svg, which also installs mathjax-full, the optional dependency that typesets the formulas.
 
+#texFormula, #mathmlFormula, #asciimathFormula and #displayFormula typeset a formula on its own, without Mermaid (Pele2svg>>#elementFor:format:).
+
 The sources are in Pele2svgMathExamples class >> #sources; Pele2svgExamplesTest checks that each has an example and that its formulas are typeset. #withoutMathOption shows what the same kind of label looks like without the option (the TeX source). See docs/mermaid-in-gt.md.
 "
 Class {
@@ -78,6 +80,14 @@ U --> C'
 ]
 
 { #category : 'examples' }
+Pele2svgMathExamples >> asciimathFormula [
+	"A formula in AsciiMath, on its own."
+
+	<gtExample>
+	^ self formulaElement: 'sum_(i=1)^n i^3=((n(n+1))/2)^2' format: #asciimath
+]
+
+{ #category : 'examples' }
 Pele2svgMathExamples >> block [
 	<gtExample>
 	^ self elementNamed: 'block'
@@ -87,6 +97,22 @@ Pele2svgMathExamples >> block [
 Pele2svgMathExamples >> classDiagram [
 	<gtExample>
 	^ self elementNamed: 'classDiagram'
+]
+
+{ #category : 'examples' }
+Pele2svgMathExamples >> displayFormula [
+	"A TeX formula in the display style, 28 px, in color."
+
+	<gtExample>
+	| element |
+	element := Pele2svg new
+		elementFor: '\int_0^1 x^2\,dx=\frac13'
+		format: #tex
+		display: true
+		size: 28
+		color: '#205ea6'.
+	self assert: element class equals: BlSkiaSvgElement.
+	^ element
 ]
 
 { #category : 'private' }
@@ -108,10 +134,26 @@ Pele2svgMathExamples >> flowchart [
 	^ self elementNamed: 'flowchart'
 ]
 
+{ #category : 'private' }
+Pele2svgMathExamples >> formulaElement: aString format: aSymbol [
+	| element |
+	element := Pele2svg new elementFor: aString format: aSymbol.
+	self assert: element class equals: BlSkiaSvgElement.
+	^ element
+]
+
 { #category : 'examples' }
 Pele2svgMathExamples >> kanban [
 	<gtExample>
 	^ self elementNamed: 'kanban'
+]
+
+{ #category : 'examples' }
+Pele2svgMathExamples >> mathmlFormula [
+	"A formula in MathML, on its own."
+
+	<gtExample>
+	^ self formulaElement: '<math><mfrac><mi>a</mi><mi>b</mi></mfrac><mo>=</mo><msqrt><mi>x</mi></msqrt></math>' format: #mathml
 ]
 
 { #category : 'examples' }
@@ -166,6 +208,14 @@ Pele2svgMathExamples >> swimlane [
 ]
 
 { #category : 'examples' }
+Pele2svgMathExamples >> texFormula [
+	"A TeX formula, on its own."
+
+	<gtExample>
+	^ self formulaElement: 'E=mc^2' format: #tex
+]
+
+{ #category : 'examples' }
 Pele2svgMathExamples >> usecase [
 	<gtExample>
 	^ self elementNamed: 'usecase'
@@ -177,7 +227,7 @@ Pele2svgMathExamples >> withoutMathOption [
 
 	<gtExample>
 	| pele svg |
-	pele := Pele2svgExamples new renderer.
+	pele := Pele2svgExamples new renderer renderOptions: nil; yourself.
 	svg := pele render: 'flowchart LR
   A["Energy $$E=mc^2$$"] --> B'.
 	self assert: (svg includesSubstring: '$$E=mc^2$$').

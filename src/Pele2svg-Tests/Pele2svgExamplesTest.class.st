@@ -91,7 +91,7 @@ Pele2svgExamplesTest >> testMathExamplesAgreeWithTheSources [
 		self assert: ((Pele2svgMathExamples >> each asSymbol) hasPragmaNamed: #gtExample) ].
 	self
 		assert: (Pele2svgMathExamples selectors select: [ :each | (Pele2svgMathExamples >> each) hasPragmaNamed: #gtExample ]) asSet
-		equals: (selectors collect: #asSymbol) asSet , #(withoutMathOption) asSet
+		equals: (selectors collect: #asSymbol) asSet , #(withoutMathOption texFormula mathmlFormula asciimathFormula displayFormula) asSet
 ]
 
 { #category : 'tests' }
@@ -107,6 +107,23 @@ Pele2svgExamplesTest >> testMathExamplesRun [
 ]
 
 { #category : 'tests' }
+Pele2svgExamplesTest >> testMathFormulasOnTheirOwn [
+	"A formula without Mermaid: the formula examples answer elements as big as the formula, and the SVG is plain."
+
+	| examples svg |
+	self skipUnlessMathIsInstalled.
+	examples := Pele2svgMathExamples new.
+	#(texFormula mathmlFormula asciimathFormula displayFormula) do: [ :each |
+		self assert: (examples perform: each) class equals: BlSkiaSvgElement ].
+	svg := Pele2svg new svgFor: 'E=mc^2' format: #tex display: false size: 16 color: '#205ea6'.
+	self assert: (svg includesSubstring: 'fill="#205ea6"').
+	self assert: (svg includesSubstring: 'currentColor') not.
+	self assert: (svg includesSubstring: '<use') not.
+	self should: [ Pele2svg new svgForTex: '\frac{' ] raise: Pele2svgError.
+	self should: [ Pele2svg new svgFor: 'x' format: #latex ] raise: Pele2svgError
+]
+
+{ #category : 'tests' }
 Pele2svgExamplesTest >> testMathLeavesPlainDiagramsAlone [
 	"A diagram without $$ is converted in the same way whether or not the math option is given."
 
@@ -116,7 +133,7 @@ Pele2svgExamplesTest >> testMathLeavesPlainDiagramsAlone [
   A --> B'.
 	self
 		assert: (Pele2svgExamples new renderer renderOptions: { #math -> true } asDictionary; render: source)
-		equals: (Pele2svgExamples new renderer render: source)
+		equals: (Pele2svgExamples new renderer renderOptions: nil; render: source)
 ]
 
 { #category : 'tests' }
@@ -134,7 +151,7 @@ Pele2svgExamplesTest >> testMathSourcesAreTypeset [
 Pele2svgExamplesTest >> testMathWithoutTheOptionLeavesTheTexSource [
 	| svg |
 	self skipUnlessMathIsInstalled.
-	svg := Pele2svgExamples new renderer render: (Pele2svgMathExamples sourceNamed: 'flowchart').
+	svg := Pele2svgExamples new renderer renderOptions: nil; render: (Pele2svgMathExamples sourceNamed: 'flowchart').
 	self assert: (svg includesSubstring: '$$E=mc^2$$').
 	self assert: (svg includesSubstring: 'pele-math') not
 ]

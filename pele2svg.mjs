@@ -24,6 +24,11 @@
 //   node pele2svg.mjs --render-options options.json input.mmd output.svg [theme.json]
 //       options for Pele's render(), e.g. {"maxWidth":360,"math":true}; see peleOptions() below
 //       (works with --batch too; --svg does not run Pele, so it ignores it)
+//   node pele2svg.mjs --math [--format tex|mathml|asciimath] [--display] [--size 16] [--color #rrggbb] input.txt output.svg
+//       typeset one formula (no Pele); see mathToSvg() below
+//   node pele2svg.mjs --math-batch formulas.json outdir
+//       formulas.json = [{"name":"f1","source":"E=mc^2","format":"tex","display":false,"size":16,"color":"#000000"}, ...]
+//       (format, display, size and color are optional); writes outdir/<name>.svg
 // theme.json example: {"--pele-bg":"#fffcf0","--pele-fg":"#100f0f","--pele-accent":"#205ea6",
 //                      "--gt-font-mono":"Consolas"}
 import { readFileSync, writeFileSync, mkdirSync, realpathSync } from 'node:fs';
@@ -296,6 +301,25 @@ export async function peleOptions(json = {}) {
   return options;
 }
 
+// ---------- A formula on its own ----------
+// Typeset one formula with MathJax (math.mjs) and answer plain SVG that Skia can draw: { svg, width, height } with the
+// size in pixels. format is 'tex' (default), 'mathml' or 'asciimath'; display: true is the larger display style;
+// size is the font size in pixels; color is the color of the glyphs (#rrggbb). It throws when MathJax cannot read
+// the formula. The engines are cached, so a second formula costs almost nothing.
+const mathEngines = {};
+export async function mathToSvg(source, { format = 'tex', display = false, size = 16, color = '#000000' } = {}) {
+  const { createMathEngine } = await import('./math.mjs');
+  const engine = mathEngines[format] ??= await createMathEngine(format);
+  const typeset = engine(source, { display, size });
+  // MathJax's viewBox is in its own units (1000 per em). Wrapping the formula in a root <svg> of the pixel size makes
+  // flatten turn it into a <g transform>, so the viewBox of the result is the size in pixels, like a diagram's
+  const { width, height } = typeset;
+  const wrapped = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">${typeset.svg}</svg>`;
+  const { svg, warnings } = flatten(wrapped, { '--pele-fg': color });
+  for (const w of new Set(warnings)) console.error('warning:', w);
+  return { svg, width, height };
+}
+
 // ---------- CLI ----------
 async function main(args) {
   // --render-options file.json can stand anywhere in front of the other arguments
@@ -317,6 +341,40 @@ async function main(args) {
     for (const w of new Set(flat.warnings)) console.error('warning:', w);
     if (flat.svg === input) console.error('note: nothing to change; is this an SVG made by Pele?');
     console.log('wrote', outFile);
+    return;
+  }
+  if (argv[0] === '--math') {
+    const o = { format: 'tex', display: false, size: 16, color: '#000000' };
+    const files = [];
+    for (let i = 1; i < argv.length; i++) {
+      const a = argv[i];
+      if (a === '--format') o.format = argv[++i];
+      else if (a === '--display') o.display = true;
+      else if (a === '--size') o.size = Number(argv[++i]);
+      else if (a === '--color') o.color = argv[++i];
+      else files.push(a);
+    }
+    if (files.length !== 2 || !(o.size > 0)) throw new Error(USAGE);
+    const { svg } = await mathToSvg(readFileSync(files[0], 'utf8').trim(), o);
+    writeFileSync(files[1], svg);
+    console.log('wrote', files[1]);
+    return;
+  }
+  if (argv[0] === '--math-batch') {
+    const [, listFile, outDir] = argv;
+    if (!listFile || !outDir) throw new Error(USAGE);
+    mkdirSync(outDir, { recursive: true });
+    let ok = 0, failed = 0;
+    for (const { name, source, ...o } of JSON.parse(readFileSync(listFile, 'utf8'))) {
+      try {
+        writeFileSync(`${outDir}/${name}.svg`, (await mathToSvg(source, o)).svg);
+        ok++;
+      } catch (e) {
+        failed++;
+        console.error(`${name}: conversion failed: ${e.message}`);
+      }
+    }
+    console.log(`ok=${ok} failed=${failed} -> ${outDir}`);
     return;
   }
   const { render: peleRender } = await import('pele');
@@ -360,7 +418,9 @@ const USAGE = `Usage:
   pele2svg input.mmd output.svg [theme.json]
   pele2svg --svg input.svg output.svg [theme.json]
   pele2svg --batch sources.json outdir [theme.json]
-  pele2svg --render-options options.json input.mmd output.svg [theme.json]`;
+  pele2svg --render-options options.json input.mmd output.svg [theme.json]
+  pele2svg --math [--format tex|mathml|asciimath] [--display] [--size 16] [--color #rrggbb] input.txt output.svg
+  pele2svg --math-batch formulas.json outdir`;
 
 // Run the CLI only when executed directly (npm bins are symlinks, so compare real paths)
 const isMain = (() => {
