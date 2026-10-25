@@ -75,6 +75,23 @@ You need [Node.js](https://nodejs.org/) 20 or later (Pele needs it). [Bun](https
      A --> B'.
    ```
 
+6. **Optional: make Bun and the Windows theme the defaults.** [Bun](https://bun.sh/) starts faster than Node.js, which
+   adds up when many diagrams are rendered (`Pele2svg installDependencies` then uses `bun install`).
+   [`themes/gt-windows.json`](themes/gt-windows.json) maps `monospace` to `Consolas` and `sans-serif` to `Arial`, so that
+   Skia draws the text with the fonts a browser on Windows uses (see [Fonts in GToolkit](#fonts-in-gtoolkit)).
+   Evaluate this once, or put it in the startup script of your image (for example a `startup.st`), to apply both to every
+   `Pele2svg`:
+
+   ```smalltalk
+   Pele2svgOptions globalDefault
+       at: #runtime put: 'bun';
+       at: #theme put: (Pele2svg repositoryDirectory / 'themes' / 'gt-windows.json') fullName
+   ```
+
+   Give the full path of `bun` if it is not on the PATH that GToolkit sees. The theme is for Windows; without it
+   (the default) no theme is applied. Both can still be set on one converter (`runtime:`, `theme:`) or for a block
+   (`during:`); see [Settings](#settings).
+
 If you did not get the code through Iceberg — for example, you cloned it with `git` yourself — point `Pele2svg` at the
 script in that clone. `installDependencies` then installs Pele there, as it does for the Iceberg clone:
 

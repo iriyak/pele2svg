@@ -299,6 +299,151 @@
 								"__type" : "textStyle"
 							},
 							"string" : "If you cloned the repository with `git` yourself, point the class at the script of that clone (see the [README](https://github.com/iriyak/pele2svg#getting-started-in-gtoolkit))."
+						},
+						{
+							"__type" : "textSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T13:39:57.495+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T13:39:57.495+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "8ssif3XSy0ezDNA0tXRAAw=="
+							},
+							"paragraphStyle" : {
+								"__type" : "textStyle"
+							},
+							"string" : "#### Bun and the Windows theme (optional)"
+						},
+						{
+							"__type" : "textSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T13:39:57.679+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T13:39:57.679+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "hb5qG+qgLkaYvg68mKGUHQ=="
+							},
+							"paragraphStyle" : {
+								"__type" : "textStyle"
+							},
+							"string" : "[Bun](https://bun.sh/) starts faster than Node.js, which adds up when you render many diagrams. `themes/gt-windows.json` maps `monospace` to `Consolas` and `sans-serif` to `Arial`, so that Skia draws the text with the fonts a browser on Windows uses. Evaluating this makes both the default of every {{gtClass:name=Pele2svg}} in the image; put it in the startup script of your image (for example a `startup.st`) to keep it:"
+						},
+						{
+							"__type" : "pharoSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T13:39:57.884+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T13:39:57.884+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "65xVLVvY1Ea0Mv6Cp5B1LA=="
+							},
+							"code" : "Pele2svgOptions globalDefault\n\tat: #runtime put: 'bun';\n\tat: #theme put: (Pele2svg repositoryDirectory / 'themes' / 'gt-windows.json') fullName"
+						},
+						{
+							"__type" : "textSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T13:39:58.068+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T13:39:58.068+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "j7ugOare7EKkxgCM4fS3+A=="
+							},
+							"paragraphStyle" : {
+								"__type" : "textStyle"
+							},
+							"string" : "Give the full path of `bun` if it is not on the PATH that GToolkit sees. The theme is for Windows. A single converter can still choose otherwise, for example `Pele2svg new runtime: 'node'; theme: nil`; see {{gtClass:name=Pele2svgOptions}}."
 						}
 					]
 				},
