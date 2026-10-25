@@ -1008,7 +1008,7 @@
 								"__type" : "time",
 								"time" : {
 									"__type" : "dateAndTime",
-									"dateAndTimeString" : "2026-10-18T19:00:07.145+09:00"
+									"dateAndTimeString" : "2026-10-25T12:22:14.64+09:00"
 								}
 							},
 							"uid" : {
@@ -1018,7 +1018,7 @@
 							"paragraphStyle" : {
 								"__type" : "textStyle"
 							},
-							"string" : "{{gtClass:name=Pele2svgExamples}} has one example per diagram: pele's 58 featured examples (`featured...`) and short examples of the basic diagram types, 82 in all. Open the class in the GT Coder and look at the results."
+							"string" : "{{gtClass:name=Pele2svgExamples}} shows all of pele's published examples (659: the 58 featured examples, the 520 documentation examples and the 81 layout cases), read from `test/fixtures`. Evaluate `Pele2svgExamples new` and look at its *Examples* view: it lists them by corpus, type and name, and selecting one draws it. The class also has short examples of the basic diagram types and a few checks. {{gtClass:name=Pele2svgFeaturedExamples}} has one example for each featured example (58, named `<type><n>`, for example `c41`). Open the classes in the GT Coder and look at the results."
 						}
 					]
 				},
@@ -1083,7 +1083,7 @@
 								"__type" : "time",
 								"time" : {
 									"__type" : "dateAndTime",
-									"dateAndTimeString" : "2026-10-18T19:14:07.295+09:00"
+									"dateAndTimeString" : "2026-10-25T12:22:14.749+09:00"
 								}
 							},
 							"uid" : {
@@ -1093,7 +1093,7 @@
 							"paragraphStyle" : {
 								"__type" : "textStyle"
 							},
-							"string" : "Font families are left as pele wrote them: `monospace` stays `monospace`. On Windows, Skia and WebView2 draw it with the same font. To use another font, map the generic name in the theme (a single font name)."
+							"string" : "Font families are left as pele wrote them: `monospace` stays `monospace`. Skia does not resolve it (on Windows the text comes out proportional), and it draws `sans-serif` in another, thinner face than a browser on Windows does (Arial). To use real fonts, map the generic names in the theme (a single font name each). `themes/gt-windows.json` in the repository does it for Windows: `monospace` becomes `Consolas` and `sans-serif` becomes `Arial`, and the examples of `Pele2svgExamples` use it there."
 						},
 						{
 							"__type" : "textSnippet",

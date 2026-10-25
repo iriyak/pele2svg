@@ -22,7 +22,7 @@ examples, before the layout cases were added. `npm test` covers all 659.
   was 0.0026 (0 is identical). The pairs can be looked at side by side in the gallery (see
   [`pele-upgrade.md`](pele-upgrade.md)). The comparison found one real bug (`fill:Purple`: Skia understands only
   lower-case colour keywords, fixed in `styleToAttrs`) and the differences listed under *Known differences in Skia* below.
-- Every `<gtExample>` of `Pele2svgFeaturedExamples` (58) and the 24 short ones of `Pele2svgExamples` (82 in all) was run through the Pharo class and
+- Every `<gtExample>` of `Pele2svgFeaturedExamples` (58) and the 28 of `Pele2svgExamples` (24 short diagrams and checks, and 4 that read the fixtures; 86 in all) was run through the Pharo class and
   looked at in GToolkit (Skia), including a flowchart with Japanese labels (`japaneseLabels`), which draws correctly.
 
 Not verified:
@@ -40,7 +40,7 @@ Known differences in Skia (not bugs of pele2svg):
 - A glyph that the font lacks, such as ♥ in `er-05` and `flowchart-03`, is drawn as a box.
 - An external `<image>` is removed on purpose (`flowchart-70`).
 - Fonts: Pele's SVG asks for the generic `sans-serif`. A browser on Windows uses Arial for it, Skia another, thinner face.
-  [`themes/gt-windows.json`](../themes/gt-windows.json) sets `--pele-font` to Arial and `--gt-font-mono` to Consolas, and
+  [`themes/gt-windows.json`](../themes/gt-windows.json) sets `--gt-font-sans` to Arial and `--gt-font-mono` to Consolas, and
   `Pele2svgExamples` applies it on Windows. `Pele2svg` itself applies no theme unless one is given.
 - `gantt-07` is an empty diagram (17x17): Pele draws nothing there either.
 

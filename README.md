@@ -240,6 +240,12 @@ proportional. To get monospace text in Skia, map `monospace` to a real font name
 the other platforms have not been looked at). Only some diagram types use `monospace`, such as event modeling; a
 flowchart is all `sans-serif`.
 
+Skia also draws the generic `sans-serif` in another face than a browser on Windows does (Arial), which looks a little thinner
+To get the browser's text, map it too: `{ '--pele-font' -> 'Arial' }`.
+[`themes/gt-windows.json`](themes/gt-windows.json) does both (`Consolas` and `Arial`):
+`Pele2svg new theme: (Pele2svg repositoryDirectory / 'themes' / 'gt-windows.json') fullName; asElement: ...`.
+The examples of `Pele2svgExamples` use it on Windows.
+
 To use another font, map the generic name in the theme (a single font name, not a list):
 
 ```smalltalk
@@ -260,7 +266,9 @@ Pele2svg new theme: { '--gt-font-mono' -> 'Courier New' } asDictionary; asElemen
 
 Every one of Pele's published examples (659: 58 featured, 520 documentation examples and 81 layout cases; checked with
 Pele 1.10.0) converts cleanly. For the first 578 (the featured and documentation examples), the converted SVGs also match
-in GToolkit (Skia) and in WebView2 on Windows; the 81 layout cases have not been looked at there yet. The details, what is not verified, and how to run the tests are in
+in GToolkit (Skia) and in WebView2 on Windows. All 659 were also compared with what a browser draws from Pele's own SVG (a gallery of
+side-by-side pictures, see [docs/pele-upgrade.md](docs/pele-upgrade.md)); the 81 layout cases have not been looked at by eye in
+WebView2. The details, what is not verified, and how to run the tests are in
 [docs/development.md](docs/development.md).
 
 ## More documentation

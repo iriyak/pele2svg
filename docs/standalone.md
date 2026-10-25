@@ -93,12 +93,12 @@ these keys in a theme:
 | `--gt-font-serif` | `serif` |
 
 ```json
-{"--gt-font-mono":"Consolas"}
+{"--gt-font-mono":"Consolas","--gt-font-sans":"Arial"}
 ```
 
-- [`themes/gt-windows.json`](../themes/gt-windows.json) maps `monospace` to `Consolas`, for Skia on Windows. Other platforms have not been looked at.
+- [`themes/gt-windows.json`](../themes/gt-windows.json) maps `monospace` to `Consolas` and `sans-serif` to `Arial`, for Skia on Windows. Other platforms have not been looked at. Without the `sans-serif` mapping Skia draws the root font in another, thinner face than a browser on Windows does.
 - Give **a single font name**, not a fallback list: Skia may treat the whole string as one name.
-- pele measures text widths itself. Replacing `sans-serif` with a font of different metrics can make labels overflow their boxes, so
-  the example theme maps only `monospace`.
+- pele measures text widths itself. Replacing `sans-serif` with a font of different metrics can make labels overflow their boxes.
+  Arial is the font a browser on Windows uses for `sans-serif`, so it suits pele's measurements; use another font with care.
 - In pele's own examples, `monospace` is used by `eventmodeling` and `railroad`; `sans-serif` is the root font everywhere;
   `serif` is not used.

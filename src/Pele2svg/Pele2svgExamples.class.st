@@ -48,11 +48,11 @@ Pele2svgExamples class >> exportGalleryPngNamed: aName using: aPele2svg [
 
 { #category : 'gallery' }
 Pele2svgExamples class >> exportGalleryPngs [
-	"Step 2 of the example gallery (docs/pele-upgrade.md). Run node out/gallery/make-svgs.mjs first. For every example, draw out/gallery/svg/<name>.svg with Skia into out/gallery/skia/<name>.png and write out/gallery/skia-metrics.json, which out/gallery/make-index.mjs reads. Answer the number of examples that failed. It takes about 20 minutes, so run it with [ Pele2svgExamples exportGalleryPngs ] fork if the image should stay usable."
+	"Step 2 of the example gallery (docs/pele-upgrade.md). Run node scripts/gallery-svgs.mjs first. For every example, draw out/gallery/svg/<name>.svg with Skia into out/gallery/skia/<name>.png and write out/gallery/skia-metrics.json, which scripts/gallery-index.mjs reads. Answer the number of examples that failed. It takes about 20 minutes, so run it with [ Pele2svgExamples exportGalleryPngs ] fork if the image should stay usable."
 
 	| pele results errors |
 	(self galleryDirectory / 'svg') exists ifFalse: [
-		Pele2svgError signal: 'Run node out/gallery/make-svgs.mjs first: ' , (self galleryDirectory / 'svg') fullName , ' does not exist' ].
+		Pele2svgError signal: 'Run node scripts/gallery-svgs.mjs first: ' , (self galleryDirectory / 'svg') fullName , ' does not exist' ].
 	(self galleryDirectory / 'skia') ensureCreateDirectory.
 	pele := self new renderer.
 	results := OrderedCollection new.
