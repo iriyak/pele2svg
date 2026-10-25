@@ -6,7 +6,7 @@ Pele's SVG relies on CSS, which Skia's SVG module (and so GToolkit's `BlSkiaSvgE
 turns that SVG into **plain SVG that a renderer without a CSS engine can draw**, and the Pharo package in this repository
 runs it for you: Mermaid text in, a `BlSkiaSvgElement` out.
 
-This is experimental; the API and options may still change. There are no versioned releases yet.
+This is experimental; the API and options may still change. The releases are still pre-releases (the current one is 0.3.0); see [CHANGELOG.md](CHANGELOG.md).
 
 ## Why
 

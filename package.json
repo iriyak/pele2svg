@@ -1,6 +1,6 @@
 {
   "name": "pele2svg",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Convert SVG from pele (Mermaid renderer) into plain SVG without CSS, for renderers such as Skia / GToolkit",
   "type": "module",
   "main": "pele2svg.mjs",
@@ -25,7 +25,7 @@
     "node": ">=20"
   },
   "dependencies": {
-    "pele": "^1.9.0"
+    "pele": "^1.10.0"
   },
   "keywords": [
     "mermaid",
