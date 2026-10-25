@@ -14,6 +14,8 @@ and on checks made with Pele 1.10.0 and `BlSkiaSvgElement` on 2026-10-25. When P
 - Pele's options reach the diagram through `renderOptions` (`Pele2svg new renderOptions: { #maxWidth -> 360. #math -> true } asDictionary`).
   They are off by default: without them narrow layouts, formulas and Sankey gradients do not appear.
   See [Render options](#render-options).
+- **The same conversion works without GToolkit**: `mermaidToSvg()` in JavaScript, or the `pele2svg` tool of an MCP server. The result is
+  plain SVG that a browser draws too. See [Outside GToolkit](#outside-gtoolkit).
 
 ## Diagram types
 
@@ -131,6 +133,20 @@ the SVG string. The engine is the same MathJax 3 as above, so the same limits ho
 5. If the picture is for a README or a document, make a PNG with white background:
    `el background: Color white. BlExporter form element: el; scaled: 2; export` (Bloc forms are premultiplied).
 6. Check the converted SVG for warnings. An empty list is the normal result.
+
+## Outside GToolkit
+
+The SVG that pele2svg answers is plain SVG, so it can go into an HTML page or a PNG as it is. [standalone.md](standalone.md) describes the
+JavaScript API (`mermaidToSvg`, `flatten`, `mathToSvg`) and [using it from an MCP server](standalone.md#using-it-from-an-mcp-server).
+What changes when the viewer is a browser and not Skia:
+
+- **Theme.** Pass an empty theme (`{}`) so that `monospace` and `sans-serif` are left to the browser. The `gt-windows` theme names Consolas and
+  Arial for Skia on Windows.
+- **Japanese text.** A browser can pick a Chinese font for Japanese labels; name the Japanese fonts in a CSS rule of the page. See
+  [Japanese text in a browser](standalone.md#japanese-text-in-a-browser).
+- **Several diagrams in one page.** Give each its own `idPrefix` in `renderOptions`.
+- **The limits in [Text in labels](#text-in-labels)** (`<sub>`, `<sup>`, `<u>`, emoji) were checked in Skia only. For a browser, look at the picture
+  before assuming they behave the same.
 
 ## Where each statement comes from
 

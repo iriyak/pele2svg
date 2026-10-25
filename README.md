@@ -345,7 +345,7 @@ WebView2. The details, what is not verified, and how to run the tests are in
 ## More documentation
 
 - [docs/standalone.md](docs/standalone.md) — using `pele2svg` without GToolkit: installing it with npm, the command line,
-  the JavaScript API, themes and fonts.
+  the JavaScript API, using it from an MCP server, themes and fonts (including Japanese text in a browser).
 - [docs/development.md](docs/development.md) — what has been checked, what has not, and how to run the tests.
 
 ## License

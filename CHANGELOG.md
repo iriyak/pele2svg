@@ -8,6 +8,8 @@
 
 - **`mermaidToSvg(source, { theme, renderOptions })`**, the library form of what the command line does for an `.mmd` file: it runs Pele, then `flatten`, and answers `{ svg, warnings }`. MathJax is still loaded only for a source that contains `$$`. The command line (`input.mmd`, `--batch`) now calls it. New file `test/mermaid-to-svg.test.js`.
 
+- **Docs.** `docs/standalone.md`: *Using it from an MCP server* and *Japanese text in a browser*. `docs/mermaid-in-gt.md`: a section on use outside GToolkit.
+
 ### Changed
 
 - A TeX error in a `$$...$$` label now shows the TeX source (as when MathJax is not available) instead of MathJax's red error message.

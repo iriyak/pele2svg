@@ -152,3 +152,53 @@ these keys in a theme:
   Arial is the font a browser on Windows uses for `sans-serif`, so it suits pele's measurements; use another font with care.
 - In pele's own examples, `monospace` is used by `eventmodeling` and `railroad`; `sans-serif` is the root font everywhere;
   `serif` is not used.
+
+### Japanese text in a browser
+
+When the SVG is shown in a browser (an HTML page, or a screenshot made with Chromium), give the converter an empty theme
+(`{}`), so that `monospace` and `sans-serif` stay as they are, and let the page choose the Japanese font. A browser picks a CJK
+font for `sans-serif` by itself, and that can be a Chinese one: in Chromium on a Linux machine it was WenQuanYi Zen Hei, and
+characters such as 令 and 直 were drawn in the Chinese shapes. `lang="ja"` on the `<svg>` or on `<html>` made no difference.
+A CSS rule beats the `font-family` attribute of the SVG, so this rule in the page is enough:
+
+```css
+svg { font-family: Arial, "Hiragino Sans", "Yu Gothic", "Meiryo", "Noto Sans CJK JP", sans-serif; }
+```
+
+Arial comes first so that Latin text keeps the metrics pele measured with; the kanji and kana come from the first Japanese font
+that exists. In the check, Liberation Sans stood in for Arial and Noto Sans CJK JP drew the Japanese (`fc-list :lang=ja family`
+lists the Japanese fonts of a Linux machine). This is for browsers; Skia in GToolkit is described above.
+
+## Using it from an MCP server
+
+An MCP server needs only `pele2svg` as a dependency: `npm install github:iriyak/pele2svg` (it brings in pele, and `mathjax-full`
+as an optional dependency). The author's own server, `local-mcp-server`, has a tool named `pele2svg` made this way. It maps its
+`input_format` argument to the functions above:
+
+| `input_format` | Call |
+|---|---|
+| `mermaid` | `mermaidToSvg(source, { theme, renderOptions })` |
+| `svg` | `flatten(source, theme)` |
+| `tex`, `mathml`, `asciimath` | `mathToSvg(source, { format, display, size, color })` |
+
+- The tool answers the SVG as text, with the warnings (and the size of a formula) as a second text item. An invalid Mermaid source,
+  a formula MathJax cannot read and an unknown render option come back as an error result with the one-line message. The
+  `output_path` argument writes the SVG to a file and answers only the path and the size, which keeps a large SVG out of the conversation.
+- When no theme is given, the tool uses [`themes/gt-windows.json`](../themes/gt-windows.json), which was made for Skia on Windows. For
+  a browser, an HTML page or a PNG, pass `{}` (see [Japanese text in a browser](#japanese-text-in-a-browser)).
+- `themes/` is in the `files` of the package, but `exports` has only `"."`, so find the folder from the main file:
+
+  ```js
+  import { createRequire } from 'node:module';
+  import { dirname, join } from 'node:path';
+
+  const themeDir = join(dirname(createRequire(import.meta.url).resolve('pele2svg')), 'themes');
+  ```
+
+- A server that talks over stdio must keep stdout for the protocol. pele2svg writes its warnings with `console.error`, so it is safe
+  to call from a handler.
+- `github:` is pinned to a commit by `package-lock.json`. After a new commit of pele2svg is pushed, run `npm update pele2svg` in the
+  server's folder, then restart the MCP client.
+- Checked: Mermaid (with and without `math`), a TeX formula, an SVG to convert, a file written with `output_path`, an unknown option
+  and invalid Mermaid, each called through the MCP protocol over stdio. For one flowchart with formulas, with the same theme and options,
+  the tool's SVG was identical to the string that `Pele2svg>>#render:` answers in GToolkit.
