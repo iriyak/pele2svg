@@ -212,9 +212,11 @@ The class also has 24 short `<gtExample>` methods (the basic diagram types and a
 `Pele2svgFeaturedExamples` has one `<gtExample>` per featured example (58, named `<type><n>` after the fixture, for example `c41` for `c4-1`, with their sources copied from Pele);
 each answers a `BlSkiaSvgElement`. Open the class in the GT Coder and look at the results.
 
+`Pele2svgMathExamples` has 12 `<gtExample>` methods for [formulas](#formulas-and-the-width-of-a-diagram): a `$$...$$` label in each of the 11 diagram types in which Pele typesets math (flowchart, sequence, class, state, ER, mindmap, kanban, block, requirement, swimlane and use case), and `withoutMathOption`, which shows the TeX source that is left when the option is not given. They need `mathjax-full` (see step 2).
+
 The tests of the [settings](#settings) (the defaults, `during:`, the global default, values set on a converter and their
 precedence) are in `Pele2svgOptionsTest`, in the package `Pele2svg-Tests`, together with `Pele2svgExamplesTest`, which
-checks the fixtures that the examples read. Neither runs Node.js.
+checks the fixtures that the examples read and the formula examples. Only the tests whose names begin with `testMath` run Node.js (they are skipped when `mathjax-full` is not installed).
 
 ### Formulas and the width of a diagram
 

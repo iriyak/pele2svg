@@ -1,5 +1,5 @@
 "
-Tests for the fixtures that Pele2svgExamples reads (test/fixtures/featured.json, docs.json and layout.json) and for the featured examples of Pele2svgFeaturedExamples. They do not run pele2svg.mjs. They are skipped when the image has no Iceberg repository named pele2svg, because the fixtures are read from its clone.
+Tests for the fixtures that Pele2svgExamples reads (test/fixtures/featured.json, docs.json and layout.json), for the featured examples of Pele2svgFeaturedExamples, and for the formula examples of Pele2svgMathExamples. The tests of the fixtures and of the example methods do not run pele2svg.mjs. The tests whose names begin with testMath do: they need Node.js (or Bun) and mathjax-full in the Iceberg clone, and are skipped without them. All are skipped when the image has no Iceberg repository named pele2svg, because the fixtures are read from its clone.
 "
 Class {
 	#name : 'Pele2svgExamplesTest',
@@ -7,6 +7,13 @@ Class {
 	#category : 'Pele2svg-Tests',
 	#package : 'Pele2svg-Tests'
 }
+
+{ #category : 'running' }
+Pele2svgExamplesTest >> defaultTimeLimit [
+	"The math tests start Node.js (or Bun) once for each diagram, which takes about 0.3 s each."
+
+	^ 2 minutes
+]
 
 { #category : 'private' }
 Pele2svgExamplesTest >> examples [
@@ -19,6 +26,14 @@ Pele2svgExamplesTest >> setUp [
 	[ Pele2svgExamples fixtureDirectory ]
 		on: Pele2svgError
 		do: [ :error | self skip: error messageText ]
+]
+
+{ #category : 'private' }
+Pele2svgExamplesTest >> skipUnlessMathIsInstalled [
+	"The math tests run pele2svg.mjs with MathJax (the optional dependency mathjax-full)."
+
+	(Pele2svg repositoryDirectory / 'node_modules' / 'mathjax-full') exists
+		ifFalse: [ self skip: 'mathjax-full is not installed (Pele2svg installDependencies)' ]
 ]
 
 { #category : 'tests' }
@@ -65,6 +80,66 @@ Pele2svgExamplesTest >> testFeaturedMethodsAgreeWithTheFeaturedFixture [
 ]
 
 { #category : 'tests' }
+Pele2svgExamplesTest >> testMathExamplesAgreeWithTheSources [
+	"Every source of Pele2svgMathExamples has a <gtExample> method of the same name, and the class has no other source-based examples."
+
+	| selectors |
+	selectors := Pele2svgMathExamples sourceNames.
+	self assert: selectors asSet size equals: selectors size.
+	selectors do: [ :each |
+		self assert: (Pele2svgMathExamples includesSelector: each asSymbol) description: 'missing ' , each.
+		self assert: ((Pele2svgMathExamples >> each asSymbol) hasPragmaNamed: #gtExample) ].
+	self
+		assert: (Pele2svgMathExamples selectors select: [ :each | (Pele2svgMathExamples >> each) hasPragmaNamed: #gtExample ]) asSet
+		equals: (selectors collect: #asSymbol) asSet , #(withoutMathOption) asSet
+]
+
+{ #category : 'tests' }
+Pele2svgExamplesTest >> testMathExamplesRun [
+	"Running the gtExamples checks that each answers a BlSkiaSvgElement."
+
+	| examples |
+	self skipUnlessMathIsInstalled.
+	examples := Pele2svgMathExamples new.
+	Pele2svgMathExamples sourceNames do: [ :each |
+		self assert: (examples perform: each asSymbol) class equals: BlSkiaSvgElement ].
+	self assert: examples withoutMathOption class equals: BlSkiaSvgElement
+]
+
+{ #category : 'tests' }
+Pele2svgExamplesTest >> testMathLeavesPlainDiagramsAlone [
+	"A diagram without $$ is converted in the same way whether or not the math option is given."
+
+	| source |
+	self skipUnlessMathIsInstalled.
+	source := 'flowchart LR
+  A --> B'.
+	self
+		assert: (Pele2svgExamples new renderer renderOptions: { #math -> true } asDictionary; render: source)
+		equals: (Pele2svgExamples new renderer render: source)
+]
+
+{ #category : 'tests' }
+Pele2svgExamplesTest >> testMathSourcesAreTypeset [
+	self skipUnlessMathIsInstalled.
+	Pele2svgMathExamples sources do: [ :each |
+		| svg |
+		self assert: (each value includesSubstring: '$$') description: each key , ' has no formula'.
+		svg := Pele2svgMathExamples new renderer render: each value.
+		self assert: (svg includesSubstring: '$$') not description: each key , ': $$ is left'.
+		self assert: (svg includesSubstring: 'pele-math') description: each key , ': no formula in the SVG' ]
+]
+
+{ #category : 'tests' }
+Pele2svgExamplesTest >> testMathWithoutTheOptionLeavesTheTexSource [
+	| svg |
+	self skipUnlessMathIsInstalled.
+	svg := Pele2svgExamples new renderer render: (Pele2svgMathExamples sourceNamed: 'flowchart').
+	self assert: (svg includesSubstring: '$$E=mc^2$$').
+	self assert: (svg includesSubstring: 'pele-math') not
+]
+
+{ #category : 'tests' }
 Pele2svgExamplesTest >> testNamesAreUnique [
 	| names |
 	names := self examples collect: [ :each | each at: 'name' ].
@@ -80,4 +155,13 @@ Pele2svgExamplesTest >> testTypeIsTheNameUpToTheFirstHyphen [
 { #category : 'tests' }
 Pele2svgExamplesTest >> testUnknownExampleSignalsAnError [
 	self should: [ Pele2svgExamples new sourceOfExampleNamed: 'no-such-example' ] raise: Pele2svgError
+]
+
+{ #category : 'tests' }
+Pele2svgExamplesTest >> testUnknownRenderOptionSignalsAnError [
+	self skipUnlessMathIsInstalled.
+	self
+		should: [ Pele2svgExamples new renderer renderOptions: { #maxwidth -> 360 } asDictionary; render: 'flowchart LR
+  A --> B' ]
+		raise: Pele2svgError
 ]

@@ -22,12 +22,12 @@ examples, before the layout cases were added. `npm test` covers all 659.
   was 0.0026 (0 is identical). The pairs can be looked at side by side in the gallery (see
   [`pele-upgrade.md`](pele-upgrade.md)). The comparison, and a look at the gallery by eye, found one kind of bug (Skia did
   not understand some color names such as `Purple` and `grey`; `flatten` now writes them as hex) and the differences listed under *Known differences in Skia* below.
-- Every `<gtExample>` of `Pele2svgFeaturedExamples` (58) and the 28 of `Pele2svgExamples` (24 short diagrams and checks, and 4 that read the fixtures; 86 in all) was run through the Pharo class and
+- Every `<gtExample>` of `Pele2svgFeaturedExamples` (58) the 28 of `Pele2svgExamples` (24 short diagrams and checks, and 4 that read the fixtures) and the 12 of `Pele2svgMathExamples` (a formula in each of 11 diagram types, and one without the `math` option; 98 in all) was run through the Pharo class and
   looked at in GToolkit (Skia), including a flowchart with Japanese labels (`japaneseLabels`), which draws correctly.
 
 Not verified:
 
-- Selecting examples in the *Examples* view of `Pele2svgExamples` by hand in the GT UI. The view builds, and all `<gtExample>` methods of `Pele2svgExamples` and `Pele2svgFeaturedExamples` (86) and the tests of the package `Pele2svg-Tests` (23) were run in a GToolkit image, but the 659 examples were not clicked through.
+- Selecting examples in the *Examples* view of `Pele2svgExamples` by hand in the GT UI. The view builds, and all `<gtExample>` methods of `Pele2svgExamples` and `Pele2svgFeaturedExamples` and `Pele2svgMathExamples` (98) and the tests of the package `Pele2svg-Tests` (29) were run in a GToolkit image, but the 659 examples were not clicked through.
 - The 81 layout cases in WebView2, and by eye in GToolkit. They are covered by the browser comparison above and by `npm test`.
 - Other full-width text than that one flowchart. Pele measures text itself, so label boxes may not fit full-width glyphs
   in every font GT picks.
