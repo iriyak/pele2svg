@@ -66,3 +66,10 @@ test('flatten: <style> rules that cannot be inlined are kept and reported', () =
   assert.match(svg, /<style/);
   assert.ok(warnings.some(w => /<style> left/.test(w)));
 });
+
+test('flatten: color keywords in style are lower-cased (Skia is case-sensitive)', () => {
+  const src = '<svg xmlns="http://www.w3.org/2000/svg"><rect width="8" height="8" style="fill:Purple;stroke:#FFF"/></svg>';
+  const { svg } = flatten(src);
+  assert.match(svg, /fill="purple"/);
+  assert.match(svg, /stroke="#FFF"/); // hex values are left alone
+});

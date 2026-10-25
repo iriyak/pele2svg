@@ -74,6 +74,8 @@ const ATTR_RE = /([\w:-]+)="([^"]*)"/g;
 const parseAttrs = s => [...s.matchAll(ATTR_RE)].map(m => [m[1], m[2]]);
 const buildAttrs = list => list.map(([k, v]) => ` ${k}="${v}"`).join('');
 
+const COLOR_PROPS = /^(fill|stroke|color|stop-color|flood-color|lighting-color)$/;
+
 function styleToAttrs(attrs) {
   const i = attrs.findIndex(([k]) => k === 'style');
   if (i < 0) return attrs;
@@ -85,6 +87,7 @@ function styleToAttrs(attrs) {
     const name = d.slice(0, j).trim();
     let value = d.slice(j + 1).trim().replace(/\s*!important$/, '');
     if ((name === 'rx' || name === 'ry') && /px$/.test(value)) value = value.slice(0, -2);
+    if (COLOR_PROPS.test(name) && /^[A-Za-z]+$/.test(value)) value = value.toLowerCase(); // Skia knows only lower-case keywords (Purple -> purple)
     const k = out.findIndex(([n]) => n === name);
     if (k >= 0) out.splice(k, 1); // CSS wins over attributes, so an existing attribute of the same name is replaced
     out.push([name, value]);

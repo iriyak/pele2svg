@@ -28,10 +28,62 @@ Pele2svgExamples class >> examplesOfCorpus: aCorpusName [
 	^ NeoJSONReader fromString: (file binaryReadStreamDo: [ :stream | stream upToEnd utf8Decoded ])
 ]
 
+{ #category : 'gallery' }
+Pele2svgExamples class >> exportGalleryPngNamed: aName using: aPele2svg [
+	"Draw out/gallery/svg/<aName>.svg with Skia and write out/gallery/skia/<aName>.png at GalleryScale times its size on a white background (Bloc forms are premultiplied, so without a background translucent fills look dark). Answer { name. width. height. share of non-white pixels }, width and height at scale 1."
+
+	| element form bits ink count |
+	element := aPele2svg elementFromSvg: (self galleryDirectory / 'svg' / (aName , '.svg')) contents.
+	element background: Color white.
+	form := BlExporter form element: element; scaled: self galleryScale; export.
+	PNGReadWriter putForm: form onFileNamed: (self galleryDirectory / 'skia' / (aName , '.png')) fullName.
+	bits := form bits.
+	ink := 0.
+	count := 0.
+	1 to: bits size by: 7 do: [ :i |
+		count := count + 1.
+		(bits at: i) ~= 16rFFFFFFFF ifTrue: [ ink := ink + 1 ] ].
+	^ { aName. form width // self galleryScale. form height // self galleryScale. ink / count asFloat }
+]
+
+{ #category : 'gallery' }
+Pele2svgExamples class >> exportGalleryPngs [
+	"Step 2 of the example gallery (docs/pele-upgrade.md). Run node out/gallery/make-svgs.mjs first. For every example, draw out/gallery/svg/<name>.svg with Skia into out/gallery/skia/<name>.png and write out/gallery/skia-metrics.json, which out/gallery/make-index.mjs reads. Answer the number of examples that failed. It takes about 20 minutes, so run it with [ Pele2svgExamples exportGalleryPngs ] fork if the image should stay usable."
+
+	| pele results errors |
+	(self galleryDirectory / 'svg') exists ifFalse: [
+		Pele2svgError signal: 'Run node out/gallery/make-svgs.mjs first: ' , (self galleryDirectory / 'svg') fullName , ' does not exist' ].
+	(self galleryDirectory / 'skia') ensureCreateDirectory.
+	pele := self new renderer.
+	results := OrderedCollection new.
+	errors := OrderedCollection new.
+	self new examples do: [ :each | | name |
+		name := each at: 'name'.
+		[ results add: (self exportGalleryPngNamed: name using: pele) ]
+			on: Error
+			do: [ :error | errors add: { name. error messageText asString } ] ].
+	(self galleryDirectory / 'skia-metrics.json') ensureDelete.
+	(self galleryDirectory / 'skia-metrics.json') writeStreamDo: [ :stream |
+		stream nextPutAll: (NeoJSONWriter toString: { 'results' -> results asArray. 'errors' -> errors asArray } asDictionary) ].
+	^ errors size
+]
+
 { #category : 'fixtures' }
 Pele2svgExamples class >> fixtureDirectory [
 	"test/fixtures in the Iceberg clone of the pele2svg repository."
 	^ Pele2svg repositoryDirectory / 'test' / 'fixtures'
+]
+
+{ #category : 'gallery' }
+Pele2svgExamples class >> galleryDirectory [
+	"out/gallery in the Iceberg clone of the pele2svg repository (git-ignored)."
+	^ Pele2svg repositoryDirectory / 'out' / 'gallery'
+]
+
+{ #category : 'gallery' }
+Pele2svgExamples class >> galleryScale [
+	"The gallery PNGs are written at this multiple of the SVG size, so that they stay sharp on a high-resolution screen."
+	^ 2
 ]
 
 { #category : 'examples' }
@@ -257,8 +309,12 @@ Pele2svgExamples >> quadrantChart [
 
 { #category : 'private' }
 Pele2svgExamples >> renderer [
-	"The converter used by all examples."
-	^ Pele2svg new
+	"The converter used by all examples. On Windows it applies themes/gt-windows.json, so that the text is drawn with the fonts a browser uses for the raw SVG (Arial) and Consolas."
+	| pele theme |
+	pele := Pele2svg new.
+	theme := Pele2svg repositoryDirectory / 'themes' / 'gt-windows.json'.
+	(OSPlatform current isWindows and: [ theme exists ]) ifTrue: [ pele theme: theme fullName ].
+	^ pele
 ]
 
 { #category : 'examples' }
