@@ -50,7 +50,16 @@ npx pele2svg --batch sources.json outdir [theme.json]
 
 # an SVG that Pele has already produced (Pele itself is not run)
 npx pele2svg --svg input.svg output.svg [theme.json]
+
+# options for Pele's render(), as a JSON file; also works with --batch
+npx pele2svg --render-options options.json input.mmd output.svg [theme.json]
 ```
+
+`options.json` holds the options of Pele's `render()` that JSON can carry (`maxWidth`, `fontSize`, `padding`, `idPrefix`,
+`links`, `images`, `maxEdges`, ...; a key that is not one of them is refused), and `"math": true`, which typesets `$$...$$`
+labels with MathJax. For example `{"maxWidth":360,"math":true}`. `math` needs `mathjax-full`, an optional dependency that
+`npm install` installs unless you pass `--omit=optional`. MathJax takes about 0.2 s to load, so it is loaded only for a
+source that contains `$$` (and once per `--batch` run); other diagrams are converted as fast as without `math`.
 
 With `--svg`, an input that has nothing to convert is written unchanged and a note is printed to stderr.
 Simple `<style>` rules of the form `.name { declarations }` are turned into attributes of the elements with that class,
@@ -64,6 +73,15 @@ import { render } from 'pele';
 import { flatten } from 'pele2svg';      // from a clone: import { flatten } from './pele2svg.mjs';
 
 const { svg, warnings } = flatten(render('flowchart LR\n A-->B').svg, { '--gt-font-mono': 'Consolas' });
+```
+
+With formulas or other render options, `peleOptions()` turns the JSON of `--render-options` into Pele's options
+(`math: true` becomes the MathJax resolver of [`math.mjs`](../math.mjs), which answers SVG in pixels):
+
+```js
+import { peleOptions } from 'pele2svg';
+
+const { svg } = render('flowchart LR\n A["$$E=mc^2$$"] --> B', await peleOptions({ math: true, maxWidth: 360 }));
 ```
 
 ## Themes

@@ -30,6 +30,7 @@ Pele2svgOptionsTest >> testDefaults [
 	self assert: (Pele2svgCurrentOptions at: #timeout) equals: 30000.
 	self assert: (Pele2svgCurrentOptions at: #installTimeout) equals: 300000.
 	self assert: (Pele2svgCurrentOptions at: #theme) isNil.
+	self assert: (Pele2svgCurrentOptions at: #renderOptions) isNil.
 	self assert: (Pele2svgCurrentOptions at: #script) isNil
 ]
 
@@ -103,6 +104,20 @@ Pele2svgOptionsTest >> testInstanceValueIsUsedWithoutDuring [
 	"what was not set on the instance comes from the global default"
 	self assert: pele theme isNil.
 	self assert: Pele2svg new timeout equals: 10
+]
+
+{ #category : 'tests' }
+Pele2svgOptionsTest >> testRenderOptions [
+	| pele |
+	pele := Pele2svg new.
+	self assert: pele renderOptions isNil.
+	pele renderOptions: { #maxWidth -> 360. #math -> true } asDictionary.
+	self assert: (pele renderOptions at: #maxWidth) equals: 360.
+	self assert: Pele2svg new renderOptions isNil.
+	Pele2svgOptions globalDefault at: #renderOptions put: { #math -> true } asDictionary.
+	self assert: (Pele2svg new renderOptions at: #math).
+	pele renderOptions: nil.
+	self assert: pele renderOptions isNil
 ]
 
 { #category : 'tests' }

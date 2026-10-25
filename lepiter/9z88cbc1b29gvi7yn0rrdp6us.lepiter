@@ -325,7 +325,7 @@
 								"__type" : "time",
 								"time" : {
 									"__type" : "dateAndTime",
-									"dateAndTimeString" : "2026-10-25T13:39:57.495+09:00"
+									"dateAndTimeString" : "2026-10-25T14:15:47.282+09:00"
 								}
 							},
 							"uid" : {
@@ -335,7 +335,7 @@
 							"paragraphStyle" : {
 								"__type" : "textStyle"
 							},
-							"string" : "#### Bun and the Windows theme (optional)"
+							"string" : "#### Bun, the Windows theme and formulas (optional)"
 						},
 						{
 							"__type" : "textSnippet",
@@ -362,7 +362,7 @@
 								"__type" : "time",
 								"time" : {
 									"__type" : "dateAndTime",
-									"dateAndTimeString" : "2026-10-25T13:39:57.679+09:00"
+									"dateAndTimeString" : "2026-10-25T14:15:47.598+09:00"
 								}
 							},
 							"uid" : {
@@ -372,7 +372,7 @@
 							"paragraphStyle" : {
 								"__type" : "textStyle"
 							},
-							"string" : "[Bun](https://bun.sh/) starts faster than Node.js, which adds up when you render many diagrams. `themes/gt-windows.json` maps `monospace` to `Consolas` and `sans-serif` to `Arial`, so that Skia draws the text with the fonts a browser on Windows uses. Evaluating this makes both the default of every {{gtClass:name=Pele2svg}} in the image; put it in the startup script of your image (for example a `startup.st`) to keep it:"
+							"string" : "[Bun](https://bun.sh/) starts faster than Node.js, which adds up when you render many diagrams. `themes/gt-windows.json` maps `monospace` to `Consolas` and `sans-serif` to `Arial`, so that Skia draws the text with the fonts a browser on Windows uses. `#math -> true` typesets `$$...$$` in labels as formulas (see **Formulas and narrow layouts** below); it costs nothing for a diagram without `$$`, because MathJax is loaded only when the source contains one. Evaluating this makes all three the default of every {{gtClass:name=Pele2svg}} in the image; put it in the startup script of your image (for example a `startup.st`) to keep it:"
 						},
 						{
 							"__type" : "pharoSnippet",
@@ -399,14 +399,14 @@
 								"__type" : "time",
 								"time" : {
 									"__type" : "dateAndTime",
-									"dateAndTimeString" : "2026-10-25T13:39:57.884+09:00"
+									"dateAndTimeString" : "2026-10-25T14:15:47.881+09:00"
 								}
 							},
 							"uid" : {
 								"__type" : "uid",
 								"uidString" : "65xVLVvY1Ea0Mv6Cp5B1LA=="
 							},
-							"code" : "Pele2svgOptions globalDefault\n\tat: #runtime put: 'bun';\n\tat: #theme put: (Pele2svg repositoryDirectory / 'themes' / 'gt-windows.json') fullName"
+							"code" : "Pele2svgOptions globalDefault\n\tat: #runtime put: 'bun';\n\tat: #theme put: (Pele2svg repositoryDirectory / 'themes' / 'gt-windows.json') fullName;\n\tat: #renderOptions put: { #math -> true } asDictionary"
 						},
 						{
 							"__type" : "textSnippet",
@@ -433,7 +433,7 @@
 								"__type" : "time",
 								"time" : {
 									"__type" : "dateAndTime",
-									"dateAndTimeString" : "2026-10-25T13:39:58.068+09:00"
+									"dateAndTimeString" : "2026-10-25T14:15:48.2+09:00"
 								}
 							},
 							"uid" : {
@@ -443,7 +443,7 @@
 							"paragraphStyle" : {
 								"__type" : "textStyle"
 							},
-							"string" : "Give the full path of `bun` if it is not on the PATH that GToolkit sees. The theme is for Windows. A single converter can still choose otherwise, for example `Pele2svg new runtime: 'node'; theme: nil`; see {{gtClass:name=Pele2svgOptions}}."
+							"string" : "Give the full path of `bun` if it is not on the PATH that GToolkit sees. The theme is for Windows. `renderOptions` is one Dictionary: add other keys such as `#maxWidth` to it rather than setting it again. A single converter can still choose otherwise, for example `Pele2svg new runtime: 'node'; theme: nil; renderOptions: nil`; see {{gtClass:name=Pele2svgOptions}}."
 						}
 					]
 				},
@@ -1381,6 +1381,185 @@
 								"uidString" : "2fwwS8MzOU+vfvjS5y/P9Q=="
 							},
 							"code" : "Pele2svg new asElement: 'eventmodeling\n\ntimeframe 01 ui CartUI\ntimeframe 02 command AddItem [[Item]]\n\ndata Item {\n  description: ''john''\n  price: 20.4\n}'"
+						},
+						{
+							"__type" : "textSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T14:15:56.751+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T14:15:56.751+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "To4kJoVd2E6NSYD7DowX/g=="
+							},
+							"paragraphStyle" : {
+								"__type" : "textStyle"
+							},
+							"string" : "#### Formulas and narrow layouts"
+						},
+						{
+							"__type" : "textSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T14:15:57.07+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T14:15:57.07+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "wTnwdFpw1U20DJ1O5VDlRQ=="
+							},
+							"paragraphStyle" : {
+								"__type" : "textStyle"
+							},
+							"string" : "Pele has options of its own. Give them to a converter as `renderOptions`. `#math -> true` typesets `$$...$$` in a label as a formula (MathJax draws it as paths, so no font is needed). It works in flowchart, sequence, class, state, ER, mindmap, kanban, block, requirement, swimlane and use case diagrams. It needs `mathjax-full`, which `Pele2svg installDependencies` installs:"
+						},
+						{
+							"__type" : "pharoSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T14:15:57.317+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T14:15:57.317+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "6tLvicqQ4kCMp9Hvq71Xsw=="
+							},
+							"code" : "Pele2svg new\n\trenderOptions: { #math -> true } asDictionary;\n\tasElement: 'sequenceDiagram\n  participant A as Customer\n  participant B as Billing\n  A->>B: Total $$\\sum_{i=1}^n p_i q_i$$\n  B-->>A: $$\\frac{a+b}{2}$$ ok'"
+						},
+						{
+							"__type" : "textSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T14:15:57.614+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T14:15:57.614+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "SMZirScksUOOPKqX4BhICg=="
+							},
+							"paragraphStyle" : {
+								"__type" : "textStyle"
+							},
+							"string" : "`#maxWidth` lays a diagram out for that width in pixels; several diagram types then switch to narrow layouts (sequence, journey, swimlane, packet, tree view and others). Compare the same diagram at two widths:"
+						},
+						{
+							"__type" : "pharoSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T14:15:57.915+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T14:16:04.989+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "gKXg/XHaMUSg/xEjx1KsAg=="
+							},
+							"code" : "| source |\nsource := 'sequenceDiagram\n  participant A as Customer service\n  participant B as Billing\n  A->>B: A rather long message that asks for the invoice\n  B-->>A: ok'.\nBlElement new\n\tlayout: BlLinearLayout horizontal;\n\tconstraintsDo: [ :c | c horizontal fitContent. c vertical fitContent ];\n\taddChildren: ({ 360. 1000 } collect: [ :width |\n\t\t(Pele2svg new renderOptions: { #maxWidth -> width } asDictionary; asElement: source)\n\t\t\tmargin: (BlInsets all: 10) ]);\n\tyourself"
 						}
 					]
 				},

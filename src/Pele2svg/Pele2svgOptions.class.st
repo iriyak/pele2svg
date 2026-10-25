@@ -19,7 +19,7 @@ Options can be cloned to make a local, writable copy that inherits from the orig
 
 An instance of Pele2svg keeps the options set on it with #runtime:, #script:, #theme: or #timeout: (as ZnClient does) and applies them with #conditionallyDuring:. So the options of an enclosing #during: take precedence over what was set on the instance, and what was set on the instance takes precedence over the global default.
 
-Options: #runtime (executable, 'node' or 'bun'), #script (path of pele2svg.mjs; nil means the Iceberg clone of pele2svg), #theme (nil, a path to a theme JSON file or a Dictionary of theme variables), #timeout (milliseconds for one conversion), #installTimeout (milliseconds for installDependencies).
+Options: #runtime (executable, 'node' or 'bun'), #script (path of pele2svg.mjs; nil means the Iceberg clone of pele2svg), #theme (nil, a path to a theme JSON file or a Dictionary of theme variables), #renderOptions (nil or a Dictionary of options for Pele's render(), such as { #maxWidth -> 360. #math -> true }), #timeout (milliseconds for one conversion), #installTimeout (milliseconds for installDependencies).
 "
 Class {
 	#name : 'Pele2svgOptions',
@@ -83,6 +83,14 @@ Pele2svgOptions class >> onClass: targetClass [
 		options: dictionary;
 		writable: false;
 		yourself
+]
+
+{ #category : 'options' }
+Pele2svgOptions class >> renderOptions [
+	"Options for Pele's render(): nil, or a Dictionary that is written as JSON and given to pele2svg.mjs (--render-options). The keys are those of Pele's RenderOptions that JSON can carry, for example #maxWidth (lay the diagram out for that width in pixels), #fontSize, #padding, #idPrefix (Sankey links become gradients), #links, #images, #maxEdges, and #math -> true, which typesets $$...$$ labels with MathJax (needs the optional dependency mathjax-full). See docs/mermaid-in-gt.md."
+
+	<pele2svgOption>
+	^ nil
 ]
 
 { #category : 'class initialization' }

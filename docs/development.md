@@ -27,7 +27,7 @@ examples, before the layout cases were added. `npm test` covers all 659.
 
 Not verified:
 
-- Selecting examples in the *Examples* view of `Pele2svgExamples` by hand in the GT UI. The view builds, and all `<gtExample>` methods of `Pele2svgExamples` and `Pele2svgFeaturedExamples` (86) and the tests of the package `Pele2svg-Tests` (22) were run in a GToolkit image, but the 659 examples were not clicked through.
+- Selecting examples in the *Examples* view of `Pele2svgExamples` by hand in the GT UI. The view builds, and all `<gtExample>` methods of `Pele2svgExamples` and `Pele2svgFeaturedExamples` (86) and the tests of the package `Pele2svg-Tests` (23) were run in a GToolkit image, but the 659 examples were not clicked through.
 - The 81 layout cases in WebView2, and by eye in GToolkit. They are covered by the browser comparison above and by `npm test`.
 - Other full-width text than that one flowchart. Pele measures text itself, so label boxes may not fit full-width glyphs
   in every font GT picks.
@@ -59,6 +59,10 @@ npm test
 `npm test` (Node's built-in test runner, a few seconds) runs:
 
 - [`test/flatten.test.js`](../test/flatten.test.js): small unit tests of `resolveVars` and `flatten`, including the inlining of simple `<style>` class rules.
+- [`test/options.test.js`](../test/options.test.js): the render options (`--render-options`, `maxWidth`, refusing unknown keys)
+  and formulas: `$$...$$` is typeset with MathJax in a flowchart, sequence, class, state, ER, mindmap, kanban, block,
+  requirement, swimlane and use case diagram, and each result converts without warnings and without sizes in `ex`
+  (a nested `<svg>` with `width="8.7ex"` would be scaled by 8.7). The formula tests are skipped when `mathjax-full` is not installed.
 - [`test/corpus.test.js`](../test/corpus.test.js): converts every source in [`test/fixtures/`](../test/fixtures) — Pele's
   58 featured examples, its 520 documentation examples, its 81 layout cases and 170 sources from its own test corpus — and checks that the
   output has no `var()`, `style` attribute, `<style>`, `currentColor`, `color-mix()`, `<a>`, external `<image>` or

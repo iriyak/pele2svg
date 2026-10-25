@@ -12,6 +12,7 @@
   },
   "files": [
     "pele2svg.mjs",
+    "math.mjs",
     "themes",
     "docs",
     "README.md",
@@ -42,5 +43,8 @@
   "bugs": {
     "url": "https://github.com/iriyak/pele2svg/issues"
   },
-  "homepage": "https://github.com/iriyak/pele2svg#readme"
+  "homepage": "https://github.com/iriyak/pele2svg#readme",
+  "optionalDependencies": {
+    "mathjax-full": "^3.2.2"
+  }
 }

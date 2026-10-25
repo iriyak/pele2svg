@@ -7,7 +7,7 @@ I convert Mermaid source to a GToolkit-friendly SVG string by running pele2svg (
 	Pele2svg new renderSvg: peleSvg.	""an SVG that Pele has already produced""
 	Pele2svg new asElementFromSvg: peleSvg.
 
-Settings (script, runtime, theme, timeout) are options in the sense of ZnOptions, and an instance works like a ZnClient. What is set on it with #script:, #runtime:, #theme: or #timeout: is kept in the instance and applied on top of Pele2svgOptions globalDefault when it renders. The options of an enclosing Pele2svgOptions>>#during: take precedence over both. The getters answer the value that rendering would use now.
+Settings (script, runtime, theme, renderOptions, timeout) are options in the sense of ZnOptions, and an instance works like a ZnClient. What is set on it with #script:, #runtime:, #theme:, #renderOptions: or #timeout: is kept in the instance and applied on top of Pele2svgOptions globalDefault when it renders. The options of an enclosing Pele2svgOptions>>#during: take precedence over both. The getters answer the value that rendering would use now.
 
 	Pele2svgOptions globalDefault at: #runtime put: 'bun'.	""for everything""
 	Pele2svgOptions globalDefault clone
@@ -17,8 +17,9 @@ Settings (script, runtime, theme, timeout) are options in the sense of ZnOptions
 script: path to pele2svg.mjs (default: the Iceberg clone of pele2svg).
 runtime: executable, 'node' by default ('bun' also works).
 theme: nil (default), a path to a theme JSON file, or a Dictionary of theme variables. Generic font families such as monospace are left as they are; Skia does not resolve monospace (the text comes out proportional), so map it to a real font name with the theme key --gt-font-mono, e.g. { '--gt-font-mono' -> 'Consolas' } asDictionary on Windows.
+renderOptions: nil (default) or a Dictionary of options for Pele's render(), for example { #maxWidth -> 360 } asDictionary for a narrow layout, or { #math -> true } asDictionary to typeset $$...$$ with MathJax (see docs/mermaid-in-gt.md). They apply to Mermaid source, not to #renderSvg:.
 timeout: milliseconds, 30000 by default.
-installDependencies installs pele (npm install, or bun install) in the directory of the script, unless it is already there.
+installDependencies installs pele and, as an optional dependency, mathjax-full (npm install, or bun install) in the directory of the script, unless both are already there.
 Failures signal Pele2svgError.
 "
 Class {
@@ -94,7 +95,7 @@ Pele2svg >> basicConvert: aString extension: anExtension flags: anArray [
 		in binaryWriteStreamDo: [ :s | s nextPutAll: aString utf8Encoded ].
 		process := GtSubprocessWithInMemoryOutput new
 			command: self runtime;
-			arguments: { self script }, anArray, { in fullName. out fullName }, (self themeArgumentIn: dir);
+			arguments: { self script }, anArray, (anExtension = 'mmd' ifTrue: [ self renderOptionsArgumentIn: dir ] ifFalse: [ #() ]), { in fullName. out fullName }, (self themeArgumentIn: dir);
 			yourself.
 		self runProcess: process timeout: self timeout description: self runtime.
 		(process exitCode = 0 and: [ out exists ]) ifFalse: [
@@ -107,10 +108,10 @@ Pele2svg >> basicConvert: aString extension: anExtension flags: anArray [
 
 { #category : 'private' }
 Pele2svg >> basicInstallDependencies [
-	"Install pele next to pele2svg.mjs: npm install, or bun install when the runtime is bun. Does nothing when pele is already installed there."
+	"Install pele (and mathjax-full, an optional dependency used for $$...$$ math) next to pele2svg.mjs: npm install, or bun install when the runtime is bun. Does nothing when both are already installed there."
 	| directory command arguments process message |
 	directory := self script asFileReference parent.
-	(directory / 'node_modules' / 'pele') exists ifTrue: [ ^ self ].
+	((directory / 'node_modules' / 'pele') exists and: [ (directory / 'node_modules' / 'mathjax-full') exists ]) ifTrue: [ ^ self ].
 	self runtime = 'bun'
 		ifTrue: [ command := 'bun'. arguments := #('install') ]
 		ifFalse: [
@@ -168,7 +169,7 @@ Pele2svg >> extentOfSvgRoot: aRootTagString [
 
 { #category : 'installing' }
 Pele2svg >> installDependencies [
-	"Install pele next to pele2svg.mjs: npm install, or bun install when the runtime is bun. Does nothing when pele is already installed there."
+	"Install pele and mathjax-full next to pele2svg.mjs: npm install, or bun install when the runtime is bun. Does nothing when both are already installed there."
 
 	^ self withDynamicVariablesDo: [ self basicInstallDependencies ]
 ]
@@ -197,6 +198,31 @@ Pele2svg >> optionAt: key put: value [
 Pele2svg >> render: aMermaidString [
 	"Answer the converted SVG string. Signal Pele2svgError on failure or timeout."
 	^ self convert: aMermaidString extension: 'mmd' flags: #()
+]
+
+{ #category : 'accessing' }
+Pele2svg >> renderOptions [
+	"nil, or a Dictionary of options for Pele's render(). See Pele2svgOptions class >> #renderOptions."
+
+	^ self withDynamicVariablesDo: [ Pele2svgCurrentOptions at: #renderOptions ]
+]
+
+{ #category : 'accessing' }
+Pele2svg >> renderOptions: nilOrDictionary [
+	"Options for Pele's render(), for example { #maxWidth -> 360. #math -> true } asDictionary. They apply to Mermaid source (#render:, #asElement:), not to #renderSvg:."
+
+	self optionAt: #renderOptions put: nilOrDictionary
+]
+
+{ #category : 'private' }
+Pele2svg >> renderOptionsArgumentIn: aDirectory [
+	"Answer the command line arguments for the render options: none, or --render-options and the path of a JSON file."
+	| file options |
+	options := self renderOptions.
+	(options isNil or: [ options isEmpty ]) ifTrue: [ ^ #() ].
+	file := aDirectory / 'render-options.json'.
+	file binaryWriteStreamDo: [ :s | s nextPutAll: (NeoJSONWriter toString: options) utf8Encoded ].
+	^ { '--render-options'. file fullName }
 ]
 
 { #category : 'accessing' }

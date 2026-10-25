@@ -45,8 +45,9 @@ You need [Node.js](https://nodejs.org/) 20 or later (Pele needs it). [Bun](https
    ```
 
 2. **Install Pele, once.** The Pharo class only calls `pele2svg.mjs`, so Pele has to be installed next to it.
-   This runs `npm install` in the Iceberg clone (`bun install` if you set `runtime: 'bun'`) and does nothing if Pele is
-   already there:
+   This runs `npm install` in the Iceberg clone (`bun install` if you set `runtime: 'bun'`), which also installs
+   `mathjax-full`, an optional dependency that is used only for formulas (see
+   [Formulas and the width of a diagram](#formulas-and-the-width-of-a-diagram)). It does nothing if both are already there:
 
    ```smalltalk
    Pele2svg installDependencies
@@ -75,22 +76,27 @@ You need [Node.js](https://nodejs.org/) 20 or later (Pele needs it). [Bun](https
      A --> B'.
    ```
 
-6. **Optional: make Bun and the Windows theme the defaults.** [Bun](https://bun.sh/) starts faster than Node.js, which
+6. **Optional: make Bun, the Windows theme and formulas the defaults.** [Bun](https://bun.sh/) starts faster than Node.js, which
    adds up when many diagrams are rendered (`Pele2svg installDependencies` then uses `bun install`).
    [`themes/gt-windows.json`](themes/gt-windows.json) maps `monospace` to `Consolas` and `sans-serif` to `Arial`, so that
    Skia draws the text with the fonts a browser on Windows uses (see [Fonts in GToolkit](#fonts-in-gtoolkit)).
-   Evaluate this once, or put it in the startup script of your image (for example a `startup.st`), to apply both to every
-   `Pele2svg`:
+   `#math -> true` typesets `$$...$$` in labels as formulas (see
+   [Formulas and the width of a diagram](#formulas-and-the-width-of-a-diagram)); it costs nothing for a diagram that has
+   no `$$`, because MathJax is loaded only when the source contains one (then about 0.2 s more for that conversion).
+   Evaluate this once, or put it in the startup script of your image (for example a `startup.st`), to apply all three to
+   every `Pele2svg`:
 
    ```smalltalk
    Pele2svgOptions globalDefault
        at: #runtime put: 'bun';
-       at: #theme put: (Pele2svg repositoryDirectory / 'themes' / 'gt-windows.json') fullName
+       at: #theme put: (Pele2svg repositoryDirectory / 'themes' / 'gt-windows.json') fullName;
+       at: #renderOptions put: { #math -> true } asDictionary
    ```
 
    Give the full path of `bun` if it is not on the PATH that GToolkit sees. The theme is for Windows; without it
-   (the default) no theme is applied. Both can still be set on one converter (`runtime:`, `theme:`) or for a block
-   (`during:`); see [Settings](#settings).
+   (the default) no theme is applied. `renderOptions` is one Dictionary: add other keys such as `#maxWidth` to it
+   rather than setting it again. All three can still be set on one converter (`runtime:`, `theme:`, `renderOptions:`) or for
+   a block (`during:`); see [Settings](#settings).
 
 If you did not get the code through Iceberg — for example, you cloned it with `git` yourself — point `Pele2svg` at the
 script in that clone. `installDependencies` then installs Pele there, as it does for the Iceberg clone:
@@ -210,9 +216,35 @@ The tests of the [settings](#settings) (the defaults, `during:`, the global defa
 precedence) are in `Pele2svgOptionsTest`, in the package `Pele2svg-Tests`, together with `Pele2svgExamplesTest`, which
 checks the fixtures that the examples read. Neither runs Node.js.
 
+### Formulas and the width of a diagram
+
+Pele has options of its own for `render()`. Give them to a converter as `renderOptions`, a Dictionary (see
+[Settings](#settings)); for example, `$$...$$` in a label is typeset as a formula when you ask for `math`:
+
+```smalltalk
+Pele2svg new
+    renderOptions: { #math -> true } asDictionary;
+    asElement: 'flowchart LR
+  A["Energy $$E=mc^2$$"] --> B["$$\int_0^1 x^2\,dx=\frac13$$"]'.
+```
+
+| Key | Effect |
+|---|---|
+| `#math -> true` | Typeset `$$...$$` labels with [MathJax](https://www.mathjax.org/) (`mathjax-full`, installed by `installDependencies`). Without it the label shows the TeX source. Tried in flowchart, sequence, class, state, ER, mindmap, kanban, block, requirement, swimlane and use case diagrams |
+| `#maxWidth -> 360` | Lay the diagram out for that width in pixels. Several diagram types switch to narrow layouts (sequence, journey, swimlane, packet, tree view, and others) |
+| `#fontSize`, `#padding` | Text size and margin |
+| `#idPrefix -> 'p1'` | Makes the ids unique, which also turns Sankey links into gradients |
+| `#links -> false`, `#images -> false` | Leave out all links or images |
+| `#maxEdges` | The limit on the edges of a flowchart (5,000 by default) |
+
+Other keys of Pele's `RenderOptions` that JSON can carry are accepted too; an unknown key signals `Pele2svgError` and names the known ones.
+The formulas are drawn as paths, so they need no font and follow the theme's foreground color. `renderOptions` apply to Mermaid
+source (`render:`, `asElement:`), not to `renderSvg:`. Evaluate `Pele2svgOptions globalDefault at: #renderOptions put: { #math -> true } asDictionary`
+to turn formulas on for everything.
+
 ### Settings
 
-Pele2svg has four settings, plus one for `installDependencies`. They follow the pattern of Zinc's `ZnOptions`: the
+Pele2svg has five settings, plus one for `installDependencies`. They follow the pattern of Zinc's `ZnOptions`: the
 defaults live in a `Pele2svgOptions` object, and the code that renders reads them through the dynamic variable
 `Pele2svgCurrentOptions`.
 
@@ -221,6 +253,7 @@ defaults live in a `Pele2svgOptions` object, and the code that renders reads the
 | `#script` | `nil`: `pele2svg.mjs` in the Iceberg clone named `pele2svg` | Path of `pele2svg.mjs`. Set it when no Iceberg repository named `pele2svg` exists in the image (the class then signals `Pele2svgError`). |
 | `#runtime` | `'node'` | The executable to run. `'bun'` is also possible. Give the full path if `node` is not on the PATH that GToolkit sees (for example, an app started from the macOS Finder does not use your shell's PATH; not tried). |
 | `#theme` | `nil` | `nil`, the path of a theme JSON file, or a Dictionary of theme variables. See [Themes](docs/standalone.md#themes). |
+| `#renderOptions` | `nil` | `nil` or a Dictionary of options for Pele's `render()`, such as `{ #maxWidth -> 360. #math -> true } asDictionary`. See [Formulas and the width of a diagram](#formulas-and-the-width-of-a-diagram). |
 | `#timeout` | `30000` | Milliseconds; the process is killed when it is exceeded. |
 | `#installTimeout` | `300000` | Milliseconds `installDependencies` may take. |
 
@@ -239,11 +272,11 @@ Pele2svgOptions globalDefault clone
   A --> B' ].
 ```
 
-Or set it on one instance, as `theme:` is set below. `script:`, `runtime:`, `theme:` and `timeout:` are kept in the
+Or set it on one instance, as `theme:` is set below. `script:`, `runtime:`, `theme:`, `renderOptions:` and `timeout:` are kept in the
 instance and applied on top of the global default when it renders, the way `ZnClient` does it. The options of an
 enclosing `during:` take precedence over both: in the block above, an instance that was given `runtime: 'node'` still
 runs with Bun. The getters (`runtime`, `timeout`, `theme`,
-`script`) answer what rendering would use at that moment.
+`renderOptions`, `script`) answer what rendering would use at that moment.
 
 Only an existing option can be set (`at:put:` signals `KeyNotFound` for any other key).
 `Pele2svgOptions resetGlobalDefault` restores the defaults. The current options belong to the process that called

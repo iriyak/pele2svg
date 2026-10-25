@@ -21,6 +21,9 @@
 //   node pele2svg.mjs input.mmd output.svg [theme.json]
 //   node pele2svg.mjs --batch sources.json outdir [theme.json]
 //       sources.json = [{"name":"flowchart-1","source":"flowchart LR\n A-->B"}, ...]
+//   node pele2svg.mjs --render-options options.json input.mmd output.svg [theme.json]
+//       options for Pele's render(), e.g. {"maxWidth":360,"math":true}; see peleOptions() below
+//       (works with --batch too; --svg does not run Pele, so it ignores it)
 // theme.json example: {"--pele-bg":"#fffcf0","--pele-fg":"#100f0f","--pele-accent":"#205ea6",
 //                      "--gt-font-mono":"Consolas"}
 import { readFileSync, writeFileSync, mkdirSync, realpathSync } from 'node:fs';
@@ -268,8 +271,36 @@ export function flatten(svg, theme = {}) {
   return { svg, warnings };
 }
 
+// ---------- Pele's render options ----------
+// The options of Pele's render() that can be written as JSON, plus `math`. Anything else is refused, so that a typo
+// does not silently do nothing. `math: true` typesets $$...$$ labels with MathJax (math.mjs).
+export const RENDER_OPTION_KEYS = [
+  'fontFamily', 'fontFamilyMono', 'fontSize', 'idPrefix', 'responsive', 'maxWidth', 'autoDirection',
+  'directionBreakpoint', 'padding', 'limit', 'outputLimit', 'maxEdges', 'links', 'images', 'linkSchemes',
+  'imageSchemes', 'linkRel', 'config',
+];
+
+export async function peleOptions(json = {}) {
+  const { math, ...rest } = json;
+  const unknown = Object.keys(rest).filter(k => !RENDER_OPTION_KEYS.includes(k));
+  if (unknown.length) {
+    throw new Error(`unknown render option(s): ${unknown.join(', ')}; known: math, ${RENDER_OPTION_KEYS.join(', ')}`);
+  }
+  const options = { ...rest };
+  if (math) options.math = await (await import('./math.mjs')).createMathResolver();
+  return options;
+}
+
 // ---------- CLI ----------
-async function main(argv) {
+async function main(args) {
+  // --render-options file.json can stand anywhere in front of the other arguments
+  let optionsFile;
+  const argv = [];
+  for (let i = 0; i < args.length; i++) {
+    if (args[i] === '--render-options') optionsFile = args[++i];
+    else argv.push(args[i]);
+  }
+  if (optionsFile === undefined && args.includes('--render-options')) throw new Error(USAGE);
   const themeOf = f => (f ? JSON.parse(readFileSync(f, 'utf8')) : {});
   if (argv[0] === '--svg') {
     // Post-process an SVG that Pele has already produced (Pele itself is not needed)
@@ -283,7 +314,15 @@ async function main(argv) {
     console.log('wrote', outFile);
     return;
   }
-  const { render } = await import('pele');
+  const { render: peleRender } = await import('pele');
+  const json = optionsFile ? JSON.parse(readFileSync(optionsFile, 'utf8')) : {};
+  // MathJax takes about 0.2 s to load, so it is loaded only for a source that has a $$ in it (and once per run)
+  const optionsCache = {};
+  const optionsFor = async source => {
+    const key = json.math && source.includes('$$') ? 'withMath' : 'withoutMath';
+    return optionsCache[key] ??= await peleOptions(key === 'withMath' ? json : { ...json, math: false });
+  };
+  const render = async source => peleRender(source, await optionsFor(source));
   if (argv[0] === '--batch') {
     const [, listFile, outDir, themeFile] = argv;
     const theme = themeOf(themeFile);
@@ -291,7 +330,7 @@ async function main(argv) {
     let ok = 0, failed = 0, warned = 0;
     for (const { name, source } of JSON.parse(readFileSync(listFile, 'utf8'))) {
       try {
-        const { svg } = render(source);
+        const { svg } = await render(source);
         const flat = flatten(svg, theme);
         writeFileSync(`${outDir}/${name}.svg`, flat.svg);
         ok++;
@@ -304,7 +343,7 @@ async function main(argv) {
     console.log(`ok=${ok} failed=${failed} withWarnings=${warned} -> ${outDir}`);
   } else {
     const [inFile, outFile, themeFile] = argv;
-    const { svg } = render(readFileSync(inFile, 'utf8'));
+    const { svg } = await render(readFileSync(inFile, 'utf8'));
     const flat = flatten(svg, themeOf(themeFile));
     writeFileSync(outFile, flat.svg);
     for (const w of new Set(flat.warnings)) console.error('warning:', w);
@@ -315,7 +354,8 @@ async function main(argv) {
 const USAGE = `Usage:
   pele2svg input.mmd output.svg [theme.json]
   pele2svg --svg input.svg output.svg [theme.json]
-  pele2svg --batch sources.json outdir [theme.json]`;
+  pele2svg --batch sources.json outdir [theme.json]
+  pele2svg --render-options options.json input.mmd output.svg [theme.json]`;
 
 // Run the CLI only when executed directly (npm bins are symlinks, so compare real paths)
 const isMain = (() => {
