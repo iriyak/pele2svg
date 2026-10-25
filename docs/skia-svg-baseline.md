@@ -279,6 +279,14 @@ Assumptions made before the review of 2026-10-25, and what was found:
 | `inherit` is not understood (a first probe drew black) | It works; the first probe had no parent value, so black was the inherited value. |
 | One-pixel samples are enough to judge a feature | Not for translucent colors (premultiplied reads) and not for text: the 659-example comparison found the color and emoji cases that the baseline rows did not. |
 
+### Stroke width 0 (step 13)
+
+MathJax draws each formula in `<g stroke="currentColor" fill="currentColor" stroke-width="0">`. A browser draws no stroke
+for a width of 0. **Skia draws a stroke of about 1 px anyway**, so the glyphs come out visibly bold. For a flowchart with three
+formulas, the same SVG with `stroke="none"` instead had 26 % fewer dark pixels in Skia (2.34 % against 3.16 % of the picture)
+and looked like Chromium's drawing. `stroke-width="0.5"` was not examined. `flatten` therefore writes `stroke="none"` on every
+element that has `stroke-width="0"`.
+
 ## Summary: what Skia needs from `flatten`
 
 | Step | Needed for Skia? | Evidence |
@@ -293,6 +301,7 @@ Assumptions made before the review of 2026-10-25, and what was found:
 | 10 external `<image>` | unclear | does not break drawing; the image itself was not looked at |
 | 11 generic font names | **yes** | all generic names draw the default font |
 | 2 root `font-size` | **yes** | the default size is not 16 |
+| 13 stroke width 0 | **yes** | a stroke of width 0 is drawn as 1 px (bold MathJax glyphs) |
 | 12 color keywords (new) | **yes** | 8 of 148 keywords draw black, and case matters; `transparent` draws black |
 | 11 `sans-serif` → Arial (theme) | **yes**, for a browser-like look | the default face differs from Arial |
 | emoji `<tspan font-family>` | **not done**; would fix `mindmap-13` | emoji inside a run are boxes; text starting with an emoji changes face and loses most of its bold |

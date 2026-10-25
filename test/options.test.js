@@ -65,6 +65,7 @@ for (const [type, source] of Object.entries(withMath)) {
     assert.doesNotMatch(svg, /\$\$/);
     assert.doesNotMatch(svg, /="[\d.]+ex"/);   // sizes are pixels, or the nested <svg> would be scaled by 8.7 instead of 70
     assert.doesNotMatch(svg, /<use\b/);        // glyphs are inline paths
+    assert.doesNotMatch(svg, /stroke="(?!none)[^"]*" stroke-width="0"/); // Skia draws a stroke of width 0 as 1 px, so the glyphs would look bold
     assert.equal((svg.match(/<svg\b/g) || []).length, 1);
   });
 }

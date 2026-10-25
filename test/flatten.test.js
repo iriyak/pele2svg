@@ -77,3 +77,12 @@ test('flatten: color keywords become hex (Skia knows only some, and only in lowe
   assert.match(svg, /fill="#d3d3d3" stroke="none"/); // LightGray; transparent
   assert.match(svg, /fill="none" stroke="#ff0000"/);
 });
+
+test('flatten: stroke-width="0" becomes stroke="none" (Skia draws a 1 px stroke for a width of 0)', () => {
+  const src = '<svg xmlns="http://www.w3.org/2000/svg"><g stroke="currentColor" fill="currentColor" stroke-width="0"><path d="M0 0h5v5z"/></g>'
+    + '<path d="M0 0h5v5z" fill="red" stroke-width="0" stroke="blue"/><path d="M0 0h5" stroke="red" stroke-width="0.5"/></svg>';
+  const { svg } = flatten(src);
+  assert.match(svg, /<g fill="#[0-9a-f]{6}" stroke="none" stroke-width="0">/);
+  assert.match(svg, /<path d="M0 0h5v5z" fill="#ff0000" stroke="none" stroke-width="0"\/>/);
+  assert.match(svg, /stroke="#ff0000" stroke-width="0.5"/); // a real width is left alone
+});

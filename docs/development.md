@@ -123,7 +123,8 @@ numbering in the header comment of `pele2svg.mjs` and in the README table, which
 | 10 | External `<image>` | **Removal of what cannot be fetched.** An `<image>` whose `href` starts with `http:` or `https:` is deleted and a warning is recorded. | `<image href="https://…"/>` → (nothing) | external resources |
 | 11 | Generic font names | **Name resolution.** `monospace`, `sans-serif`, `serif` are replaced by `--gt-font-mono`, `--gt-font-sans`, `--gt-font-serif` from the theme, if given. In Skia all three generic names draw the same default font, only the first name of a family list is tried, and quoted names do not match. | `font-family="monospace"` → `font-family="Consolas"` | font matching |
 | 12 | Color keywords | **Normalization.** Every CSS color keyword in `fill`, `stroke`, `color`, `stop-color`, `flood-color` and `lighting-color` is written as `#rrggbb` (148 names, any case), and `transparent` as `none`. Skia understands only some spellings and only in lower case. | `grey` → `#808080`, `Purple` → `#800080` | named colors |
-| 13 | Final check | **Verification only.** Adds a warning if `var(`, `<style` or `color-mix(` is still in the output. | — | — |
+| 13 | Zero stroke width | **Normalization.** On an element with `stroke-width="0"`, `stroke` is written as `none`. Skia ignores a width of 0 and draws a 1 px stroke; the glyphs of MathJax formulas (`stroke="currentColor" stroke-width="0"`) came out visibly bold. | `stroke="#1f1f1f" stroke-width="0"` → `stroke="none" stroke-width="0"` | stroke |
+| 14 | Final check | **Verification only.** Adds a warning if `var(`, `<style` or `color-mix(` is still in the output. | — | — |
 
 `asElementFromSvg:` and `--svg` run exactly the same `flatten` on an SVG that already exists; only the Pele rendering
 step is skipped.
@@ -233,12 +234,12 @@ How well each step would map:
 
 | Step | Fit for tree rewriting | Why |
 |---|---|---|
-| 4 `var()`, 5 `currentColor`, 11 fonts, 12 color keywords | good | local replacement of one node by a value computed from a table |
+| 4 `var()`, 5 `currentColor`, 11 fonts, 12 color keywords, 13 zero stroke width | good | local replacement of one node by a value computed from a table |
 | 8 `color-mix()` | fair | the matching is local, but the arithmetic is code anyway |
 | 7 `style` → attributes | fair | needs the CSS declaration grammar *and* a condition ("replace an existing attribute of that name") |
 | 1 variable table, 3 class rules | poor | they need whole-document information (all variable definitions; all rules matched against all classes); this is a pass that gathers facts, not a local rewrite |
 | 6, 9, 10 structural | good, once an XML grammar exists | pairing `<svg>` with `</svg>` is trivial on a tree |
-| 13 final check | not a rewrite | a traversal that reports |
+| 14 final check | not a rewrite | a traversal that reports |
 
 A practical split would be: gather the environment with a visitor, apply the local rewrites as rules, and keep
 verification as a separate traversal. The 659-example corpus and `test/corpus.test.js` would serve as the oracle for such

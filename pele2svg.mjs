@@ -264,6 +264,11 @@ export function flatten(svg, theme = {}) {
   // 7c. Color keywords -> hex (see CSS_COLORS)
   svg = colorKeywordsToHex(svg);
 
+  // 7d. stroke-width="0" -> stroke="none". Skia ignores a width of 0 and draws a 1 px stroke, which makes the glyphs
+  //     of MathJax formulas (stroke="currentColor" stroke-width="0") look bold
+  svg = svg.replace(/<[a-zA-Z][^<>]*\sstroke-width="0"[^<>]*>/g,
+    tag => tag.replace(/\sstroke="[^"]*"/g, '').replace(/\sstroke-width="0"/, ' stroke="none" stroke-width="0"'));
+
   // 8. Check for anything left behind
   if (/var\(/.test(svg)) warnings.push('unresolved var() left in the output');
   if (/<style\b/i.test(svg)) warnings.push('<style> left in the output');
