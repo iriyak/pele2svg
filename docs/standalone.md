@@ -53,6 +53,13 @@ npx pele2svg --svg input.svg output.svg [theme.json]
 
 # options for Pele's render(), as a JSON file; also works with --batch
 npx pele2svg --render-options options.json input.mmd output.svg [theme.json]
+
+# one formula on its own (no Pele): --format tex (default), mathml or asciimath
+npx pele2svg --math [--format tex] [--display] [--size 16] [--color '#000000'] input.txt output.svg
+
+# many formulas: formulas.json = [{"name":"f1","source":"E=mc^2","format":"tex","display":false,"size":16,"color":"#000000"}, ...]
+# (everything but name and source is optional); writes outdir/<name>.svg
+npx pele2svg --math-batch formulas.json outdir
 ```
 
 `options.json` holds the options of Pele's `render()` that JSON can carry (`maxWidth`, `fontSize`, `padding`, `idPrefix`,
@@ -83,6 +90,18 @@ import { peleOptions } from 'pele2svg';
 
 const { svg } = render('flowchart LR\n A["$$E=mc^2$$"] --> B', await peleOptions({ math: true, maxWidth: 360 }));
 ```
+
+A formula on its own, without Mermaid, is `mathToSvg()`. It typesets with MathJax (`mathjax-full`) and answers plain SVG that Skia can draw,
+as large as the formula in pixels (`viewBox="0 0 width height"`):
+
+```js
+import { mathToSvg } from 'pele2svg';
+
+const { svg, width, height } = await mathToSvg('E=mc^2', { format: 'tex', display: false, size: 16, color: '#000000' });
+```
+
+`format` is `'tex'`, `'mathml'` or `'asciimath'`; it throws when MathJax cannot read the formula. The engine of each format is
+loaded once, when it is first used, so the second formula costs almost nothing.
 
 ## Themes
 

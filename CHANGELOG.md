@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- **A formula on its own.** `mathToSvg(source, { format, display, size, color })` typesets one formula with MathJax and answers plain SVG, as large as the formula in pixels. The format is TeX, MathML or AsciiMath. On the command line: `--math` and `--math-batch`. In Pharo: `elementFor:format:`, `svgFor:format:`, `elementForTex:`, `svgForTex:`, and the longer `elementFor:format:display:size:color:` and `svgFor:format:display:size:color:`. Four new gtExamples in `Pele2svgMathExamples`, `test/math.test.js` and a new test.
+
+### Changed
+
+- A TeX error in a `$$...$$` label now shows the TeX source (as when MathJax is not available) instead of MathJax's red error message.
+- The tests that need the math option off set `renderOptions: nil` explicitly, so they no longer fail when the global default has `math` on.
+
 ## 0.3.0 (pre-release)
 
 Formulas, render options, and a pele 1.10 baseline.

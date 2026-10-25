@@ -1381,44 +1381,45 @@
 								"uidString" : "2fwwS8MzOU+vfvjS5y/P9Q=="
 							},
 							"code" : "Pele2svg new asElement: 'eventmodeling\n\ntimeframe 01 ui CartUI\ntimeframe 02 command AddItem [[Item]]\n\ndata Item {\n  description: ''john''\n  price: 20.4\n}'"
-						},
-						{
-							"__type" : "textSnippet",
-							"children" : {
-								"__type" : "snippets",
-								"items" : [ ]
-							},
-							"createEmail" : {
-								"__type" : "email",
-								"emailString" : "<unknown>"
-							},
-							"createTime" : {
-								"__type" : "time",
-								"time" : {
-									"__type" : "dateAndTime",
-									"dateAndTimeString" : "2026-10-25T14:15:56.751+09:00"
-								}
-							},
-							"editEmail" : {
-								"__type" : "email",
-								"emailString" : "<unknown>"
-							},
-							"editTime" : {
-								"__type" : "time",
-								"time" : {
-									"__type" : "dateAndTime",
-									"dateAndTimeString" : "2026-10-25T14:15:56.751+09:00"
-								}
-							},
-							"uid" : {
-								"__type" : "uid",
-								"uidString" : "To4kJoVd2E6NSYD7DowX/g=="
-							},
-							"paragraphStyle" : {
-								"__type" : "textStyle"
-							},
-							"string" : "#### Formulas and narrow layouts"
-						},
+						}
+					]
+				},
+				"createEmail" : {
+					"__type" : "email",
+					"emailString" : "<unknown>"
+				},
+				"createTime" : {
+					"__type" : "time",
+					"time" : {
+						"__type" : "dateAndTime",
+						"dateAndTimeString" : "2026-10-18T19:00:07.145+09:00"
+					}
+				},
+				"editEmail" : {
+					"__type" : "email",
+					"emailString" : "<unknown>"
+				},
+				"editTime" : {
+					"__type" : "time",
+					"time" : {
+						"__type" : "dateAndTime",
+						"dateAndTimeString" : "2026-10-18T19:00:07.145+09:00"
+					}
+				},
+				"uid" : {
+					"__type" : "uid",
+					"uidString" : "Qha81HOVcU+3X2APVf+/+Q=="
+				},
+				"paragraphStyle" : {
+					"__type" : "textStyle"
+				},
+				"string" : "#### Fonts"
+			},
+			{
+				"__type" : "textSnippet",
+				"children" : {
+					"__type" : "snippets",
+					"items" : [
 						{
 							"__type" : "textSnippet",
 							"children" : {
@@ -1560,6 +1561,114 @@
 								"uidString" : "gKXg/XHaMUSg/xEjx1KsAg=="
 							},
 							"code" : "| source |\nsource := 'sequenceDiagram\n  participant A as Customer service\n  participant B as Billing\n  A->>B: A rather long message that asks for the invoice\n  B-->>A: ok'.\nBlElement new\n\tlayout: BlLinearLayout horizontal;\n\tconstraintsDo: [ :c | c horizontal fitContent. c vertical fitContent ];\n\taddChildren: ({ 360. 1000 } collect: [ :width |\n\t\t(Pele2svg new renderOptions: { #maxWidth -> width } asDictionary; asElement: source)\n\t\t\tmargin: (BlInsets all: 10) ]);\n\tyourself"
+						},
+						{
+							"__type" : "textSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T16:10:46.772+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T16:10:46.772+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "oes2Dkb1Cm1zVsUZJ1Nu7A=="
+							},
+							"paragraphStyle" : {
+								"__type" : "textStyle"
+							},
+							"string" : "A formula does not have to be in a diagram. {{gtMethod:name=Pele2svg>>elementForTex:}} answers a `BlSkiaSvgElement` as big as the formula, and {{gtMethod:name=Pele2svg>>elementFor:format:}} also reads MathML (`#mathml`) and AsciiMath (`#asciimath`). Put the elements in any Bloc layout. The last one is in the display style, 28 px, in color:"
+						},
+						{
+							"__type" : "pharoSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T16:10:46.772+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T16:10:46.772+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "WUX+wrW5/y/1p2DUYa9BNQ=="
+							},
+							"code" : "| pele row |\npele := Pele2svg new.\nrow := BlElement new\n\tlayout: (BlLinearLayout horizontal cellSpacing: 24);\n\tconstraintsDo: [ :c | c horizontal fitContent. c vertical fitContent ];\n\tpadding: (BlInsets all: 12).\nrow addChildren: {\n\tpele elementForTex: 'E=mc^2'.\n\tpele elementFor: '<math><msqrt><mi>x</mi></msqrt></math>' format: #mathml.\n\tpele elementFor: 'sum_(i=1)^n i^3=((n(n+1))/2)^2' format: #asciimath.\n\tpele\n\t\telementFor: '\\int_0^1 x^2\\,dx=\\frac13' format: #tex\n\t\tdisplay: true size: 28 color: '#205ea6' }.\nrow"
+						},
+						{
+							"__type" : "textSnippet",
+							"children" : {
+								"__type" : "snippets",
+								"items" : [ ]
+							},
+							"createEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"createTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T16:10:46.772+09:00"
+								}
+							},
+							"editEmail" : {
+								"__type" : "email",
+								"emailString" : "<unknown>"
+							},
+							"editTime" : {
+								"__type" : "time",
+								"time" : {
+									"__type" : "dateAndTime",
+									"dateAndTimeString" : "2026-10-25T16:10:46.772+09:00"
+								}
+							},
+							"uid" : {
+								"__type" : "uid",
+								"uidString" : "9qjRwTDcr2wFk37uwFPNqg=="
+							},
+							"paragraphStyle" : {
+								"__type" : "textStyle"
+							},
+							"string" : "Each call starts one process (about 0.3 s). {{gtClass:name=Pele2svgMathExamples}} has `texFormula`, `mathmlFormula`, `asciimathFormula` and `displayFormula`. The same is available outside Pharo as `mathToSvg()` and `--math` (docs/standalone.md)."
 						}
 					]
 				},
@@ -1571,7 +1680,7 @@
 					"__type" : "time",
 					"time" : {
 						"__type" : "dateAndTime",
-						"dateAndTimeString" : "2026-10-18T19:00:07.145+09:00"
+						"dateAndTimeString" : "2026-10-25T14:15:56.751+09:00"
 					}
 				},
 				"editEmail" : {
@@ -1582,17 +1691,17 @@
 					"__type" : "time",
 					"time" : {
 						"__type" : "dateAndTime",
-						"dateAndTimeString" : "2026-10-18T19:00:07.145+09:00"
+						"dateAndTimeString" : "2026-10-25T14:15:56.751+09:00"
 					}
 				},
 				"uid" : {
 					"__type" : "uid",
-					"uidString" : "Qha81HOVcU+3X2APVf+/+Q=="
+					"uidString" : "To4kJoVd2E6NSYD7DowX/g=="
 				},
 				"paragraphStyle" : {
 					"__type" : "textStyle"
 				},
-				"string" : "#### Fonts"
+				"string" : "#### Formulas and narrow layouts"
 			},
 			{
 				"__type" : "textSnippet",

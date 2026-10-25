@@ -113,6 +113,14 @@ the formula takes the foreground color of the theme. Pele (1.8.0) lists the same
 - Bun gives the same SVG as Node for a diagram with formulas (command line, Linux).
 - Not checked: a diagram with many formulas was not timed; formulas in the other diagram types of 1.8.0 were not looked for.
 
+### A formula on its own
+
+Outside a diagram, `Pele2svg new elementForTex: 'E=mc^2'` answers a `BlSkiaSvgElement` as big as the formula, for any Bloc layout or a Lepiter
+snippet. `elementFor:format:` also reads MathML (`#mathml`) and AsciiMath (`#asciimath`), and `elementFor:format:display:size:color:` sets the
+display style, the font size in pixels and the color (`#rrggbb`; the default is black, not the theme's color). `svgForTex:` and `svgFor:format:` answer
+the SVG string. The engine is the same MathJax 3 as above, so the same limits hold; each call is one process (about 0.3 s). From JavaScript it is
+`mathToSvg()`, from the shell `--math` and `--math-batch` (docs/standalone.md). A formula MathJax cannot read signals `Pele2svgError`.
+
 ## Recipes for a new diagram
 
 1. Pick the type from the list above. For a type you have not drawn before, copy the nearest featured example.

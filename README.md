@@ -213,7 +213,7 @@ The class also has 24 short `<gtExample>` methods (the basic diagram types and a
 `Pele2svgFeaturedExamples` has one `<gtExample>` per featured example (58, named `<type><n>` after the fixture, for example `c41` for `c4-1`, with their sources copied from Pele);
 each answers a `BlSkiaSvgElement`. Open the class in the GT Coder and look at the results.
 
-`Pele2svgMathExamples` has 12 `<gtExample>` methods for [formulas](#formulas-and-the-width-of-a-diagram): a `$$...$$` label in each of the 11 diagram types in which Pele typesets math (flowchart, sequence, class, state, ER, mindmap, kanban, block, requirement, swimlane and use case), and `withoutMathOption`, which shows the TeX source that is left when the option is not given. They need `mathjax-full` (see step 2).
+`Pele2svgMathExamples` has 16 `<gtExample>` methods for [formulas](#formulas-and-the-width-of-a-diagram): a `$$...$$` label in each of the 11 diagram types in which Pele typesets math (flowchart, sequence, class, state, ER, mindmap, kanban, block, requirement, swimlane and use case), `withoutMathOption`, which shows the TeX source that is left when the option is not given, and four [formulas on their own](#a-formula-on-its-own) (`texFormula`, `mathmlFormula`, `asciimathFormula`, `displayFormula`). They need `mathjax-full` (see step 2).
 
 The tests of the [settings](#settings) (the defaults, `during:`, the global default, values set on a converter and their
 precedence) are in `Pele2svgOptionsTest`, in the package `Pele2svg-Tests`, together with `Pele2svgExamplesTest`, which
@@ -243,7 +243,26 @@ Pele2svg new
 Other keys of Pele's `RenderOptions` that JSON can carry are accepted too; an unknown key signals `Pele2svgError` and names the known ones.
 The formulas are drawn as paths, so they need no font and follow the theme's foreground color. `renderOptions` apply to Mermaid
 source (`render:`, `asElement:`), not to `renderSvg:`. Evaluate `Pele2svgOptions globalDefault at: #renderOptions put: { #math -> true } asDictionary`
-to turn formulas on for everything. `Pele2svgMathExamples` has an example for each diagram type that can hold a formula (see [Examples](#examples)).
+to turn formulas on for everything. `Pele2svgMathExamples` has an example for each diagram type that can hold a formula (see [Examples](#examples)). A formula alone: [A formula on its own](#a-formula-on-its-own).
+
+### A formula on its own
+
+A formula does not have to be in a diagram. `elementForTex:` answers a `BlSkiaSvgElement` that you can put in any Bloc layout
+(a Lepiter snippet that answers it shows it in the page); `svgForTex:` answers the SVG string:
+
+```smalltalk
+Pele2svg new elementForTex: 'E=mc^2'.
+Pele2svg new elementFor: '<math><msqrt><mi>x</mi></msqrt></math>' format: #mathml.
+Pele2svg new elementFor: 'sum_(i=1)^n i^3=((n(n+1))/2)^2' format: #asciimath.
+Pele2svg new
+    elementFor: '\int_0^1 x^2\,dx=\frac13' format: #tex
+    display: true size: 28 color: '#205ea6'.
+```
+
+The format is `#tex`, `#mathml` or `#asciimath`; `display: true` is the display style, `size:` the font size in pixels and `color:` the
+color of the glyphs. The element is as big as the formula, in pixels. A formula MathJax cannot read signals `Pele2svgError`. It needs
+`mathjax-full` like `math` does, and every call starts one process (about 0.3 s). The same is available outside Pharo as `mathToSvg()`
+and `--math` ([docs/standalone.md](docs/standalone.md)).
 
 ### Settings
 
