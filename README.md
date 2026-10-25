@@ -94,7 +94,7 @@ Pele2svg new
 
 The Lepiter notebook (steps 3 and 4) is registered from the Iceberg clone, so it is available only with the Iceberg route.
 
-## Using it
+## Usage
 
 `Pele2svg` turns Mermaid text into an SVG string, or into an element you can show in GToolkit.
 
@@ -240,8 +240,7 @@ proportional. To get monospace text in Skia, map `monospace` to a real font name
 the other platforms have not been looked at). Only some diagram types use `monospace`, such as event modeling; a
 flowchart is all `sans-serif`.
 
-Skia also draws the generic `sans-serif` in another face than a browser on Windows does (Arial), which looks a little thinner
-To get the browser's text, map it too: `{ '--pele-font' -> 'Arial' }`.
+Skia also draws the generic `sans-serif` in another face than a browser on Windows does (Arial), which looks a little thinner. To get the browser's text, map it too: `{ '--gt-font-sans' -> 'Arial' }`.
 [`themes/gt-windows.json`](themes/gt-windows.json) does both (`Consolas` and `Arial`):
 `Pele2svg new theme: (Pele2svg repositoryDirectory / 'themes' / 'gt-windows.json') fullName; asElement: ...`.
 The examples of `Pele2svgExamples` use it on Windows.
