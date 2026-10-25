@@ -1,5 +1,5 @@
 "
-Metacello baseline of Pele2svg. The default group loads the package Pele2svg; the group Tests also loads Pele2svg-Tests. Run Pele2svg installDependencies once afterwards to install Pele next to pele2svg.mjs.
+Metacello baseline of Pele2svg. The default group loads the package Pele2svg and its tests, Pele2svg-Tests; the group Core loads Pele2svg only. Run Pele2svg installDependencies once afterwards to install Pele (and mathjax-full) next to pele2svg.mjs.
 "
 Class {
 	#name : 'BaselineOfPele2svg',
@@ -33,6 +33,6 @@ BaselineOfPele2svg >> baseline: spec [
 				package: 'Pele2svg';
 				package: 'Pele2svg-Tests' with: [ spec requires: #('Pele2svg') ].
 			spec
-				group: 'default' with: #('Pele2svg');
-				group: 'Tests' with: #('Pele2svg' 'Pele2svg-Tests') ]
+				group: 'default' with: #('Pele2svg' 'Pele2svg-Tests');
+				group: 'Core' with: #('Pele2svg') ]
 ]

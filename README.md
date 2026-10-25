@@ -34,8 +34,8 @@ In `BlSkiaSvgElement` a minimal test showed that declarations inside a `style` a
 
 You need [Node.js](https://nodejs.org/) 20 or later (Pele needs it). [Bun](https://bun.sh/) can run the script too.
 
-1. **Load the Pharo package** in a GToolkit image. Metacello clones the repository with Iceberg
-   (under `pharo-local/iceberg/` in the GT directory):
+1. **Load the Pharo packages** in a GToolkit image: `Pele2svg` and its tests, `Pele2svg-Tests`. Metacello clones the
+   repository with Iceberg (under `pharo-local/iceberg/` in the GT directory):
 
    ```smalltalk
    Metacello new
@@ -44,10 +44,11 @@ You need [Node.js](https://nodejs.org/) 20 or later (Pele needs it). [Bun](https
        load
    ```
 
-2. **Install Pele, once.** The Pharo class only calls `pele2svg.mjs`, so Pele has to be installed next to it.
-   This runs `npm install` in the Iceberg clone (`bun install` if you set `runtime: 'bun'`), which also installs
-   `mathjax-full`, an optional dependency that is used only for formulas (see
-   [Formulas and the width of a diagram](#formulas-and-the-width-of-a-diagram)). It does nothing if both are already there:
+   To load `Pele2svg` without the tests, use `load: 'Core'` instead of `load`.
+
+2. **Install Pele, once.** The Pharo class only calls `pele2svg.mjs`, so Pele, and `mathjax-full` (used only for
+   [formulas](#formulas-and-the-width-of-a-diagram)), have to be installed next to it. This runs `npm install` in the
+   Iceberg clone (`bun install` if you set `runtime: 'bun'`) and does nothing if both are already there:
 
    ```smalltalk
    Pele2svg installDependencies

@@ -146,7 +146,7 @@
 								"__type" : "time",
 								"time" : {
 									"__type" : "dateAndTime",
-									"dateAndTimeString" : "2026-10-18T19:14:07.295+09:00"
+									"dateAndTimeString" : "2026-10-25T15:24:01.804+09:00"
 								}
 							},
 							"uid" : {
@@ -156,7 +156,7 @@
 							"paragraphStyle" : {
 								"__type" : "textStyle"
 							},
-							"string" : "The package is loaded with Metacello. It clones the repository with Iceberg under `pharo-local/iceberg/`:"
+							"string" : "The packages are loaded with Metacello: `Pele2svg` and its tests, `Pele2svg-Tests` (use `load: 'Core'` instead of `load` to leave the tests out). It clones the repository with Iceberg under `pharo-local/iceberg/`:"
 						},
 						{
 							"__type" : "pharoSnippet",
