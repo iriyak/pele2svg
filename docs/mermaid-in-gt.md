@@ -1,9 +1,10 @@
 # Writing Mermaid for GToolkit with pele2svg
 
 A guide for whoever (a person or Claude) draws a diagram **from scratch** in GToolkit: what Pele can express, what
-survives the trip to Skia, and which Pele options reach it. It is based on the Pele release notes (1.0.1 to 1.10.0)
-and on checks made with Pele 1.10.0 and `BlSkiaSvgElement` on 2026-10-25. When Pele is upgraded, see
-[pele-upgrade.md](pele-upgrade.md) and re-check the sections marked *checked*.
+survives the trip to Skia, and which Pele options reach it. It is based on the Pele release notes (1.0.1 to 1.13.0)
+and on checks made with Pele 1.10.0 and `BlSkiaSvgElement` on 2026-10-25. Pele 1.13.0 was checked on 2026-11-03 with the
+gallery of all 659 examples, the tests and the `monospace` option (see the table below); the small probes of *Text in labels*
+were not repeated. When Pele is upgraded, see [pele-upgrade.md](pele-upgrade.md) and re-check the sections marked *checked*.
 
 ## In short
 
@@ -56,6 +57,11 @@ Choosing a type for a Smalltalk or GT subject: `class` (a hierarchy), `sequence`
 | 1.9.0 | C4 relation labels no longer cover elements; quadrant point labels stay clear of titles; state transitions follow `flowchart.curve`; only diagrams starting with a C4 keyword are detected as C4 | Works with the defaults |
 | 1.0.4, 1.3.0, 1.5.x, 1.6.0 | `maxEdges` (flowcharts are limited to 5,000 edges by default), `links` and `images` switches, `parse()` then `render()` of a model, `mount()` and zoom, error display in place, `onError`, unique SVG IDs | Browser or API matters. Nothing to do in GToolkit, except `maxEdges`, `links` and `images`, which are `renderOptions` keys |
 | 1.10.0 | Stricter syntax: `%%` comments no longer delete the character before them, so a line that only parsed because a comment removed a stray `:` or `,` is now a syntax error (Venn, sequence, XY chart, quadrant, gantt, journey, timeline); a Sankey value that does not start with a number is a syntax error; a `title` line without text sets no title; error messages show entity codes as written and count front matter, comments and blank lines in line numbers; Sankey `prefix`/`suffix` entities are decoded; XY chart no longer draws `NaN` when both y-axis bounds clamp to one limit; radar draws very large values in proportion | Works with the defaults. Do not put a stray `:` or `,` before a `%%` comment |
+| 1.10.1 | A flowchart subgraph or agentflow flow that has a node linked to a node outside it ignores its own `direction` and uses its parent's, as in Mermaid. Names that start with a keyword are read in full (`set-theory`, `titles`, `title.txt`; they used to be syntax errors or lose the keyword). Errors at the end of the input point just after the last line with content. Sankey ignores blanks at the ends of a row; quadrant empty labels no longer block point labels. Diagrams narrow for the zoom buttons | Works with the defaults. Do not rely on `direction` inside a subgraph that is linked from outside. *Checked* (2026-11-03): in Pele's own example 'Groups with their own direction' the two links between the groups were removed for this reason. The zoom change is for browsers |
+| 1.11.0 | **`monospace` option**: class `members`, ER `attributes`, TreeView `files` and sequence `messages` are measured and drawn in the monospace font | **Needs `#monospace -> #(#members)` in `renderOptions` and a theme with `--gt-font-mono`** (`gt-windows` has one); without the theme Skia does not resolve `monospace` and draws a proportional font. *Checked* in GToolkit: class members were drawn in Courier New with `--gt-font-mono` set to it, and with `gt-windows` (Consolas) |
+| 1.11.0 | Sequence messages use spare width when `maxWidth` is set; treemap shows all nodes with tighter spacing when crowded; block labels on parallel edges stack and the gap grows; zoom fix | Works with the defaults (sequence needs `maxWidth`, as in 1.4.0) |
+| 1.12.0 | Labels on fills that `style`, `classDef` or a sequence `rect` or `box` set use `--pele-fg-on-light` or `--pele-fg-on-dark`, whichever contrasts more; edges and arrows on those fills too. Custom fills on subgraphs, composite states, block composites, ER subgraphs and use case boundaries are drawn at full opacity instead of half. Percent escapes in links are kept | Works. Pele writes `var(--pele-fg-on-light,#1f1f1f)` with a fallback, so `flatten` resolves it with no theme key; a dark theme can set the two variables (not tried). Links are made inert by pele2svg anyway |
+| 1.13.0 | Series colors follow Mermaid's palette theme variables (`pie1`-`pie8`, `git0`-`git7`, `cScale0`-`cScale7`, `cScale1`-`cScale8` for mindmaps, `venn1`-`venn8`, the first eight colors of `xyChart.plotColorPalette`); labels on them use the two `--pele-fg-on-*` colors. Edges that cross a subgraph border bend less; an unlinked node in a subgraph no longer drops a rank. Block labels use extra width in wide cells. Quadrant font sizes (`titleFontSize`, `quadrantLabelFontSize`, ...) are read from the `quadrantChart` settings; point labels wrap at the plot width | **Write palette colors as hex** (see [Text in labels](#text-in-labels)). The palette and quadrant settings were not tried in Skia. The layout changes work with the defaults |
 
 Titles work from frontmatter (`---` / `title: ...` / `---`) and are drawn. *Checked*: the other `config:` keys tried
 (`flowchart.curve`) did not change the picture, so do not rely on them.
@@ -76,12 +82,15 @@ Titles work from frontmatter (`---` / `title: ...` / `---`) and are drawn. *Chec
 | emoji and symbols | see [skia-svg-baseline.md](skia-svg-baseline.md): an emoji in the middle of a label can become a box; ♥ (U+2665) is safe, ❤ (U+2764) is not |
 
 Colors in `style` or `classDef` should be hex (`#rrggbb`) or the standard names; pele2svg turns names into hex and
-Skia understands them. `hsl()`, `oklch()` and 8-digit hex do not work in Skia (see the baseline document).
+Skia understands them. `hsl()`, `oklch()` and 8-digit hex do not work in Skia (see the baseline document). The same holds for the
+palette theme variables of Pele 1.13.0 (`pie1`, `cScale0`, `xyChart.plotColorPalette`, ...): Pele accepts color functions there
+(`hsl`, `oklch`, `light-dark`, `color-mix`, ...), but the 659 examples contain none, so pele2svg has not been made to convert them
+(it handles hex, `rgb()`, color names and simple `color-mix()`). Use hex.
 
 ## Render options
 
 `Pele2svg` gives Pele's `render()` the Dictionary `renderOptions` (a setting like `theme`; on the command line,
-`--render-options options.json`). The keys of Pele's `RenderOptions` that JSON can carry are accepted, and `math`. An unknown key
+`--render-options options.json`). The keys of Pele's `RenderOptions` that JSON can carry are accepted, and `math`; `monospace` must be a list of `members`, `attributes`, `files` and `messages`. An unknown key
 signals `Pele2svgError` and names the known ones. The options apply to Mermaid source, not to `renderSvg:`.
 
 | Key | Effect | Value for GToolkit |
@@ -92,6 +101,7 @@ signals `Pele2svgError` and names the known ones. The options apply to Mermaid s
 | `math` | `true` typesets `$$...$$` labels with MathJax | formulas, see below |
 | `links: false`, `images: false` | omit all links and images | should remove the external-image warning of `flowchart-70` (not tried); links are made inert by pele2svg anyway |
 | `maxEdges`, `limit`, `outputLimit` | size limits | very large diagrams |
+| `monospace` | a list of the parts to draw in the monospace font: `members` (class), `attributes` (ER), `files` (tree view), `messages` (sequence) | code-like text; set `--gt-font-mono` in the theme (`gt-windows` does) or Skia draws a proportional font |
 
 ### Formulas
 
@@ -150,8 +160,9 @@ What changes when the viewer is a browser and not Skia:
 
 ## Where each statement comes from
 
-- Release notes: <https://github.com/obsidianmd/pele/releases> (1.0.1 to 1.10.0); the math resolver: [Pele issue 36](https://github.com/obsidianmd/pele/issues/36); Mermaid's math: <https://mermaid.js.org/config/math.html>.
+- Release notes: <https://github.com/obsidianmd/pele/releases> (1.0.1 to 1.13.0); the math resolver: [Pele issue 36](https://github.com/obsidianmd/pele/issues/36); Mermaid's math: <https://mermaid.js.org/config/math.html>.
 - *Checked*: `render()` calls on the installed Pele 1.10.0, then the pele2svg conversion, then a Skia drawing
-  (`BlSkiaSvgElement`) in GToolkit, on 2026-10-25.
+  (`BlSkiaSvgElement`) in GToolkit, on 2026-10-25. For 1.10.1 to 1.13.0 (2026-11-03): the 659 examples converted with no warning and
+  none newly flagged in the gallery, the Pharo tests and gtExamples passed, and `monospace` was drawn in GToolkit.
 - The text-in-labels table and the sankey gradient are small probes, not part of the test suite. If they matter, turn
   them into a gtExample.
