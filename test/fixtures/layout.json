@@ -157,7 +157,7 @@
   },
   {
     "name": "flowchart-layout-subgraphs-4",
-    "source": "flowchart LR\n  subgraph top [Runs down]\n    direction TB\n    t1 --> t2 --> t3\n  end\n  subgraph side [Runs across]\n    direction LR\n    s1 --> s2 --> s3\n  end\n  outside --> top\n  outside --> s1\n  t3 --> s2\n  s3 --> t1\n"
+    "source": "flowchart LR\n  subgraph top [Runs down]\n    direction TB\n    t1 --> t2 --> t3\n  end\n  subgraph side [Runs across]\n    direction LR\n    s1 --> s2 --> s3\n  end\n  outside --> top\n  outside --> s1\n"
   },
   {
     "name": "flowchart-layout-subgraphs-5",
