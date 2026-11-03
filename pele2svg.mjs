@@ -287,14 +287,25 @@ export function flatten(svg, theme = {}) {
 export const RENDER_OPTION_KEYS = [
   'fontFamily', 'fontFamilyMono', 'fontSize', 'idPrefix', 'responsive', 'maxWidth', 'autoDirection',
   'directionBreakpoint', 'padding', 'limit', 'outputLimit', 'maxEdges', 'links', 'images', 'linkSchemes',
-  'imageSchemes', 'linkRel', 'config',
+  'imageSchemes', 'linkRel', 'config', 'monospace',
 ];
+
+// The parts `monospace` can list (Pele 1.11.0): class members, ER attributes, tree view files, sequence messages.
+// Pele ignores a name it does not know, so a typo is refused here instead.
+export const MONOSPACE_PARTS = ['members', 'attributes', 'files', 'messages'];
 
 export async function peleOptions(json = {}) {
   const { math, ...rest } = json;
   const unknown = Object.keys(rest).filter(k => !RENDER_OPTION_KEYS.includes(k));
   if (unknown.length) {
     throw new Error(`unknown render option(s): ${unknown.join(', ')}; known: math, ${RENDER_OPTION_KEYS.join(', ')}`);
+  }
+  if (rest.monospace !== undefined) {
+    const parts = rest.monospace;
+    const bad = Array.isArray(parts) ? parts.filter(p => !MONOSPACE_PARTS.includes(p)) : [parts];
+    if (bad.length) {
+      throw new Error(`invalid monospace part(s): ${bad.join(', ')}; monospace is a list of: ${MONOSPACE_PARTS.join(', ')}`);
+    }
   }
   const options = { ...rest };
   if (math) options.math = await (await import('./math.mjs')).createMathResolver();

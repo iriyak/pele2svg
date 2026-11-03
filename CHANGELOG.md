@@ -10,8 +10,11 @@
 
 - **Docs.** `docs/standalone.md`: *Using it from an MCP server* and *Japanese text in a browser*. `docs/mermaid-in-gt.md`: a section on use outside GToolkit.
 
+- **`monospace` render option** (Pele 1.11.0): a list of `members`, `attributes`, `files` and `messages`, the parts of class, ER, tree view and sequence diagrams that Pele then measures and draws in the monospace font. `peleOptions` accepts it and refuses a name that is not in the list (`MONOSPACE_PARTS`), because Pele ignores unknown names silently. New tests in `test/options.test.js`.
+
 ### Changed
 
+- **Pele 1.13.0.** `pele` dependency is `^1.13.0` (tested with 1.13.0; the baseline was 1.10.0). The 659 examples convert cleanly and all tests pass. `featured.json` and `docs.json` are unchanged; in `layout.json` one case changed (Pele removed two links from 'Groups with their own direction'). The three SVGs in `examples/` are the same as before, except that the C2PA `<metadata>` block that an earlier tool had added to them is gone.
 - A TeX error in a `$$...$$` label now shows the TeX source (as when MathJax is not available) instead of MathJax's red error message.
 - The tests that need the math option off set `renderOptions: nil` explicitly, so they no longer fail when the global default has `math` on.
 

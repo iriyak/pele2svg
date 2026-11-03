@@ -239,6 +239,7 @@ Pele2svg new
 | `#idPrefix -> 'p1'` | Makes the ids unique, which also turns Sankey links into gradients |
 | `#links -> false`, `#images -> false` | Leave out all links or images |
 | `#maxEdges` | The limit on the edges of a flowchart (5,000 by default) |
+| `#monospace -> #(#members)` | Measure and draw parts of the diagram in the monospace font (Pele 1.11.0 or later). The parts are `#members` (class diagrams), `#attributes` (ER), `#files` (tree view) and `#messages` (sequence); a name that is not one of them signals `Pele2svgError`. Set a real font for `monospace` in the theme (`--gt-font-mono`, as in `themes/gt-windows.json`), because Skia does not resolve the family name |
 
 Other keys of Pele's `RenderOptions` that JSON can carry are accepted too; an unknown key signals `Pele2svgError` and names the known ones.
 The formulas are drawn as paths, so they need no font and follow the theme's foreground color. `renderOptions` apply to Mermaid
@@ -336,7 +337,7 @@ Pele2svg new theme: { '--gt-font-mono' -> 'Courier New' } asDictionary; asElemen
 ## What has been checked
 
 Every one of Pele's published examples (659: 58 featured, 520 documentation examples and 81 layout cases; checked with
-Pele 1.10.0) converts cleanly. For the first 578 (the featured and documentation examples), the converted SVGs also match
+Pele 1.13.0) converts cleanly. For the first 578 (the featured and documentation examples), the converted SVGs also match
 in GToolkit (Skia) and in WebView2 on Windows. All 659 were also compared with what a browser draws from Pele's own SVG (a gallery of
 side-by-side pictures, see [docs/pele-upgrade.md](docs/pele-upgrade.md)); the 81 layout cases have not been looked at by eye in
 WebView2. The details, what is not verified, and how to run the tests are in

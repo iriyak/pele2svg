@@ -3,7 +3,7 @@
 ## What has been checked
 
 Using Pele's published examples ([pele.run/examples](https://pele.run/examples)) — 32 diagram types, 58 featured examples,
-the 520 documentation examples and the 81 layout cases on the per-type pages (659 in total, Pele 1.10.0).
+the 520 documentation examples and the 81 layout cases on the per-type pages (659 in total, Pele 1.13.0).
 
 The by-hand checks below (`xmllint`, resvg, GToolkit and WebView2) were made on the 578 featured and documentation
 examples, before the layout cases were added. `npm test` covers all 659.

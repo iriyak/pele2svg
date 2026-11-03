@@ -81,3 +81,34 @@ test('math: the formula keeps the foreground color of the theme', { skip: skipMa
   assert.match(svg, /fill="#123456"/);
   assert.doesNotMatch(svg, /currentColor/);
 });
+
+// `monospace` (Pele 1.11.0): the listed parts are measured and drawn in the monospace font
+const classDiagram = `classDiagram
+  class Account {
+    +String owner
+    +deposit(amount) void
+  }`;
+
+test('peleOptions: monospace is accepted for the four parts, and a typo or a non-list is refused', async () => {
+  const options = await peleOptions({ monospace: ['members', 'attributes', 'files', 'messages'] });
+  assert.deepEqual(options.monospace, ['members', 'attributes', 'files', 'messages']);
+  await assert.rejects(peleOptions({ monospace: ['member'] }), /invalid monospace part\(s\): member/);
+  await assert.rejects(peleOptions({ monospace: 'members' }), /invalid monospace part\(s\): members/);
+});
+
+test('monospace: members are measured in the monospace font, and --gt-font-mono reaches the converted SVG', async () => {
+  const plain = render(classDiagram);
+  const mono = render(classDiagram, await peleOptions({ monospace: ['members'] }));
+  assert.notEqual(mono.svg, plain.svg);
+  const { svg, warnings } = flatten(mono.svg, { '--gt-font-mono': 'Consolas' });
+  assert.deepEqual(warnings, []);
+  assert.match(svg, /font-family="Consolas"/);
+  assert.doesNotMatch(svg, /var\(/);
+});
+
+test('monospace: messages in a sequence diagram', async () => {
+  const mono = render(sequence, await peleOptions({ monospace: ['messages'] }));
+  const { svg, warnings } = flatten(mono.svg, { '--gt-font-mono': 'Consolas' });
+  assert.deepEqual(warnings, []);
+  assert.match(svg, /font-family="Consolas"/);
+});
