@@ -10,6 +10,8 @@
 
 - **Docs.** `docs/standalone.md`: *Using it from an MCP server* and *Japanese text in a browser*. `docs/mermaid-in-gt.md`: a section on use outside GToolkit.
 
+- **Docs: the Skia version.** New `docs/gt-skia-source.md`: GToolkit v1.1.668 draws SVG with Skia m142 (`skia-safe` 0.90.0 in `Skia.dll`, built from feenkcom/libskia), how that was found, and a reading of the `modules/svg` source against the measurements of `docs/skia-svg-baseline.md` (why `var()` takes only its fallback, why `<style>` and `!important` are lost, the default `font-size` of 24, stroke width 0). `docs/skia-svg-baseline.md` has the version in its environment table; the README lists both pages.
+
 - **`monospace` render option** (Pele 1.11.0): a list of `members`, `attributes`, `files` and `messages`, the parts of class, ER, tree view and sequence diagrams that Pele then measures and draws in the monospace font. `peleOptions` accepts it and refuses a name that is not in the list (`MONOSPACE_PARTS`), because Pele ignores unknown names silently. New tests in `test/options.test.js`.
 
 ### Changed

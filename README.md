@@ -348,6 +348,10 @@ WebView2. The details, what is not verified, and how to run the tests are in
 - [docs/standalone.md](docs/standalone.md) — using `pele2svg` without GToolkit: installing it with npm, the command line,
   the JavaScript API, using it from an MCP server, themes and fonts (including Japanese text in a browser).
 - [docs/development.md](docs/development.md) — what has been checked, what has not, and how to run the tests.
+- [docs/skia-svg-baseline.md](docs/skia-svg-baseline.md) — what GToolkit's Skia draws, ignores or gets wrong for the CSS
+  and SVG features that `flatten` converts (measurements).
+- [docs/gt-skia-source.md](docs/gt-skia-source.md) — which Skia GToolkit uses (m142), how that was found, and what the
+  source of its SVG module says about those measurements.
 
 ## License
 

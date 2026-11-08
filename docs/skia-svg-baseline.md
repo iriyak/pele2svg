@@ -22,7 +22,7 @@ removal; the ones it does not handle are candidates for being supported on the S
 | VM | `v10.3.11-49-gfea30c6` (2026-09-17) |
 | OS | Windows 64 bit |
 | Renderer | `BlSkiaSvgElement` (`SkiaSvgDom` / `drawSvg:`) |
-| Skia version | **not determined** (to be read from the Skia sources GToolkit bundles) |
+| Skia version | **m142** (`skia-safe` / `skia-bindings` 0.90.0 in the `Skia.dll` of GT v1.1.668; found on 2026-11-08, see [gt-skia-source.md](gt-skia-source.md)). The measurements below were made with GT v1.1.624, whose Skia was **not** checked. |
 
 Not measured: WebView2 (`GtWebViewElement`), other platforms, other GT versions.
 
@@ -315,7 +315,9 @@ element that has `stroke-width="0"`.
 - The nested `<svg>` and `<a>` rows used simple inputs; Pele's icon `<svg>` elements are more varied.
 - "Needed: no" means "Skia coped with the tested input", not that removing the step is safe. Removing a step should be
   checked against the whole corpus (`npm test`, and the `Pele2svgExamples` in GToolkit).
-- The Skia version is unknown. The next step is to obtain the Skia sources that GToolkit bundles (`modules/svg`:
-  `SkSVGDOM`, the attribute parser and the presentation-attribute table) and compare the findings above with the
-  implementation: this would confirm *why* `var()` takes only its fallback, whether `currentColor` and nested `<svg>`
-  are complete, and which other properties and elements are supported but not yet used by Pele2svg.
+- **The Skia version and the source reading** are now in [gt-skia-source.md](gt-skia-source.md): GT v1.1.668 uses Skia
+  m142, and the `modules/svg` source of that milestone explains most of the rows above (`var()` is parsed but never
+  resolved because `SkSVGDOM::render` gives it no table of names; there is no `<style>`; `!important` makes the colour
+  parse fail; the default `font-size` is 24; only the first family name is used; stroke width 0 has no special case).
+  Still open: why 8 colour names draw black (the table is in `src/utils/SkParse.cpp`), which `FontMgr` GT passes in
+  (generic font names, emoji), and whether v1.1.624 had the same Skia. The list is at the end of that page.

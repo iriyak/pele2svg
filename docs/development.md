@@ -34,7 +34,8 @@ Not verified:
 - One `<image>` with an external URL (a flowchart example) is removed.
 - The converted SVG keeps Pele's intrinsic `width`/`height`; how it is scaled depends on the viewer.
 
-Known differences in Skia (not bugs of pele2svg):
+Known differences in Skia (not bugs of pele2svg). Most of them are explained by the source of Skia m142, the version
+in GToolkit v1.1.668: see [`gt-skia-source.md`](gt-skia-source.md).
 
 - Text with an emoji can lose its bold weight, and text after an emoji with U+FE0F may shift (`treeview-12`).
 - An external `<image>` is removed on purpose (`flowchart-70`).
